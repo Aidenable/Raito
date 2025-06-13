@@ -1,0 +1,94 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "raito"
+version = "0.1.0"
+description = "REPL, hot-reload, keyboards, pagination, and internal dev tools — all in one. That's Raito."
+authors = [{ name = "Aiden", email = "aidenthedev@gmail.com" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Environment :: Plugins",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Debuggers",
+    "Topic :: Software Development :: User Interfaces",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+
+keywords = [
+    "aiogram",
+    "telegram",
+    "keyboard",
+    "pagination",
+    "repl",
+    "hot-reload",
+    "devtools",
+    "bot",
+    "aiogram3",
+    "raito",
+]
+
+[project.optional-dependencies]
+dev = ["ruff", "mypy", "pytest", "ipdb", "pre-commit"]
+docs = ["sphinx", "furo", "sphinx-autodoc-typehints"]
+
+[project.urls]
+Repository = "https://github.com/Aidenable/raito"
+Documentation = "https://aidenable.github.io/raito"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+ignore = [
+    "E501", # line too long
+    "D100", # missing docstring in public module
+    "D104", # missing docstring in public package
+]
+fixable = ["ALL"]
+extend-select = [
+    "E",   # pycodestyle: basic style issues
+    "F",   # pyflakes: undefined variables, imports, unused code
+    "B",   # bugbear: likely bugs and design problems
+    "C4",  # flake8-comprehensions: improve list/set/dict comprehensions
+    "SIM", # flake8-simplify: overly complex constructs
+    "I",   # isort: import sorting
+    "UP",  # pyupgrade: outdated syntax for your Python version
+    "RUF", # ruff-specific: best practices from ruff itself
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ALL"]
+"examples/*" = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+exclude = ["tests", "examples"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+python_files = "tests/test_*.py"
