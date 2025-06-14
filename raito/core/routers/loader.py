@@ -25,8 +25,17 @@ class RouterLoader:
 
         self._parent_router: Router | None = None
         self._sub_routers: list[Router] | None = None
+
         self._is_restarting: bool = False
-        self._last_hash: str | None = None
+        self._is_loaded: bool = False
+
+    @property
+    def is_loaded(self) -> bool:
+        return self._is_loaded
+
+    @property
+    def is_restarting(self) -> bool:
+        return self._is_restarting
 
     @classmethod
     def extract_router(cls, file_path: str | Path) -> "Router":
@@ -68,13 +77,14 @@ class RouterLoader:
                 sub_router._parent_router = router
 
     def load(self) -> None:
-        if self.router is None:
+        if self.router is None or self.is_loaded:
             return
 
         self._link_parent_router(self.router)
         self._link_subrouters(self.router)
 
         self.dispatcher.include_router(self.router)
+        self._is_loaded = True
 
     def _unlink_from_parent(self, router: Router) -> None:
         if not router.parent_router:
@@ -89,7 +99,7 @@ class RouterLoader:
             sub_router._parent_router = None
 
     def unload(self) -> None:
-        if self.router is None:
+        if self.router is None or not self.is_loaded:
             return
 
         self._parent_router = self.router.parent_router
@@ -98,6 +108,7 @@ class RouterLoader:
         self._unlink_from_parent(self.router)
         self._unlink_sub_routers(self.router)
         self._router = None
+        self._is_loaded = False
 
     async def reload(self, timeout: float | None = None) -> None:
         if self._is_restarting:

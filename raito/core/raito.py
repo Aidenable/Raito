@@ -31,11 +31,16 @@ class Raito:
         self.redis = redis
 
         self.manager = RoutersManager(dispatcher)
+        self.dispatcher["raito"] = self
 
     async def setup(self) -> None:
-        await self.manager.load_routers(self.routers_dir)
+        await self._load_routers()
         if not self.production:
             create_task(self.manager.start_watchdog(self.routers_dir))  # noqa: RUF006
+
+    async def _load_routers(self) -> None:
+        await self.manager.load_routers(Path(__file__).parent.parent / "handlers")
+        await self.manager.load_routers(self.routers_dir)
 
     async def add_global_throttling(
         self,
