@@ -7,6 +7,8 @@ on:
 
 jobs:
   deploy:
+    if: false
+
     name: 📦 Deploy to PyPI
     runs-on: ubuntu-latest
 
