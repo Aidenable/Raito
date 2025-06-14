@@ -1,3 +1,4 @@
+from asyncio import create_task
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
 
@@ -29,10 +30,12 @@ class Raito:
         self.production = production
         self.redis = redis
 
-        self.manager = RoutersManager(dispatcher, watchdog=not production)
+        self.manager = RoutersManager(dispatcher)
 
     async def setup(self) -> None:
         await self.manager.load_routers(self.routers_dir)
+        if not self.production:
+            create_task(self.manager.start_watchdog(self.routers_dir))  # noqa: RUF006
 
     async def add_global_throttling(
         self,

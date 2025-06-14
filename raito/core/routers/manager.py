@@ -1,8 +1,9 @@
-import asyncio
 from collections.abc import Generator
 from os import listdir, path
 from pathlib import Path
 from typing import TYPE_CHECKING
+
+from watchfiles import awatch
 
 from raito.utils import loggers
 
@@ -13,19 +14,10 @@ if TYPE_CHECKING:
 
 
 class RoutersManager:
-    def __init__(
-        self,
-        dispatcher: "Dispatcher",
-        watchdog: bool = False,
-        *,
-        watchdog_interval: float = 1.0,
-    ) -> None:
+    def __init__(self, dispatcher: "Dispatcher") -> None:
         self.dispatcher = dispatcher
-        self.watchdog = watchdog
-        self.watchdog_interval = watchdog_interval
 
         self._routers: dict[str, RouterLoader] = {}
-        self._watchdogs: list[asyncio.Task[None]] = []
 
     def resolve_paths(self, directory: str | Path) -> Generator[Path | str, None, None]:
         for file_name in listdir(directory):
@@ -72,6 +64,16 @@ class RoutersManager:
             self._routers[unique_name] = loader
             loggers.core.info("Router loaded: %s", unique_name)
 
-            if self.watchdog:
-                task = asyncio.create_task(loader.watchdog(interval=self.watchdog_interval))
-                self._watchdogs.append(task)
+    async def start_watchdog(self, directory: str | Path) -> None:
+        loggers.core.info("Router watchdog started for: %s", directory)
+        async for changes in awatch(directory):
+            for _, changed_path in changes:
+                path_obj = Path(changed_path).resolve()
+
+                for loader in self._routers.values():
+                    if Path(loader.path).resolve() == path_obj:
+                        loggers.core.info(
+                            "File changed: %s. Reloading router '%s'...", changed_path, loader.name
+                        )
+                        await loader.reload()
+                        break

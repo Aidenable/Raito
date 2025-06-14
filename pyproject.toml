@@ -15,6 +15,7 @@ dependencies = [
     "aioredis>=2.0.1",
     "cachetools>=6.0.0",
     "pydantic>=2.11.6",
+    "watchfiles>=1.0.5",
 ]
 
 classifiers = [

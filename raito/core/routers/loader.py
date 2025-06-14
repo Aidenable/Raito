@@ -1,12 +1,9 @@
 import importlib.util
 from asyncio import sleep
-from hashlib import sha256
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from aiogram import Router
-
-from raito.utils import loggers
 
 if TYPE_CHECKING:
     from aiogram import Dispatcher
@@ -114,27 +111,3 @@ class RouterLoader:
 
         self.load()
         self._is_restarting = False
-
-    def _calculate_hash(self) -> str:
-        with open(self.path, "rb") as file:
-            return sha256(file.read()).hexdigest()
-
-    async def watchdog(self, interval: float = 1.0) -> None:
-        while True:
-            await sleep(interval)
-
-            try:
-                current_hash = self._calculate_hash()
-            except FileNotFoundError:
-                loggers.core.debug("Router %s not found", self.name)
-                await sleep(60)
-                continue
-
-            if self._last_hash is None:
-                self._last_hash = current_hash
-                continue
-
-            if current_hash != self._last_hash and not self._is_restarting:
-                loggers.core.info("Changes have been detected. Reloading router '%s'...", self.name)
-                self._last_hash = current_hash
-                await self.reload()
