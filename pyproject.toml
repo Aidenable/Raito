@@ -10,7 +10,13 @@ authors = [{ name = "Aiden", email = "aidenthedev@gmail.com" }]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "aiogram>=3.20.0",
+    "aioredis>=2.0.1",
+    "cachetools>=6.0.0",
+    "pydantic>=2.11.6",
+    "watchfiles>=1.0.5",
+]
 
 classifiers = [
     "Development Status :: 1 - Planning",
@@ -46,12 +52,22 @@ keywords = [
 ]
 
 [project.optional-dependencies]
-dev = ["ruff", "mypy", "pytest", "ipdb", "pre-commit"]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+    "ipdb",
+    "pre-commit",
+    "types-cachetools>=6.0.0.20250525",
+]
 docs = ["sphinx", "furo", "sphinx-autodoc-typehints"]
 
 [project.urls]
 Repository = "https://github.com/Aidenable/raito"
 Documentation = "https://aidenable.github.io/raito"
+
+[tool.hatch.build]
+packages = ["raito"]
 
 [tool.ruff]
 line-length = 100
@@ -92,3 +108,8 @@ exclude = ["tests", "examples"]
 [tool.pytest.ini_options]
 addopts = "-ra"
 python_files = "tests/test_*.py"
+
+[dependency-groups]
+dev = [
+    "types-cachetools>=6.0.0.20250525",
+]
