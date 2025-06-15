@@ -39,10 +39,7 @@ class RouterParser:
     @classmethod
     def _validate_router(cls, module: object) -> Router:
         """Validate and return router from module."""
-        if not hasattr(module, "router"):
-            msg = "Module missing 'router' attribute."
-
-        router = module.router
+        router = getattr(module, "router", None)
         if not isinstance(router, Router):
             msg = f"Excepted Router, got {type(router).__name__}"
             raise TypeError(msg)
