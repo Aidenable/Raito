@@ -11,18 +11,18 @@ if TYPE_CHECKING:
 router = Router(name="raito.management.load")
 
 
-@router.message(RaitoCommand("load"))
+@router.message(RaitoCommand("load"))  # type: ignore[misc]
 async def load_router(message: Message, raito: "Raito") -> None:
     args = message.text
     if args is None or len(args.split()) != 3:
-        await message.answer("Please provide a valid router name")
+        await message.answer("⚠️ Please provide a valid router name")
         return
 
     router_name = args.split()[2]
     router_loader = raito.manager.loaders.get(router_name)
     if not router_loader:
-        await message.answer(f"Router {html.bold(router_name)} not found", parse_mode="HTML")
+        await message.answer(f"🔎 Router {html.bold(router_name)} not found", parse_mode="HTML")
         return
 
     router_loader.load()
-    await message.answer(f"Loading router {html.bold(router_name)}...", parse_mode="HTML")
+    await message.answer(f"📦 Loading router {html.bold(router_name)}...", parse_mode="HTML")
