@@ -58,7 +58,7 @@ class RouterParser:
         """
         router = getattr(module, "router", None)
         if not isinstance(router, Router):
-            msg = f"Excepted Router, got {type(router).__name__}"
+            msg = f"Expected Router, got {type(router).__name__}"
             raise TypeError(msg)
 
         return router
