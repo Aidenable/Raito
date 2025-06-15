@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from watchfiles import awatch
 
@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
     from aiogram import Dispatcher
 
-PathOrStr = Union["Path", str]
+    from raito.utils.types import StrOrPath
 
 
 class RouterManager:
@@ -27,7 +27,7 @@ class RouterManager:
 
         self._routers: dict[str, RouterLoader] = {}
 
-    def resolve_paths(self, directory: PathOrStr) -> Generator[PathOrStr, None, None]:
+    def resolve_paths(self, directory: StrOrPath) -> Generator[StrOrPath, None, None]:
         """Recursively resolve all router paths in a directory.
 
         :param directory: Directory to scan.
@@ -44,7 +44,7 @@ class RouterManager:
             elif item.is_dir():
                 yield from self.resolve_paths(item)
 
-    async def load_routers(self, directory: PathOrStr) -> None:
+    async def load_routers(self, directory: StrOrPath) -> None:
         """Load all routers from a directory.
 
         :param directory: Directory containing router files.
@@ -88,7 +88,7 @@ class RouterManager:
             self._routers[unique_name] = loader
             loggers.core.info("Router loaded: %s", unique_name)
 
-    async def start_watchdog(self, directory: PathOrStr) -> None:
+    async def start_watchdog(self, directory: StrOrPath) -> None:
         """Start file watching service.
 
         :param directory: Directory to watch for changes.

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from asyncio import sleep
 from pathlib import Path
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from .base_router import BaseRouter
 from .parser import RouterParser
@@ -10,7 +10,7 @@ from .parser import RouterParser
 if TYPE_CHECKING:
     from aiogram import Dispatcher, Router
 
-PathOrStr = Union[Path, str]
+    from raito.utils.types import StrOrPath
 
 
 class RouterLoader(BaseRouter, RouterParser):
@@ -28,7 +28,7 @@ class RouterLoader(BaseRouter, RouterParser):
     def __init__(
         self,
         name: str,
-        path: PathOrStr,
+        path: StrOrPath,
         dispatcher: Dispatcher,
         router: Router | None = None,
     ) -> None:

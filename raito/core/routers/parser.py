@@ -2,18 +2,19 @@ from __future__ import annotations
 
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
-from typing import Union
+from typing import TYPE_CHECKING
 
 from aiogram import Router
 
-PathOrStr = Union["Path", str]
+if TYPE_CHECKING:
+    from raito.utils.types import StrOrPath
 
 
 class RouterParser:
     """Parses routers from Python files."""
 
     @classmethod
-    def extract_router(cls, file_path: PathOrStr) -> Router:
+    def extract_router(cls, file_path: StrOrPath) -> Router:
         """Extract router from a Python file.
 
         :param file_path: Path to the Python File.
@@ -24,7 +25,7 @@ class RouterParser:
         return cls._validate_router(module)
 
     @classmethod
-    def _load_module(cls, file_path: Path) -> object:
+    def _load_module(cls, file_path: StrOrPath) -> object:
         """Load module from file path."""
         spec = spec_from_file_location("dynamic_module", file_path)
 

@@ -1,23 +1,23 @@
 from asyncio import create_task
-from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
-
-from aiogram import Dispatcher
 
 from raito.utils.middlewares import ThrottlingMiddleware
 
 from .routers.manager import RouterManager
 
 if TYPE_CHECKING:
+    from aiogram import Dispatcher
     from aioredis import Redis
     from pydantic import PostgresDsn
+
+    from raito.utils.types import StrOrPath
 
 
 class Raito:
     def __init__(
         self,
         dispatcher: "Dispatcher",
-        routers_dir: str | Path,
+        routers_dir: StrOrPath,
         developers: list[int],
         database: Union["PostgresDsn", str],
         *,
