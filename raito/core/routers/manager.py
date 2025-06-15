@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Union
 
 from watchfiles import awatch
 
@@ -11,7 +11,7 @@ from .loader import RouterLoader
 from .parser import RouterParser
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Coroutine, Generator
+    from collections.abc import Generator
 
     from aiogram import Dispatcher
 
@@ -26,9 +26,6 @@ class RouterManager:
         self.dispatcher = dispatcher
 
         self._routers: dict[str, RouterLoader] = {}
-        self._handlers: dict[
-            Path, list[Callable[[Path], Coroutine[Any, Any, None]]],
-        ] = {}
 
     def resolve_paths(self, directory: PathOrStr) -> Generator[PathOrStr, None, None]:
         """Recursively resolve all router paths in a directory.
@@ -82,9 +79,9 @@ class RouterManager:
             names.add(router.name)
 
             loader = RouterLoader(
-               unique_name,
-               file_path,
-               self.dispatcher,
+                unique_name,
+                file_path,
+                self.dispatcher,
                 router=router,
             )
             loader.load()
