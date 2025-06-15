@@ -20,6 +20,7 @@ class Raito:
         routers_dir: str | Path,
         developers: list[int],
         database: Union["PostgresDsn", str],
+        *,
         production: bool = True,
         redis: Optional["Redis"] = None,
     ):
