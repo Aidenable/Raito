@@ -14,6 +14,11 @@ if TYPE_CHECKING:
 
 
 class Raito:
+    """Main class for managing the Raito utilities.
+
+    Provides router management, middleware setup, etc.
+    """
+
     def __init__(
         self,
         dispatcher: "Dispatcher",
@@ -23,7 +28,22 @@ class Raito:
         *,
         production: bool = True,
         redis: Optional["Redis"] = None,
-    ):
+    ) -> None:
+        """Initialize the Raito.
+
+        :param dispatcher: Aiogram dispatcher instance
+        :type dispatcher: Dispatcher
+        :param routers_dir: Directory containing router files
+        :type routers_dir: StrOrPath
+        :param developers: List of developer user IDs with special privileges
+        :type developers: list[int]
+        :param database: Database connection string
+        :type database: PostgresDsn | str
+        :param production: Whether running in production mode, defaults to True
+        :type production: bool, optional
+        :param redis: Redis connection instance for caching, defaults to None
+        :type redis: Redis | None, optional
+        """
         self.dispatcher = dispatcher
         self.routers_dir = routers_dir
         self.developers = developers
@@ -34,6 +54,11 @@ class Raito:
         self.manager = RouterManager(dispatcher)
 
     async def setup(self) -> None:
+        """Set up the Raito by loading routers and starting watchdog.
+
+        Loads all routers from the specified directory and starts file watching
+        in development mode for automatic reloading.
+        """
         await self.manager.load_routers(self.routers_dir)
         if not self.production:
             create_task(self.manager.start_watchdog(self.routers_dir))  # noqa: RUF006
@@ -44,6 +69,17 @@ class Raito:
         mode: ThrottlingMiddleware.MODE = "chat",
         max_size: int = 10_000,
     ) -> None:
+        """Add global throttling middleware to prevent spam.
+
+        Applies rate limiting to both messages and callback queries.
+
+        :param rate_limit: Time in seconds between allowed requests
+        :type rate_limit: float
+        :param mode: Throttling mode - 'chat', 'user', or 'bot', defaults to 'chat'
+        :type mode: ThrottlingMiddleware.MODE, optional
+        :param max_size: Maximum cache size for throttling records, defaults to 10_000
+        :type max_size: int, optional
+        """
         self.dispatcher.callback_query.outer_middleware(
             ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
         )

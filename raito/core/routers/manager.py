@@ -22,7 +22,11 @@ class RouterManager:
     """Manages multiple routers and file watching."""
 
     def __init__(self, dispatcher: Dispatcher) -> None:
-        """Initialize the RouterManager."""
+        """Initialize the RouterManager.
+
+        :param dispatcher: Aiogram dispatcher instance
+        :type dispatcher: Dispatcher
+        """
         self.dispatcher = dispatcher
 
         self._routers: dict[str, RouterLoader] = {}
@@ -30,8 +34,13 @@ class RouterManager:
     def resolve_paths(self, directory: StrOrPath) -> Generator[StrOrPath, None, None]:
         """Recursively resolve all router paths in a directory.
 
-        :param directory: Directory to scan.
-        :yield: Path objects for router files.
+        Scans the given directory recursively for Python files that can contain routers.
+        Ignores files and directories starting with underscore `_`
+
+        :param directory: Directory to scan for router files
+        :type directory: StrOrPath
+        :yield: Path objects for router files found in the directory
+        :rtype: Generator[StrOrPath, None, None]
         """
         dir_path = Path(directory)
 
@@ -47,7 +56,13 @@ class RouterManager:
     async def load_routers(self, directory: StrOrPath) -> None:
         """Load all routers from a directory.
 
-        :param directory: Directory containing router files.
+        Scans the directory for Python files containing routers, extracts them,
+        handles name conflicts by adding unique suffixes, and registers them
+        with the dispatcher.
+
+        :param directory: Directory containing router files
+        :type directory: StrOrPath
+        :raises AttributeError: If a router doesn't have a name attribute
         """
         names = set()
         dir_path = Path(directory)
@@ -91,7 +106,11 @@ class RouterManager:
     async def start_watchdog(self, directory: StrOrPath) -> None:
         """Start file watching service.
 
-        :param directory: Directory to watch for changes.
+        Monitors the specified directory for file changes and automatically
+        reloads routers when their corresponding files are modified.
+
+        :param directory: Directory to watch for changes
+        :type directory: StrOrPath
         """
         loggers.core.info("Router watchdog started for: %s", directory)
         async for changes in awatch(directory):

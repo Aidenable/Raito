@@ -7,22 +7,27 @@ if TYPE_CHECKING:
 
 
 class BaseRouter:
-    """Base class providing router linking and unlinking functionality.
-
-    :param router: Optional, router instance to manage.
-    """
+    """Base class providing router linking and unlinking functionality."""
 
     def __init__(self, router: Router | None) -> None:
-        """Initialize the BaseRouter instance."""
+        """Initialize the BaseRouter instance.
+
+        :param router: Router instance to manage
+        :type router: Router | None, optional
+        """
         self._router = router
 
     @property
     def router(self) -> Router | None:
-        """Get the managed router instance."""
+        """Get the managed router instance.
+
+        :return: The managed router instance or None if not set
+        :rtype: Router | None
+        """
         return self._router
 
     def _unlink_from_parent(self) -> None:
-        """Unlink router from its parent."""
+        """Unlink router from its parent router."""
         if not self._router or not self._router.parent_router:
             return
 
@@ -34,7 +39,8 @@ class BaseRouter:
     def _link_to_parent(self, parent: Router) -> None:
         """Link router to a parent router.
 
-        :param parent: Parent router to link to.
+        :param parent: Parent router to link to
+        :type parent: Router
         """
         if self._router and self._router not in parent.sub_routers:
             parent.sub_routers.append(self._router)

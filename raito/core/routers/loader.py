@@ -14,16 +14,7 @@ if TYPE_CHECKING:
 
 
 class RouterLoader(BaseRouter, RouterParser):
-    """A class for loading, unloading and reloading routers dynamically.
-
-    :param name: Unique name of the router.
-    :type name: str
-    :param path: Path to the router file.
-    :type path: str
-    :param dispatcher: Aiogram dispatcher.
-    :param router: Optional, pre-existing router instance, defaults to None
-    :type router: Router, optional
-    """
+    """A class for loading, unloading and reloading routers dynamically."""
 
     def __init__(
         self,
@@ -32,7 +23,17 @@ class RouterLoader(BaseRouter, RouterParser):
         dispatcher: Dispatcher,
         router: Router | None = None,
     ) -> None:
-        """Initialize RouterLoader."""
+        """Initialize RouterLoader.
+
+        :param name: Unique name of the router
+        :type name: str
+        :param path: Path to the router file
+        :type path: StrOrPath
+        :param dispatcher: Aiogram dispatcher
+        :type dispatcher: Dispatcher
+        :param router: Router instance, defaults to None
+        :type router: Router | None, optional
+        """
         super().__init__(router)
 
         self.name = name
@@ -49,7 +50,11 @@ class RouterLoader(BaseRouter, RouterParser):
 
     @property
     def router(self) -> Router:
-        """Get or load the router instance."""
+        """Get or load the router instance.
+
+        :return: The router instance
+        :rtype: Router
+        """
         if self._router is None:
             self._router = self.extract_router(self.path)
             if not hasattr(self._router, "name"):
@@ -72,7 +77,8 @@ class RouterLoader(BaseRouter, RouterParser):
     async def reload(self, timeout: float | None = None) -> None:
         """Reload the router with optional delay.
 
-        :param timeout: Delay in seconds before reloading.
+        :param timeout: Delay in seconds before reloading, defaults to None
+        :type timeout: float | None, optional
         """
         if not self._is_restarting:
             self._is_restarting = True
