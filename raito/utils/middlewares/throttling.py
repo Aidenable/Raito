@@ -21,12 +21,12 @@ class ThrottlingMiddleware(BaseMiddleware):
 
         self.cache: TTLCache[int, bool] = TTLCache(maxsize=self.max_size, ttl=self.rate_limit)
 
-    async def __call__(
+    async def __call__[R: Any, T: types.TelegramObject](
         self,
-        handler: Callable[[types.TelegramObject, dict[str, Any]], Awaitable[Any]],
-        event: types.TelegramObject,
+        handler: Callable[[T, dict[str, Any]], Awaitable[R]],
+        event: T,
         data: dict[str, Any],
-    ) -> Any:
+    ) -> R | None:
         chat_id: int
 
         if isinstance(event, types.Message) and event.from_user and event.bot:
