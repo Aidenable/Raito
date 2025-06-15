@@ -24,5 +24,5 @@ async def unload_router(message: Message, raito: "Raito") -> None:
         await message.answer(f"🔎 Router {html.bold(router_name)} not found", parse_mode="HTML")
         return
 
-    router_loader.unload()
     await message.answer(f"📦 Unloading router {html.bold(router_name)}...", parse_mode="HTML")
+    router_loader.unload()

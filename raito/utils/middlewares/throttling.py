@@ -6,7 +6,7 @@ from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from cachetools import TTLCache
 
 
-class ThrottlingMiddleware(BaseMiddleware):
+class ThrottlingMiddleware(BaseMiddleware):  # type: ignore[misc]
     MODE = Literal["chat", "user", "bot"]
 
     def __init__(

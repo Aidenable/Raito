@@ -6,7 +6,7 @@ from aiogram.types import Message
 PREFIX = ".rt"
 
 
-class RaitoCommand(Filter):
+class RaitoCommand(Filter):  # type: ignore[misc]
     def __init__(self, *commands: str) -> None:
         if not commands:
             raise ValueError("At least one command must be specified")

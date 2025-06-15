@@ -12,6 +12,6 @@ if TYPE_CHECKING:
 router = Router(name="raito.management.list")
 
 
-@router.message(RaitoCommand("list"))
+@router.message(RaitoCommand("list"))  # type: ignore[misc]
 async def list_routers(message: Message, raito: "Raito") -> None:
     await message.answer(ascii_tree(list(raito.manager.loaders.keys())))

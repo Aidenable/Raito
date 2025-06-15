@@ -8,11 +8,11 @@ from raito.utils.filters import RaitoCommand
 if TYPE_CHECKING:
     from raito.core.raito import Raito
 
-router = Router(name="raito.management.load")
+router = Router(name="raito.management.reload")
 
 
-@router.message(RaitoCommand("load"))  # type: ignore[misc]
-async def load_router(message: Message, raito: "Raito") -> None:
+@router.message(RaitoCommand("reload"))  # type: ignore[misc]
+async def reload_router(message: Message, raito: "Raito") -> None:
     args = message.text
     if args is None or len(args.split()) != 3:
         await message.answer("⚠️ Please provide a valid router name")
@@ -26,5 +26,7 @@ async def load_router(message: Message, raito: "Raito") -> None:
         )
         return
 
-    router_loader.load()
-    await message.answer(f"📦 Loading router <b>{html.bold(router_name)}</b>...", parse_mode="HTML")
+    await message.answer(
+        f"📦 Reloading router <b>{html.bold(router_name)}</b>...", parse_mode="HTML"
+    )
+    await router_loader.reload()
