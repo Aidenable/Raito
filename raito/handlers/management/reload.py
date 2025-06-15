@@ -1,3 +1,4 @@
+from asyncio import sleep
 from typing import TYPE_CHECKING
 
 from aiogram import Router, html
@@ -26,7 +27,9 @@ async def reload_router(message: Message, raito: "Raito") -> None:
         )
         return
 
-    await message.answer(
+    msg = await message.answer(
         f"📦 Reloading router <b>{html.bold(router_name)}</b>...", parse_mode="HTML"
     )
     await router_loader.reload()
+    await sleep(0.5)
+    await msg.edit_text(f"✅ Router {html.bold(router_name)} reloaded", parse_mode="HTML")

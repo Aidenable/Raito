@@ -1,3 +1,4 @@
+from asyncio import sleep
 from typing import TYPE_CHECKING
 
 from aiogram import Router, html
@@ -24,5 +25,9 @@ async def unload_router(message: Message, raito: "Raito") -> None:
         await message.answer(f"🔎 Router {html.bold(router_name)} not found", parse_mode="HTML")
         return
 
-    await message.answer(f"📦 Unloading router {html.bold(router_name)}...", parse_mode="HTML")
+    msg = await message.answer(
+        f"📦 Unloading router {html.bold(router_name)}...", parse_mode="HTML"
+    )
     router_loader.unload()
+    await sleep(0.5)
+    await msg.edit_text(f"✅ Router {html.bold(router_name)} unloaded", parse_mode="HTML")
