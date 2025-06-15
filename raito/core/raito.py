@@ -17,7 +17,7 @@ class Raito:
     def __init__(
         self,
         dispatcher: "Dispatcher",
-        routers_dir: StrOrPath,
+        routers_dir: "StrOrPath",
         developers: list[int],
         database: Union["PostgresDsn", str],
         *,
