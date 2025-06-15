@@ -1,8 +1,11 @@
 from collections import defaultdict
+from typing import Any
+
+TreeNode = dict[str, Any]
 
 
-def _build_tree(paths: list[str]) -> dict:
-    def tree() -> defaultdict:
+def _build_tree(paths: list[str]) -> TreeNode:
+    def tree() -> defaultdict[str, Any]:
         return defaultdict(tree)
 
     root = tree()
@@ -13,7 +16,7 @@ def _build_tree(paths: list[str]) -> dict:
     return root
 
 
-def _render_ascii(node: dict, *, _prefix: str = "") -> list[str]:
+def _render_ascii(node: TreeNode, *, _prefix: str = "") -> list[str]:
     lines = []
     items = sorted(node.items())
     last_index = len(items) - 1
