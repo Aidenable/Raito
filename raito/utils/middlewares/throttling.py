@@ -49,7 +49,8 @@ class ThrottlingMiddleware(BaseMiddleware):
             case "bot":
                 key = event.bot.id
             case _:
-                raise ValueError(f"Invalid mode: {self.mode}")
+                msg = f"Invalid mode: {self.mode}"
+                raise ValueError(msg)
 
         if key in self.cache:
             return None
