@@ -93,6 +93,9 @@ extend-select = [
     "RUF", # ruff-specific: best practices from ruff itself
 ]
 
+[tool.ruff.lint.pylint]
+max-args = 10
+
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["ALL"]
 "examples/*" = ["ALL"]
@@ -112,6 +115,4 @@ addopts = "-ra"
 python_files = "tests/test_*.py"
 
 [dependency-groups]
-dev = [
-    "types-cachetools>=6.0.0.20250525",
-]
+dev = ["types-cachetools>=6.0.0.20250525"]
