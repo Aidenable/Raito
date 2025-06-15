@@ -45,8 +45,8 @@ class Raito:
         max_size: int = 10_000,
     ) -> None:
         self.dispatcher.callback_query.outer_middleware(
-            ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size)
+            ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
         )
         self.dispatcher.message.outer_middleware(
-            ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size)
+            ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
         )

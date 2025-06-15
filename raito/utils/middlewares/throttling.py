@@ -10,7 +10,10 @@ class ThrottlingMiddleware(BaseMiddleware):
     MODE = Literal["chat", "user", "bot"]
 
     def __init__(
-        self, rate_limit: float = 0.5, mode: MODE = "chat", max_size: int = 10_000
+        self,
+        rate_limit: float = 0.5,
+        mode: MODE = "chat",
+        max_size: int = 10_000,
     ) -> None:
         self.rate_limit = rate_limit
         self.mode = mode
