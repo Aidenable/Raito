@@ -6,7 +6,7 @@ from aiogram import Dispatcher
 
 from raito.utils.middlewares import ThrottlingMiddleware
 
-from .routers.manager import RoutersManager
+from .routers.manager import RouterManager
 
 if TYPE_CHECKING:
     from aioredis import Redis
@@ -30,7 +30,7 @@ class Raito:
         self.production = production
         self.redis = redis
 
-        self.manager = RoutersManager(dispatcher)
+        self.manager = RouterManager(dispatcher)
 
     async def setup(self) -> None:
         await self.manager.load_routers(self.routers_dir)
