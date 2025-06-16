@@ -31,7 +31,7 @@ class RouterManager:
 
         self.loaders: dict[str, RouterLoader] = {}
 
-    def resolve_paths(self, directory: StrOrPath) -> Generator[StrOrPath, None, None]:
+    def resolve_paths(self, directory: StrOrPath) -> Generator[StrOrPath]:  # pyright: ignore [reportInvalidTypeArguments]
         """Recursively resolve all router paths in a directory.
 
         Scans the given directory recursively for Python files that can contain routers.
