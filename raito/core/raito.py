@@ -66,7 +66,7 @@ class Raito:
         if not self.production:
             create_task(self.manager.start_watchdog(self.routers_dir))  # noqa: RUF006
 
-    async def add_global_throttling(
+    def add_global_throttling(
         self,
         rate_limit: float,
         mode: ThrottlingMiddleware.MODE = "chat",
