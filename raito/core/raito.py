@@ -1,6 +1,7 @@
 from asyncio import create_task
 from typing import TYPE_CHECKING, Optional, Union
 
+from raito.utils.const import ROOT_DIR
 from raito.utils.middlewares import ThrottlingMiddleware
 
 from .routers.manager import RouterManager
@@ -61,12 +62,9 @@ class Raito:
         in development mode for automatic reloading.
         """
         await self.manager.load_routers(self.routers_dir)
+        await self.manager.load_routers(ROOT_DIR / "handlers")
         if not self.production:
             create_task(self.manager.start_watchdog(self.routers_dir))  # noqa: RUF006
-
-    async def _load_routers(self) -> None:
-        await self.manager.load_routers(Path(__file__).parent.parent / "handlers")
-        await self.manager.load_routers(self.routers_dir)
 
     async def add_global_throttling(
         self,
