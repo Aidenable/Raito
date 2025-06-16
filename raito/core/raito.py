@@ -1,6 +1,7 @@
 from asyncio import create_task
 from typing import TYPE_CHECKING, Optional, Union
 
+from raito.utils.configuration import Configuration
 from raito.utils.const import ROOT_DIR
 from raito.utils.middlewares import ThrottlingMiddleware
 
@@ -28,6 +29,7 @@ class Raito:
         database: Union["PostgresDsn", str],
         *,
         production: bool = True,
+        configuration: Configuration | None = None,
         redis: Optional["Redis"] = None,
     ) -> None:
         """Initialize the Raito.
@@ -50,6 +52,7 @@ class Raito:
         self.developers = developers
         self.database = database
         self.production = production
+        self.configuration = configuration or Configuration()
         self.redis = redis
 
         self.manager = RouterManager(dispatcher)
