@@ -120,8 +120,6 @@ class RouterManager:
         """
         loggers.core.info("Router watchdog started for: %s", directory)
         async for changes in awatch(directory, step=500):
-            await self.load_routers(directory)
-
             for event_type, changed_path in changes:
                 path_object = Path(changed_path).resolve()
 
