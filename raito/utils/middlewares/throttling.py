@@ -1,10 +1,12 @@
 from collections.abc import Awaitable, Callable
-from typing import Any, Literal
+from typing import Any, Literal, TypeVar
 
 from aiogram import types
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from cachetools import TTLCache
 
+R = TypeVar("R")
+T = TypeVar("T", bound=types.TelegramObject)
 
 
 class ThrottlingMiddleware(BaseMiddleware):  # type: ignore[misc]
@@ -37,7 +39,7 @@ class ThrottlingMiddleware(BaseMiddleware):  # type: ignore[misc]
 
         self.cache: TTLCache[int, bool] = TTLCache(maxsize=self.max_size, ttl=self.rate_limit)
 
-    async def __call__[R: Any, T: types.TelegramObject](
+    async def __call__(
         self,
         handler: Callable[[T, dict[str, Any]], Awaitable[R]],
         event: T,
