@@ -123,33 +123,42 @@ class RouterManager:
             for event_type, changed_path in changes:
                 path_object = Path(changed_path).resolve()
 
+                current_loader: RouterLoader | None = None
                 for loader in self.loaders.values():
                     if Path(loader.path).resolve() == path_object:
+                        current_loader = loader
                         break
+
+                if not current_loader:
+                    loggers.core.error(
+                        "File changed: %s. No routers found.",
+                        changed_path,
+                    )
+                    continue
 
                 if event_type in (Change.modified, Change.added):
                     loggers.core.info(
                         "File changed: %s. Reloading router '%s'...",
                         changed_path,
-                        loader.name,
+                        current_loader.name,
                     )
 
                     try:
-                        await loader.reload()
+                        await current_loader.reload()
                     except Exception as exc:  # noqa: BLE001
                         loggers.core.error(
                             "Router '%s' has an error '%s'. Unloading router...",
-                            loader.path,
+                            current_loader.path,
                             exc,
                         )
-                        loader.unload()
+                        current_loader.unload()
                         continue
 
                 elif event_type == Change.deleted:
                     loggers.core.info(
                         "File removed: %s. Unloading router '%s'...",
                         changed_path,
-                        loader.name,
+                        current_loader.name,
                     )
-                    loader.unload()
+                    current_loader.unload()
                 break
