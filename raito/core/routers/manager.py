@@ -70,8 +70,8 @@ class RouterManager:
         for file_path in self.resolve_paths(dir_path):
             try:
                 router = RouterParser.extract_router(file_path)
-            except (ModuleNotFoundError, AttributeError) as e:
-                loggers.core.error("Module not found: %s, Error: %s", file_path, e)
+            except Exception as e: # noqa: BLE001
+                loggers.core.error("Router '%s' has an error '%s'. Unloading router...", file_path, e)
                 continue
 
 
@@ -116,7 +116,7 @@ class RouterManager:
         :type directory: StrOrPath
         """
         loggers.core.info("Router watchdog started for: %s", directory)
-        async for changes in awatch(directory):
+        async for changes in awatch(directory, step=500):
             await self.load_routers(directory)
 
             for event_type, changed_path in changes:
@@ -141,4 +141,5 @@ class RouterManager:
                         loader.name,
                     )
                     loader.unload()
+                break
 
