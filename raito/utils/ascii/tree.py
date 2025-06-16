@@ -23,12 +23,12 @@ def _render_ascii(node: TreeNode, *, _prefix: str = "") -> list[str]:
 
     for i, (key, children) in enumerate(items):
         is_last = i == last_index
-        branch = "└" if is_last else "├"
+        branch = "╚" if is_last else "╠"
         suffix = "/" if children else " "
         lines.append(f"{_prefix}{branch} {key}{suffix}")
 
         if children:
-            extension = "  " if is_last else "│ "
+            extension = "  " if is_last else "║ "
             lines.extend(_render_ascii(children, _prefix=_prefix + extension))
     return lines
 
