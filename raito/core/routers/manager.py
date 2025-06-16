@@ -68,16 +68,7 @@ class RouterManager:
         dir_path = Path(directory)
 
         for file_path in self.resolve_paths(dir_path):
-            try:
-                router = RouterParser.extract_router(file_path)
-            except Exception as exc:  # noqa: BLE001
-                loggers.core.error(
-                    "Router '%s' has an error '%s'. Unloading router...",
-                    file_path,
-                    exc,
-                )
-                continue
-
+            router = RouterParser.extract_router(file_path)
             if router.name in self.loaders:
                 continue
 
