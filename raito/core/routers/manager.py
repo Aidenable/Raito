@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from watchfiles import awatch
+from watchfiles import awatch, Change 
 
 from raito.utils import loggers
 
@@ -114,14 +114,18 @@ class RouterManager:
         """
         loggers.core.info("Router watchdog started for: %s", directory)
         async for changes in awatch(directory):
-            for _, changed_path in changes:
-                path_obj = Path(changed_path).resolve()
+            for event_type, changed_path in changes:
+                if event_type == Change.modified or event_type == Change.added:
+                    path_obj = Path(changed_path).resolve()
 
-                for loader in self.loaders.values():
-                    if Path(loader.path).resolve() == path_obj:
-                        loggers.core.info(
-                            "File changed: %s. Reloading router '%s'...",
-                            changed_path,
-                            loader.name,
-                        )
-                        await loader.reload()
+                    for loader in self.loaders.values():
+                        if Path(loader.path).resolve() == path_obj:
+                            loggers.core.info(
+                                "File changed: %s. Reloading router '%s'...",
+                                changed_path,
+                                loader.name,
+                            )
+                            await loader.reload()
+                elif event_type == Change.deleted:
+                    loader.unload()
+
