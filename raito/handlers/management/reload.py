@@ -15,20 +15,24 @@ router = Router(name="raito.management.reload")
 @router.message(RaitoCommand("reload"))  # type: ignore[misc]
 async def reload_router(message: Message, raito: "Raito") -> None:
     args = message.text
-    if args is None or len(args.split()) != 3:
+    name_position = 3
+
+    if args is None or len(args.split()) != name_position:
         await message.answer("⚠️ Please provide a valid router name")
         return
 
-    router_name = args.split()[2]
+    router_name = args.split()[name_position - 1]
     router_loader = raito.manager.loaders.get(router_name)
     if not router_loader:
         await message.answer(
-            f"🔎 Router <b>{html.bold(router_name)}</b> not found", parse_mode="HTML"
+            f"🔎 Router <b>{html.bold(router_name)}</b> not found",
+            parse_mode="HTML",
         )
         return
 
     msg = await message.answer(
-        f"📦 Reloading router <b>{html.bold(router_name)}</b>...", parse_mode="HTML"
+        f"📦 Reloading router <b>{html.bold(router_name)}</b>...",
+        parse_mode="HTML",
     )
     await router_loader.reload()
     await sleep(0.5)
