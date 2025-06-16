@@ -133,7 +133,17 @@ class RouterManager:
                         changed_path,
                         loader.name,
                     )
-                    await loader.reload()
+
+                    try:
+                        await loader.reload()
+                    except Exception as exc:  # noqa: BLE001
+                        loggers.core.error(
+                            "Router '%s' has an error '%s'. Unloading router...",
+                            loader.path,
+                            exc,
+                        )
+                        loader.unload()
+                        continue
 
                 elif event_type == Change.deleted:
                     loggers.core.info(
