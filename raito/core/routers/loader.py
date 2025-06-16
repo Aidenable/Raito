@@ -45,8 +45,26 @@ class RouterLoader(BaseRouter, RouterParser):
         self._parent_router: Router | None = None
         self._sub_routers: list[Router] = []
 
-        self._is_restarting = False
-        self._last_hash: str | None = None
+        self._is_restarting: bool = False
+        self._is_loaded: bool = False
+
+    @property
+    def is_loaded(self) -> bool:
+        """Check whether the router is currently loaded.
+
+        :return: True if the router has been loaded and registered into the dispatcher
+        :rtype: bool
+        """
+        return self._is_loaded
+
+    @property
+    def is_restarting(self) -> bool:
+        """Check whether the router is currently being reloaded.
+
+        :return: True if a reload operation is in progress
+        :rtype: bool
+        """
+        return self._is_restarting
 
     @property
     def router(self) -> Router:
@@ -67,12 +85,14 @@ class RouterLoader(BaseRouter, RouterParser):
             if self._parent_router:
                 self._link_to_parent(self._parent_router)
             self._dispatcher.include_router(router)
+        self._is_loaded = True
 
     def unload(self) -> None:
         """Unload and unregister the router."""
         if self.router:
             self._unlink_from_parent()
             self._router = None
+        self._is_loaded = False
 
     async def reload(self, timeout: float | None = None) -> None:
         """Reload the router with optional delay.

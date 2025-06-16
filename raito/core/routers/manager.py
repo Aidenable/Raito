@@ -29,7 +29,7 @@ class RouterManager:
         """
         self.dispatcher = dispatcher
 
-        self._routers: dict[str, RouterLoader] = {}
+        self.loaders: dict[str, RouterLoader] = {}
 
     def resolve_paths(self, directory: StrOrPath) -> Generator[StrOrPath, None, None]:
         """Recursively resolve all router paths in a directory.
@@ -100,7 +100,7 @@ class RouterManager:
                 router=router,
             )
             loader.load()
-            self._routers[unique_name] = loader
+            self.loaders[unique_name] = loader
             loggers.core.info("Router loaded: %s", unique_name)
 
     async def start_watchdog(self, directory: StrOrPath) -> None:
@@ -117,7 +117,7 @@ class RouterManager:
             for _, changed_path in changes:
                 path_obj = Path(changed_path).resolve()
 
-                for loader in self._routers.values():
+                for loader in self.loaders.values():
                     if Path(loader.path).resolve() == path_obj:
                         loggers.core.info(
                             "File changed: %s. Reloading router '%s'...",

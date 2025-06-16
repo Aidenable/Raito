@@ -6,7 +6,8 @@ from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from cachetools import TTLCache
 
 
-class ThrottlingMiddleware(BaseMiddleware):
+
+class ThrottlingMiddleware(BaseMiddleware):  # type: ignore[misc]
     """Middleware for throttling message and callback query processing.
 
     Prevents spam by limiting the rate at which users can send messages
