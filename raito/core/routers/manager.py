@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from watchfiles import awatch, Change 
+from watchfiles import Change, awatch
 
 from raito.utils import loggers
 
@@ -71,15 +71,18 @@ class RouterManager:
             try:
                 router = RouterParser.extract_router(file_path)
             except (ModuleNotFoundError, AttributeError) as e:
-                loggers.core.error(f"Module not found: {file_path}, Error: {e}")
+                loggers.core.error("Module not found: %s, Error: %s", file_path, e)
+                continue
+
+
+            if router.name in self.loaders:
                 continue
 
             try:
                 unique_name: str = router.name
             except AttributeError as e:
                 msg = "The router has no name"
-                loggers.core.error(f"{msg}, Error: {e}")
-                raise AttributeError(msg) from e  # Preserve original exception
+                raise AttributeError(msg) from e
 
             if router.name in names:
                 suffix = hex(id(router))
@@ -114,18 +117,28 @@ class RouterManager:
         """
         loggers.core.info("Router watchdog started for: %s", directory)
         async for changes in awatch(directory):
-            for event_type, changed_path in changes:
-                if event_type == Change.modified or event_type == Change.added:
-                    path_obj = Path(changed_path).resolve()
+            await self.load_routers(directory)
 
-                    for loader in self.loaders.values():
-                        if Path(loader.path).resolve() == path_obj:
-                            loggers.core.info(
-                                "File changed: %s. Reloading router '%s'...",
-                                changed_path,
-                                loader.name,
-                            )
-                            await loader.reload()
+            for event_type, changed_path in changes:
+                path_object = Path(changed_path).resolve()
+
+                for loader in self.loaders.values():
+                    if Path(loader.path).resolve() == path_object:
+                        break
+
+                if event_type in (Change.modified, Change.added):
+                    loggers.core.info(
+                        "File changed: %s. Reloading router '%s'...",
+                        changed_path,
+                        loader.name,
+                    )
+                    await loader.reload()
+
                 elif event_type == Change.deleted:
+                    loggers.core.info(
+                        "File removed: %s. Unloading router '%s'...",
+                        changed_path,
+                        loader.name,
+                    )
                     loader.unload()
 
