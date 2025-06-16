@@ -74,10 +74,12 @@ line-length = 100
 target-version = "py310"
 
 [tool.ruff.lint]
+select = ["ALL"]
 ignore = [
-    "E501", # line too long
-    "D100", # missing docstring in public module
-    "D104", # missing docstring in public package
+    "E501", # line-too-long
+    "D100", # undocumented-public-module
+    "D104", # undocumented-public-package
+    "D103", # undocumented-public-function
 ]
 fixable = ["ALL"]
 extend-select = [
@@ -90,6 +92,9 @@ extend-select = [
     "UP",  # pyupgrade: outdated syntax for your Python version
     "RUF", # ruff-specific: best practices from ruff itself
 ]
+
+[tool.ruff.lint.pylint]
+max-args = 10
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["ALL"]
@@ -110,6 +115,4 @@ addopts = "-ra"
 python_files = "tests/test_*.py"
 
 [dependency-groups]
-dev = [
-    "types-cachetools>=6.0.0.20250525",
-]
+dev = ["types-cachetools>=6.0.0.20250525"]

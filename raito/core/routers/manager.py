@@ -1,5 +1,5 @@
-from collections.abc import Generator
-from os import listdir, path
+from __future__ import annotations
+
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -8,50 +8,89 @@ from watchfiles import awatch
 from raito.utils import loggers
 
 from .loader import RouterLoader
+from .parser import RouterParser
 
 if TYPE_CHECKING:
+    from collections.abc import Generator
+
     from aiogram import Dispatcher
 
+    from raito.utils.types import StrOrPath
 
-class RoutersManager:
-    def __init__(self, dispatcher: "Dispatcher") -> None:
+
+class RouterManager:
+    """Manages multiple routers and file watching."""
+
+    def __init__(self, dispatcher: Dispatcher) -> None:
+        """Initialize the RouterManager.
+
+        :param dispatcher: Aiogram dispatcher instance
+        :type dispatcher: Dispatcher
+        """
         self.dispatcher = dispatcher
 
         self.loaders: dict[str, RouterLoader] = {}
 
-    def resolve_paths(self, directory: str | Path) -> Generator[Path | str, None, None]:
-        for file_name in listdir(directory):
-            file_path = Path(directory, file_name)
+    def resolve_paths(self, directory: StrOrPath) -> Generator[StrOrPath, None, None]:
+        """Recursively resolve all router paths in a directory.
 
-            if file_name.startswith("_"):  # ignore files with prefix _
+        Scans the given directory recursively for Python files that can contain routers.
+        Ignores files and directories starting with underscore `_`
+
+        :param directory: Directory to scan for router files
+        :type directory: StrOrPath
+        :yield: Path objects for router files found in the directory
+        :rtype: Generator[StrOrPath, None, None]
+        """
+        dir_path = Path(directory)
+
+        for item in dir_path.iterdir():
+            if item.name.startswith("_"):  # ignore files with prefix _
                 continue
 
-            if path.isfile(file_path) and file_name.endswith(".py"):
-                yield file_path
-            elif path.isdir(file_path):
-                yield from self.resolve_paths(file_path)
+            if item.is_file() and item.suffix == ".py":
+                yield item
+            elif item.is_dir():
+                yield from self.resolve_paths(item)
 
-    async def load_routers(self, directory: str | Path) -> None:
+    async def load_routers(self, directory: StrOrPath) -> None:
+        """Load all routers from a directory.
+
+        Scans the directory for Python files containing routers, extracts them,
+        handles name conflicts by adding unique suffixes, and registers them
+        with the dispatcher.
+
+        :param directory: Directory containing router files
+        :type directory: StrOrPath
+        :raises AttributeError: If a router doesn't have a name attribute
+        """
         names = set()
+        dir_path = Path(directory)
 
-        for file_path in self.resolve_paths(directory):
+        for file_path in self.resolve_paths(dir_path):
             try:
-                router = RouterLoader.extract_router(file_path)
-            except ModuleNotFoundError:
-                loggers.core.error("Module not found: %s", file_path)
+                router = RouterParser.extract_router(file_path)
+            except (ModuleNotFoundError, AttributeError) as e:
+                loggers.core.error(f"Module not found: {file_path}, Error: {e}")
                 continue
 
-            unique_name: str = router.name
+            try:
+                unique_name: str = router.name
+            except AttributeError as e:
+                msg = "The router has no name"
+                loggers.core.error(f"{msg}, Error: {e}")
+                raise AttributeError(msg) from e  # Preserve original exception
+
             if router.name in names:
                 suffix = hex(id(router))
                 unique_name = f"{router.name}_{suffix}"
-
                 loggers.core.warning(
                     "Duplicate router name: %s. Will rename to %s...",
                     router.name,
                     unique_name,
                 )
                 router.name = unique_name
+
             names.add(router.name)
 
             loader = RouterLoader(
@@ -64,7 +103,15 @@ class RoutersManager:
             self.loaders[unique_name] = loader
             loggers.core.info("Router loaded: %s", unique_name)
 
-    async def start_watchdog(self, directory: str | Path) -> None:
+    async def start_watchdog(self, directory: StrOrPath) -> None:
+        """Start file watching service.
+
+        Monitors the specified directory for file changes and automatically
+        reloads routers when their corresponding files are modified.
+
+        :param directory: Directory to watch for changes
+        :type directory: StrOrPath
+        """
         loggers.core.info("Router watchdog started for: %s", directory)
         async for changes in awatch(directory):
             for _, changed_path in changes:
@@ -73,7 +120,8 @@ class RoutersManager:
                 for loader in self.loaders.values():
                     if Path(loader.path).resolve() == path_obj:
                         loggers.core.info(
-                            "File changed: %s. Reloading router '%s'...", changed_path, loader.name
+                            "File changed: %s. Reloading router '%s'...",
+                            changed_path,
+                            loader.name,
                         )
                         await loader.reload()
-                        break
