@@ -80,6 +80,8 @@ ignore = [
     "D100", # undocumented-public-module
     "D104", # undocumented-public-package
     "D103", # undocumented-public-function
+    "D203", # one-blank-line-before-class
+    "D213", # multi-line-summary-second-line
 ]
 fixable = ["ALL"]
 extend-select = [
