@@ -61,6 +61,8 @@ dev = [
 ]
 docs = ["sphinx", "furo", "sphinx-autodoc-typehints"]
 redis = ["redis>=6.2.0"]
+postgresql = ["sqlalchemy[asyncio]>=2.0.0", "asyncpg>=0.29.0"]
+sqlite = ["sqlalchemy[asyncio]>=2.0.0", "aiosqlite>=0.20.0"]
 
 [project.urls]
 Repository = "https://github.com/Aidenable/raito"
