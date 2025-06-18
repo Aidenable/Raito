@@ -7,9 +7,11 @@ from raito.plugins.roles.data import Role
 class IRoleProvider(Protocol):
     """Protocol for providers that manage user roles."""
 
-    async def get_role(self, user_id: int) -> Role | None:
+    async def get_role(self, bot_id: int, user_id: int) -> Role | None:
         """Get the role for a specific user.
 
+        :param bot_id: The Telegram bot ID
+        :type bot_id: int
         :param user_id: The Telegram user ID
         :type user_id: int
         :return: The user's role or None if not found
@@ -17,9 +19,11 @@ class IRoleProvider(Protocol):
         """
         ...
 
-    async def set_role(self, user_id: int, role: Role) -> None:
+    async def set_role(self, bot_id: int, user_id: int, role: Role) -> None:
         """Set the role for a specific user.
 
+        :param bot_id: The Telegram bot ID
+        :type bot_id: int
         :param user_id: The Telegram user ID
         :type user_id: int
         :param role: The role to assign
@@ -27,9 +31,11 @@ class IRoleProvider(Protocol):
         """
         ...
 
-    async def remove_role(self, user_id: int) -> None:
+    async def remove_role(self, bot_id: int, user_id: int) -> None:
         """Remove the role for a specific user.
 
+        :param bot_id: The Telegram bot ID
+        :type bot_id: int
         :param user_id: The Telegram user ID
         :type user_id: int
         """

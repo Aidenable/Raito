@@ -61,7 +61,7 @@ class RoleMiddleware(BaseMiddleware):
         """
         user_id: int
 
-        if isinstance(event, Message | CallbackQuery) and event.from_user:
+        if isinstance(event, Message | CallbackQuery) and event.from_user and event.bot:
             user_id = event.from_user.id
         else:
             return await handler(event, data)
@@ -77,7 +77,7 @@ class RoleMiddleware(BaseMiddleware):
             raise RuntimeError(msg)
 
         roles = handler_object.flags.get(self.flag_name, [])
-        if not await raito.role_manager.has_any_roles(user_id, *roles):
+        if not await raito.role_manager.has_any_roles(event.bot.id, user_id, *roles):
             await self._answer(event, "🚫 Access denied")
             return None
 

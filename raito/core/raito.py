@@ -1,8 +1,12 @@
 from asyncio import create_task
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING
 
-from raito.plugins.roles.manager import RoleManager
-from raito.plugins.roles.providers.memory import MemoryRoleProvider
+from aiogram.fsm.storage.base import BaseStorage
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.fsm.storage.redis import RedisStorage
+
+from raito.plugins.roles import IRoleProvider, MemoryRoleProvider, RoleManager
+from raito.plugins.roles.providers.base import BaseRoleProvider
 from raito.utils.configuration import Configuration
 from raito.utils.const import ROOT_DIR
 from raito.utils.middlewares import ThrottlingMiddleware
@@ -11,8 +15,6 @@ from .routers.manager import RouterManager
 
 if TYPE_CHECKING:
     from aiogram import Dispatcher
-    from aioredis import Redis
-    from pydantic import PostgresDsn
 
     from raito.utils.types import StrOrPath
 
@@ -28,11 +30,10 @@ class Raito:
         dispatcher: "Dispatcher",
         routers_dir: "StrOrPath",
         developers: list[int],
-        database: Union["PostgresDsn", str],
         *,
         production: bool = True,
         configuration: Configuration | None = None,
-        redis: Optional["Redis"] = None,
+        storage: BaseStorage | None = None,
     ) -> None:
         """Initialize the Raito.
 
@@ -42,25 +43,26 @@ class Raito:
         :type routers_dir: StrOrPath
         :param developers: List of developer user IDs with special privileges
         :type developers: list[int]
-        :param database: Database connection string
-        :type database: PostgresDsn | str
         :param production: Whether running in production mode, defaults to True
         :type production: bool, optional
-        :param redis: Redis connection instance for caching, defaults to None
-        :type redis: Redis | None, optional
+        :param configuration: Configuration instance, defaults to Configuration()
+        :type configuration: Configuration | None, optional
+        :param storage: Aiogram storage instance for storing data, default None
+        :type storage: BaseStorage | None, optional
         """
         self.dispatcher = dispatcher
         self.routers_dir = routers_dir
         self.developers = developers
-        self.database = database
         self.production = production
         self.configuration = configuration or Configuration()
-        self.redis = redis
+        self.storage = storage or MemoryStorage()
 
         self.router_manager = RouterManager(dispatcher)
         self.dispatcher["raito"] = self
 
-        self._role_provider = MemoryRoleProvider()
+        self._role_provider = self.configuration.role_provider or self._get_role_provider(
+            self.storage,
+        )
         self.role_manager = RoleManager(self._role_provider, developers=self.developers)
 
     async def setup(self) -> None:
@@ -100,3 +102,21 @@ class Raito:
         self.dispatcher.message.outer_middleware(
             ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
         )
+
+    def _get_role_provider(self, storage: BaseStorage) -> "IRoleProvider":
+        """Get the current role provider based on storage.
+
+        :return: Role provider instance
+        :rtype: IRoleProvider
+        """
+        if isinstance(storage, MemoryStorage):
+            return MemoryRoleProvider(storage)
+        if isinstance(storage, RedisStorage):
+            try:
+                from raito.plugins.roles import RedisRoleProvider  # noqa: PLC0415
+            except ImportError as exc:
+                msg = "RedisRoleProvider requires redis package. Install it using `pip install raito[redis]`"
+                raise ImportError(msg) from exc
+
+            return RedisRoleProvider(storage)
+        return BaseRoleProvider(storage)

@@ -88,6 +88,9 @@ async def assign_role(message: Message, raito: "Raito", state: FSMContext) -> No
     if not message.text or not message.text.isdigit():
         await message.answer("🚫 Invalid user ID")
         return
+    if not message.bot:
+        await message.answer("🚫 Bot instance not found")
+        return
 
     await state.update_data(rt_selected_role=None)
     await state.set_state()
@@ -95,6 +98,7 @@ async def assign_role(message: Message, raito: "Raito", state: FSMContext) -> No
     role = Role(role_index)
     try:
         await raito.role_manager.assign_role(
+            message.bot.id,
             message.from_user.id,
             int(message.text),
             role,
