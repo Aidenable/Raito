@@ -1,6 +1,8 @@
 from asyncio import create_task
 from typing import TYPE_CHECKING, Optional, Union
 
+from raito.plugins.roles.manager import RoleManager
+from raito.plugins.roles.providers.memory import MemoryRoleProvider
 from raito.utils.configuration import Configuration
 from raito.utils.const import ROOT_DIR
 from raito.utils.middlewares import ThrottlingMiddleware
@@ -55,8 +57,11 @@ class Raito:
         self.configuration = configuration or Configuration()
         self.redis = redis
 
-        self.manager = RouterManager(dispatcher)
+        self.router_manager = RouterManager(dispatcher)
         self.dispatcher["raito"] = self
+
+        self._role_provider = MemoryRoleProvider()
+        self.role_manager = RoleManager(self._role_provider, developers=self.developers)
 
     async def setup(self) -> None:
         """Set up the Raito by loading routers and starting watchdog.
@@ -64,10 +69,13 @@ class Raito:
         Loads all routers from the specified directory and starts file watching
         in development mode for automatic reloading.
         """
-        await self.manager.load_routers(self.routers_dir)
-        await self.manager.load_routers(ROOT_DIR / "handlers")
+        await self.role_manager.initialize(self.dispatcher)
+
+        await self.router_manager.load_routers(self.routers_dir)
+        await self.router_manager.load_routers(ROOT_DIR / "handlers")
+
         if not self.production:
-            create_task(self.manager.start_watchdog(self.routers_dir))  # noqa: RUF006
+            create_task(self.router_manager.start_watchdog(self.routers_dir))  # noqa: RUF006
 
     def add_global_throttling(
         self,
