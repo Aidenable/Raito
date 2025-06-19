@@ -23,7 +23,7 @@ class Emojis(NamedTuple):
     not_found: str
 
 
-@router.message(RaitoCommand("list"))
+@router.message(RaitoCommand("routers"))
 @roles(Role.DEVELOPER)
 async def list_routers(message: Message, raito: "Raito") -> None:
     match raito.configuration.router_list_style:
