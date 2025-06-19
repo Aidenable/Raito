@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from aiogram import Router, html
 from aiogram.types import Message
 
+from raito.plugins.roles import Role, roles
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
@@ -12,7 +13,8 @@ if TYPE_CHECKING:
 router = Router(name="raito.management.reload")
 
 
-@router.message(RaitoCommand("reload"))  # type: ignore[misc]
+@router.message(RaitoCommand("reload"))
+@roles(Role.DEVELOPER)
 async def reload_router(message: Message, raito: "Raito") -> None:
     args = message.text
     name_position = 3
@@ -22,7 +24,7 @@ async def reload_router(message: Message, raito: "Raito") -> None:
         return
 
     router_name = args.split()[name_position - 1]
-    router_loader = raito.manager.loaders.get(router_name)
+    router_loader = raito.router_manager.loaders.get(router_name)
     if not router_loader:
         await message.answer(
             f"🔎 Router <b>{html.bold(router_name)}</b> not found",

@@ -2,6 +2,8 @@ from enum import IntEnum, unique
 
 from pydantic import BaseModel
 
+from raito.plugins.roles import IRoleProvider
+
 
 class Configuration(BaseModel):
     """Raito configuration."""
@@ -16,3 +18,9 @@ class Configuration(BaseModel):
         RHOMBUSES_REVERSED = 3
 
     router_list_style: RouterListStyle = RouterListStyle.RHOMBUSES
+    role_provider: IRoleProvider | None = None
+
+    class Config:
+        """Pydantic settings."""
+
+        arbitrary_types_allowed = True
