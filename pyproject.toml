@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "raito"
-version = "1.0.0.dev"
+version = "1.0.0.b0"
 description = "REPL, hot-reload, keyboards, pagination, and internal dev tools — all in one. That's Raito."
 authors = [{ name = "Aiden", email = "aidenthedev@gmail.com" }]
 license = "MIT"
