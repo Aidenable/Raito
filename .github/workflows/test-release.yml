@@ -9,8 +9,6 @@ on:
 
 jobs:
   deploy:
-    if: false
-
     name: 📦 Deploy to TestPyPI
     runs-on: ubuntu-latest
 

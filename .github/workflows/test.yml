@@ -7,8 +7,6 @@ on:
 
 jobs:
   test:
-    if: false
-
     name: 🧪 Lint & Test on Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
 
