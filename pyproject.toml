@@ -96,6 +96,8 @@ extend-select = [
     "I",   # isort: import sorting
     "UP",  # pyupgrade: outdated syntax for your Python version
     "RUF", # ruff-specific: best practices from ruff itself
+    "ANN", # flake8-annotations: type annotations
+    "BLE", # flake8-blind-except: ignore base exceptions without an exception type
 ]
 
 [tool.ruff.lint.pylint]
