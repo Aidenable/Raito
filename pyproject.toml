@@ -58,6 +58,7 @@ dev = [
     "ipdb",
     "pre-commit",
     "types-cachetools>=6.0.0.20250525",
+    "python-dotenv",
 ]
 docs = ["sphinx", "furo", "sphinx-autodoc-typehints"]
 redis = ["redis>=6.2.0"]
