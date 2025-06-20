@@ -10,7 +10,6 @@ if TYPE_CHECKING:
     from raito.core.raito import Raito
 
 R = TypeVar("R")
-T = TypeVar("T", bound=TelegramObject)
 
 
 class RoleMiddleware(BaseMiddleware):
@@ -42,8 +41,8 @@ class RoleMiddleware(BaseMiddleware):
 
     async def __call__(
         self,
-        handler: Callable[[T, dict[str, Any]], Awaitable[R]],
-        event: T,
+        handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[R]],
+        event: TelegramObject,
         data: dict[str, Any],
     ) -> R | None:
         """Process incoming events with role checking logic.

@@ -111,7 +111,7 @@ class SQLAlchemyStorage(BaseStorage):
             parts.append(key.destiny)
         return self.key_separator.join(parts)
 
-    async def get_state(self, key: StorageKey) -> str | None:
+    async def get_state(self, key: StorageKey) -> Any | None:  # noqa: ANN401
         """Get key state.
 
         :param key: Storage key

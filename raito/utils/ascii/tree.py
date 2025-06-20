@@ -133,7 +133,7 @@ class AsciiTree:
         if not root.children:
             return ""
 
-        lines = []
+        lines: list[str] = []
         self._render_children(root.children, "", lines)
         return "\n".join(lines)
 

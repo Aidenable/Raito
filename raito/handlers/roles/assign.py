@@ -1,10 +1,14 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from aiogram import F, Router, html
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, Message
+from aiogram.types import (
+    CallbackQuery,
+    InlineKeyboardMarkup,
+    Message,
+)
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from raito.plugins.roles import Role, roles
@@ -37,8 +41,7 @@ def roles_list_markup() -> InlineKeyboardMarkup:
             callback_data=AssignRoleCallback(role_index=index),
         )
 
-    adjusted: InlineKeyboardBuilder = builder.adjust(2)  # type: ignore [reportAssignmentType]
-    return adjusted.as_markup()
+    return cast(InlineKeyboardMarkup, builder.adjust(2).as_markup())
 
 
 @router.message(RaitoCommand("roles", "assign"))

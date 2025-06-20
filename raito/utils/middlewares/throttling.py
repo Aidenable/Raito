@@ -1,15 +1,14 @@
 from collections.abc import Awaitable, Callable
 from typing import Any, Literal, TypeVar
 
-from aiogram import types
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
+from aiogram.types import CallbackQuery, Message, TelegramObject
 from cachetools import TTLCache
 
 R = TypeVar("R")
-T = TypeVar("T", bound=types.TelegramObject)
 
 
-class ThrottlingMiddleware(BaseMiddleware):  # type: ignore[misc]
+class ThrottlingMiddleware(BaseMiddleware):
     """Middleware for throttling message and callback query processing.
 
     Prevents spam by limiting the rate at which users can send messages
@@ -41,8 +40,8 @@ class ThrottlingMiddleware(BaseMiddleware):  # type: ignore[misc]
 
     async def __call__(
         self,
-        handler: Callable[[T, dict[str, Any]], Awaitable[R]],
-        event: T,
+        handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[R]],
+        event: TelegramObject,
         data: dict[str, Any],
     ) -> R | None:
         """Process incoming events with throttling logic.
@@ -62,14 +61,9 @@ class ThrottlingMiddleware(BaseMiddleware):  # type: ignore[misc]
         """
         chat_id: int
 
-        if isinstance(event, types.Message) and event.from_user and event.bot:
+        if isinstance(event, Message) and event.from_user and event.bot:
             chat_id = event.chat.id
-        elif (
-            isinstance(event, types.CallbackQuery)
-            and event.message
-            and event.from_user
-            and event.bot
-        ):
+        elif isinstance(event, CallbackQuery) and event.message and event.from_user and event.bot:
             chat_id = event.message.chat.id
         else:
             return await handler(event, data)

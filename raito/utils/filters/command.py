@@ -6,7 +6,7 @@ from aiogram.types import Message
 PREFIX = ".rt"
 
 
-class RaitoCommand(Filter):  # type: ignore[misc]
+class RaitoCommand(Filter):
     """A filter for Raito bot commands.
 
     This class filters messages that match the Raito command format:
