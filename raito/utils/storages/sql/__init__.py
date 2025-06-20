@@ -18,9 +18,7 @@ def get_sqlite_storage() -> type["SQLiteStorage"]: ...
 def get_sqlite_storage(*, throw: bool = False) -> type["SQLiteStorage"] | None: ...
 def get_sqlite_storage(*, throw: bool = True) -> type["SQLiteStorage"] | None:
     try:
-        from .sqlite import (  # type: ignore[import-untyped]  # noqa: PLC0415
-            SQLiteStorage,
-        )
+        from .sqlite import SQLiteStorage
     except ImportError as exc:
         if not throw:
             return None
@@ -37,9 +35,7 @@ def get_postgresql_storage() -> type["PostgreSQLStorage"]: ...
 def get_postgresql_storage(*, throw: bool = False) -> type["PostgreSQLStorage"] | None: ...
 def get_postgresql_storage(*, throw: bool = True) -> type["PostgreSQLStorage"] | None:
     try:
-        from .postgresql import (  # type: ignore[import-untyped]  # noqa: PLC0415
-            PostgreSQLStorage,
-        )
+        from .postgresql import PostgreSQLStorage
     except ImportError as exc:
         if not throw:
             return None
@@ -52,9 +48,7 @@ def get_postgresql_storage(*, throw: bool = True) -> type["PostgreSQLStorage"] |
 
 def get_redis_storage(*, throw: bool = True) -> type["RedisStorage"] | None:
     try:
-        from aiogram.fsm.storage.redis import (  # type: ignore[import-untyped]  # noqa: PLC0415
-            RedisStorage,
-        )
+        from aiogram.fsm.storage.redis import RedisStorage
     except ImportError as exc:
         if not throw:
             return None

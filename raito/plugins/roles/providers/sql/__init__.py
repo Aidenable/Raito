@@ -16,9 +16,7 @@ def get_sqlite_provider() -> type["SQLiteRoleProvider"]: ...
 def get_sqlite_provider(*, throw: bool = False) -> type["SQLiteRoleProvider"] | None: ...
 def get_sqlite_provider(*, throw: bool = True) -> type["SQLiteRoleProvider"] | None:
     try:
-        from .sqlite import (  # type: ignore[import-untyped]  # noqa: PLC0415
-            SQLiteRoleProvider,
-        )
+        from .sqlite import SQLiteRoleProvider
     except ImportError as exc:
         if not throw:
             return None
@@ -35,9 +33,7 @@ def get_postgresql_provider() -> type["PostgreSQLRoleProvider"]: ...
 def get_postgresql_provider(*, throw: bool = False) -> type["PostgreSQLRoleProvider"] | None: ...
 def get_postgresql_provider(*, throw: bool = True) -> type["PostgreSQLRoleProvider"] | None:
     try:
-        from .postgresql import (  # type: ignore[import-untyped]  # noqa: PLC0415
-            PostgreSQLRoleProvider,
-        )
+        from .postgresql import PostgreSQLRoleProvider
     except ImportError as exc:
         if not throw:
             return None

@@ -24,9 +24,7 @@ def get_redis_provider() -> type["RedisRoleProvider"]: ...
 def get_redis_provider(*, throw: bool = False) -> type["RedisRoleProvider"] | None: ...
 def get_redis_provider(*, throw: bool = True) -> type["RedisRoleProvider"] | None:
     try:
-        from .redis import (  # type: ignore[import-untyped]  # noqa: PLC0415
-            RedisRoleProvider,
-        )
+        from .redis import RedisRoleProvider
     except ImportError as exc:
         if not throw:
             return None
