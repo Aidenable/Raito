@@ -1,36 +1,30 @@
 from asyncio import create_task
-from contextlib import suppress
 from typing import TYPE_CHECKING
 
 from aiogram.fsm.storage.base import BaseStorage
 from aiogram.fsm.storage.memory import MemoryStorage
 
-from raito.plugins.roles import IRoleProvider, MemoryRoleProvider, RoleManager
-from raito.plugins.roles.providers.base import BaseRoleProvider
+from raito.plugins.roles import (
+    BaseRoleProvider,
+    IRoleProvider,
+    MemoryRoleProvider,
+    RoleManager,
+)
+from raito.plugins.roles.providers import get_redis_provider
+from raito.plugins.roles.providers.sql import (
+    get_postgresql_provider,
+    get_sqlite_provider,
+)
 from raito.utils.configuration import Configuration
 from raito.utils.const import ROOT_DIR
 from raito.utils.middlewares import ThrottlingMiddleware
+from raito.utils.storages import (
+    get_postgresql_storage,
+    get_sqlite_storage,
+)
+from raito.utils.storages.sql import get_redis_storage
 
 from .routers.manager import RouterManager
-
-RedisStorage = RedisRoleProvider = None
-SQLiteStorage = SQLiteRoleProvider = None
-PostgreSQLStorage = PostgreSQLRoleProvider = None
-
-with suppress(ImportError):
-    from aiogram.fsm.storage.redis import RedisStorage
-
-    from raito.plugins.roles import RedisRoleProvider
-
-
-with suppress(ImportError):
-    from raito.plugins.roles import SQLiteRoleProvider
-    from raito.utils.storages.sql.sqlite import SQLiteStorage
-
-with suppress(ImportError):
-    from raito.plugins.roles import PostgreSQLRoleProvider
-    from raito.utils.storages.sql.postgresql import PostgreSQLStorage
-
 
 if TYPE_CHECKING:
     from aiogram import Dispatcher
@@ -133,22 +127,16 @@ class Raito:
         if isinstance(storage, MemoryStorage):
             return MemoryRoleProvider(storage)
 
-        if RedisStorage and isinstance(storage, RedisStorage):
-            if not RedisRoleProvider:
-                msg = "RedisRoleProvider requires redis package. Install it using `pip install raito[redis]`"
-                raise ImportError(msg)
-            return RedisRoleProvider(storage)
+        redis_storage = get_redis_storage(throw=False)
+        if redis_storage is not None and isinstance(storage, redis_storage):
+            return get_redis_provider()(storage)
 
-        if PostgreSQLStorage and isinstance(storage, PostgreSQLStorage):
-            if not PostgreSQLRoleProvider:
-                msg = "PostgreSQLRoleProvider requires postgresql package. Install it using `pip install raito[postgresql]`"
-                raise ImportError(msg)
-            return PostgreSQLRoleProvider(storage)
+        postgresql_storage = get_postgresql_storage(throw=False)
+        if postgresql_storage is not None and isinstance(storage, postgresql_storage):
+            return get_postgresql_provider()(storage)
 
-        if SQLiteStorage and isinstance(storage, SQLiteStorage):
-            if not SQLiteRoleProvider:
-                msg = "SQLiteRoleProvider requires sqlite3 package. Install it using `pip install raito[sqlite]`"
-                raise ImportError(msg)
-            return SQLiteRoleProvider(storage)
+        sqlite_storage = get_sqlite_storage(throw=False)
+        if sqlite_storage is not None and isinstance(storage, sqlite_storage):
+            return get_sqlite_provider()(storage)
 
         return BaseRoleProvider(storage)

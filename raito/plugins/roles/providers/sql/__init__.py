@@ -1,9 +1,48 @@
-from .postgresql import PostgreSQLRoleProvider
-from .sqlalchemy import SQLAlchemyRoleProvider
-from .sqlite import SQLiteRoleProvider
+from typing import TYPE_CHECKING, overload
 
 __all__ = (
-    "PostgreSQLRoleProvider",
-    "SQLAlchemyRoleProvider",
-    "SQLiteRoleProvider",
+    "get_postgresql_provider",
+    "get_sqlite_provider",
 )
+
+if TYPE_CHECKING:
+    from .postgresql import PostgreSQLRoleProvider
+    from .sqlite import SQLiteRoleProvider
+
+
+@overload
+def get_sqlite_provider() -> type["SQLiteRoleProvider"]: ...
+@overload
+def get_sqlite_provider(*, throw: bool = False) -> type["SQLiteRoleProvider"] | None: ...
+def get_sqlite_provider(*, throw: bool = True) -> type["SQLiteRoleProvider"] | None:
+    try:
+        from .sqlite import (  # type: ignore[import-untyped]  # noqa: PLC0415
+            SQLiteRoleProvider,
+        )
+    except ImportError as exc:
+        if not throw:
+            return None
+
+        msg = "SQLiteRoleProvider requires :code:`aiosqlite` package. Install it using :code:`pip install raito[sqlite]`"
+        raise ImportError(msg) from exc
+
+    return SQLiteRoleProvider
+
+
+@overload
+def get_postgresql_provider() -> type["PostgreSQLRoleProvider"]: ...
+@overload
+def get_postgresql_provider(*, throw: bool = False) -> type["PostgreSQLRoleProvider"] | None: ...
+def get_postgresql_provider(*, throw: bool = True) -> type["PostgreSQLRoleProvider"] | None:
+    try:
+        from .postgresql import (  # type: ignore[import-untyped]  # noqa: PLC0415
+            PostgreSQLRoleProvider,
+        )
+    except ImportError as exc:
+        if not throw:
+            return None
+
+        msg = "PostgreSQLRoleProvider requires :code:`asyncpg`, :code:`sqlalchemy` package. Install it using :code:`pip install raito[postgresql]`"
+        raise ImportError(msg) from exc
+
+    return PostgreSQLRoleProvider

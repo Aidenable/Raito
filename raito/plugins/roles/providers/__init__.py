@@ -1,31 +1,39 @@
-from contextlib import suppress
+from typing import TYPE_CHECKING, overload
 
+from .base import BaseRoleProvider
 from .memory import MemoryRoleProvider
 from .protocol import IRoleProvider
+from .sql import get_postgresql_provider, get_sqlite_provider
 
-RedisRoleProvider = None
-SQLiteRoleProvider = None
-PostgreSQLRoleProvider = None
-
-with suppress(ImportError):
+if TYPE_CHECKING:
     from .redis import RedisRoleProvider
 
-with suppress(ImportError):
-    from .sql.postgresql import PostgreSQLRoleProvider
-
-with suppress(ImportError):
-    from .sql.sqlite import SQLiteRoleProvider
-
-__all__ = [
+__all__ = (
+    "BaseRoleProvider",
     "IRoleProvider",
     "MemoryRoleProvider",
-]
+    "get_postgresql_provider",
+    "get_redis_provider",
+    "get_sqlite_provider",
+)
 
-if RedisRoleProvider is not None:
-    __all__ += ["RedisRoleProvider"]
 
-if PostgreSQLRoleProvider is not None:
-    __all__ += ["PostgreSQLRoleProvider"]
+@overload
+def get_redis_provider() -> type["RedisRoleProvider"]: ...
+@overload
+def get_redis_provider(*, throw: bool = False) -> type["RedisRoleProvider"] | None: ...
+def get_redis_provider(*, throw: bool = True) -> type["RedisRoleProvider"] | None:
+    try:
+        from .redis import (  # type: ignore[import-untyped]  # noqa: PLC0415
+            RedisRoleProvider,
+        )
+    except ImportError as exc:
+        if not throw:
+            return None
 
-if SQLiteRoleProvider is not None:
-    __all__ += ["SQLiteRoleProvider"]
+        msg = (
+            "RedisRoleProvider requires redis package. Install it using `pip install raito[redis]`"
+        )
+        raise ImportError(msg) from exc
+
+    return RedisRoleProvider
