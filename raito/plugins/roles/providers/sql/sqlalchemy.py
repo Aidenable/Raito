@@ -17,6 +17,8 @@ from raito.plugins.roles.data import Role
 from raito.plugins.roles.providers.protocol import IRoleProvider
 from raito.utils.storages.sql.sqlalchemy import SQLAlchemyStorage
 
+__all__ = ("SQLAlchemyRoleProvider",)
+
 metadata = MetaData()
 
 roles_table = Table(

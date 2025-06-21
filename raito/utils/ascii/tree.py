@@ -3,6 +3,13 @@ from typing import NamedTuple, Optional
 
 from pydantic import BaseModel
 
+__all__ = (
+    "NodeParts",
+    "TreeChars",
+    "TreeNode",
+    "dot_paths_to_tree",
+)
+
 
 class TreeChars(BaseModel):
     """Tree branch characters for ASCII tree rendering."""

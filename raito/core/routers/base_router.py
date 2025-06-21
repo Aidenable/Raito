@@ -5,6 +5,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from aiogram import Router
 
+__all__ = ("BaseRouter",)
+
 
 class BaseRouter:
     """Base class providing router linking and unlinking functionality."""

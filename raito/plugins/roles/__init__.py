@@ -1,6 +1,7 @@
-from .data import ROLES_DATA, Role
+from .data import Role
 from .flags import roles
 from .manager import RoleManager
+from .middleware import RoleMiddleware
 from .providers import (
     BaseRoleProvider,
     IRoleProvider,
@@ -11,12 +12,12 @@ from .providers import (
 )
 
 __all__ = (
-    "ROLES_DATA",
     "BaseRoleProvider",
     "IRoleProvider",
     "MemoryRoleProvider",
     "Role",
     "RoleManager",
+    "RoleMiddleware",
     "get_postgresql_provider",
     "get_redis_provider",
     "get_sqlite_provider",

@@ -7,6 +7,8 @@ from cachetools import TTLCache
 
 R = TypeVar("R")
 
+__all__ = ("ThrottlingMiddleware",)
+
 
 class ThrottlingMiddleware(BaseMiddleware):
     """Middleware for throttling message and callback query processing.

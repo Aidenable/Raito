@@ -13,6 +13,9 @@ if TYPE_CHECKING:
     from raito.utils.types import StrOrPath
 
 
+__all__ = ("RouterLoader",)
+
+
 class RouterLoader(BaseRouter, RouterParser):
     """A class for loading, unloading and reloading routers dynamically."""
 

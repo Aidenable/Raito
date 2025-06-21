@@ -10,6 +10,9 @@ if TYPE_CHECKING:
     from raito.utils.types import StrOrPath
 
 
+__all__ = ("RouterParser",)
+
+
 class RouterParser:
     """Parses routers from Python files."""
 

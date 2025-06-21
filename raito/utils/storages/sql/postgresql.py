@@ -9,6 +9,8 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 from .sqlalchemy import SQLAlchemyStorage, storage_table
 
+__all__ = ("PostgreSQLStorage",)
+
 
 class PostgreSQLStorage(SQLAlchemyStorage):
     """PostgreSQL storage for FSM.

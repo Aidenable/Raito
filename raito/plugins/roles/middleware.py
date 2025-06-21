@@ -12,6 +12,9 @@ if TYPE_CHECKING:
 R = TypeVar("R")
 
 
+__all__ = ("RoleMiddleware",)
+
+
 class RoleMiddleware(BaseMiddleware):
     """Middleware for checking user roles.
 

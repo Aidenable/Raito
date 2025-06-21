@@ -11,6 +11,9 @@ if TYPE_CHECKING:
     from aiogram import Dispatcher
 
 
+__all__ = ("RoleManager",)
+
+
 class RoleManager:
     """Central manager for role-based access control in Raito."""
 

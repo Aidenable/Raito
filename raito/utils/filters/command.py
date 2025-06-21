@@ -5,6 +5,8 @@ from aiogram.types import Message
 
 PREFIX = ".rt"
 
+__all__ = ("RaitoCommand",)
+
 
 class RaitoCommand(Filter):
     """A filter for Raito bot commands.

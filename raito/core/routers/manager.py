@@ -17,6 +17,8 @@ if TYPE_CHECKING:
 
     from raito.utils.types import StrOrPath
 
+__all__ = ("RouterManager",)
+
 
 class RouterManager:
     """Manages multiple routers and file watching."""

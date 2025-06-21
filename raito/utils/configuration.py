@@ -4,6 +4,8 @@ from pydantic import BaseModel
 
 from raito.plugins.roles import IRoleProvider
 
+__all__ = ("Configuration",)
+
 
 class Configuration(BaseModel):
     """Raito configuration."""

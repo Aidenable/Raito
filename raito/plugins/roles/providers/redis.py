@@ -3,6 +3,8 @@ from aiogram.fsm.storage.redis import RedisStorage
 from .base import BaseRoleProvider
 from .protocol import IRoleProvider
 
+__all__ = ("RedisRoleProvider",)
+
 
 class RedisRoleProvider(BaseRoleProvider, IRoleProvider):
     """Redis-based role provider for testing and development.

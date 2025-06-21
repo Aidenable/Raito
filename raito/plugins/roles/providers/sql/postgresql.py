@@ -5,6 +5,8 @@ from raito.plugins.roles.data import Role
 
 from .sqlalchemy import SQLAlchemyRoleProvider, roles_table
 
+__all__ = ("PostgreSQLRoleProvider",)
+
 
 class PostgreSQLRoleProvider(SQLAlchemyRoleProvider):
     """PostgreSQL-based role provider.

@@ -4,6 +4,8 @@ from raito.plugins.roles.data import Role
 
 from .protocol import IRoleProvider
 
+__all__ = ("BaseRoleProvider",)
+
 
 class BaseRoleProvider(IRoleProvider):
     """Base role provider class."""

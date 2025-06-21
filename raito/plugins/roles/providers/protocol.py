@@ -2,6 +2,8 @@ from typing import Protocol, runtime_checkable
 
 from raito.plugins.roles.data import Role
 
+__all__ = ("IRoleProvider",)
+
 
 @runtime_checkable
 class IRoleProvider(Protocol):

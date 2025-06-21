@@ -19,6 +19,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
+__all__ = ("SQLAlchemyStorage",)
+
 metadata = MetaData()
 
 storage_table = Table(
