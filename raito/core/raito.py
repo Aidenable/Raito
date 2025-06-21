@@ -15,6 +15,7 @@ from raito.plugins.roles.providers.sql import (
     get_postgresql_provider,
     get_sqlite_provider,
 )
+from raito.utils import loggers
 from raito.utils.configuration import Configuration
 from raito.utils.const import ROOT_DIR
 from raito.utils.middlewares import ThrottlingMiddleware
@@ -86,6 +87,11 @@ class Raito:
         Loads all routers from the specified directory and starts file watching
         in development mode for automatic reloading.
         """
+        loggers.core.info(
+            "[ 🔦 Raito ] Running in %s mode",
+            "production" if self.production else "development",
+        )
+
         await self.role_manager.initialize(self.dispatcher)
 
         await self.router_manager.load_routers(self.routers_dir)
