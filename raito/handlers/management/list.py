@@ -6,10 +6,12 @@ from aiogram.types import Message
 from raito.plugins.roles import Role, roles
 from raito.utils.ascii.tree import AsciiTree, dot_paths_to_tree
 from raito.utils.configuration import Configuration
+from raito.utils.const import ROOT_DIR
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
     from raito.core.raito import Raito
+    from raito.core.routers.loader import RouterLoader
 
 router = Router(name="raito.management.list")
 
@@ -45,7 +47,15 @@ async def list_routers(message: Message, raito: "Raito") -> None:
                 return emojis.enabled
         return emojis.disabled
 
-    paths = list(raito.router_manager.loaders.keys())
+    def extract_loader_path(loader: "RouterLoader") -> str:
+        return (
+            loader.path.as_posix()
+            .replace(ROOT_DIR.parent.as_posix(), "")
+            .replace(".py", "")
+            .replace("/", ".")
+        )
+
+    paths = [extract_loader_path(loader) for loader in raito.router_manager.loaders.values()]
     tree_root = dot_paths_to_tree(paths, prefix_callback=get_router_emoji)
     tree = AsciiTree().render(tree_root)
 
