@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, overload
+from typing import TYPE_CHECKING, Literal, overload
 
 __all__ = (
     "get_postgresql_storage",
@@ -13,9 +13,9 @@ if TYPE_CHECKING:
 
 
 @overload
-def get_sqlite_storage() -> type["SQLiteStorage"]: ...
+def get_sqlite_storage(*, throw: Literal[True] = True) -> type["SQLiteStorage"]: ...
 @overload
-def get_sqlite_storage(*, throw: bool = False) -> type["SQLiteStorage"] | None: ...
+def get_sqlite_storage(*, throw: Literal[False]) -> type["SQLiteStorage"] | None: ...
 def get_sqlite_storage(*, throw: bool = True) -> type["SQLiteStorage"] | None:
     try:
         from .sqlite import SQLiteStorage
@@ -30,9 +30,9 @@ def get_sqlite_storage(*, throw: bool = True) -> type["SQLiteStorage"] | None:
 
 
 @overload
-def get_postgresql_storage() -> type["PostgreSQLStorage"]: ...
+def get_postgresql_storage(*, throw: Literal[True] = True) -> type["PostgreSQLStorage"]: ...
 @overload
-def get_postgresql_storage(*, throw: bool = False) -> type["PostgreSQLStorage"] | None: ...
+def get_postgresql_storage(*, throw: Literal[False]) -> type["PostgreSQLStorage"] | None: ...
 def get_postgresql_storage(*, throw: bool = True) -> type["PostgreSQLStorage"] | None:
     try:
         from .postgresql import PostgreSQLStorage
@@ -46,6 +46,10 @@ def get_postgresql_storage(*, throw: bool = True) -> type["PostgreSQLStorage"] |
     return PostgreSQLStorage
 
 
+@overload
+def get_redis_storage(*, throw: Literal[True] = True) -> type["RedisStorage"]: ...
+@overload
+def get_redis_storage(*, throw: Literal[False]) -> type["RedisStorage"] | None: ...
 def get_redis_storage(*, throw: bool = True) -> type["RedisStorage"] | None:
     try:
         from aiogram.fsm.storage.redis import RedisStorage

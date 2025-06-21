@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, overload
+from typing import TYPE_CHECKING, Literal, overload
 
 __all__ = (
     "get_postgresql_provider",
@@ -11,9 +11,9 @@ if TYPE_CHECKING:
 
 
 @overload
-def get_sqlite_provider() -> type["SQLiteRoleProvider"]: ...
+def get_sqlite_provider(*, throw: Literal[True] = True) -> type["SQLiteRoleProvider"]: ...
 @overload
-def get_sqlite_provider(*, throw: bool = False) -> type["SQLiteRoleProvider"] | None: ...
+def get_sqlite_provider(*, throw: Literal[False]) -> type["SQLiteRoleProvider"] | None: ...
 def get_sqlite_provider(*, throw: bool = True) -> type["SQLiteRoleProvider"] | None:
     try:
         from .sqlite import SQLiteRoleProvider
@@ -28,9 +28,9 @@ def get_sqlite_provider(*, throw: bool = True) -> type["SQLiteRoleProvider"] | N
 
 
 @overload
-def get_postgresql_provider() -> type["PostgreSQLRoleProvider"]: ...
+def get_postgresql_provider(*, throw: Literal[True] = True) -> type["PostgreSQLRoleProvider"]: ...
 @overload
-def get_postgresql_provider(*, throw: bool = False) -> type["PostgreSQLRoleProvider"] | None: ...
+def get_postgresql_provider(*, throw: Literal[False]) -> type["PostgreSQLRoleProvider"] | None: ...
 def get_postgresql_provider(*, throw: bool = True) -> type["PostgreSQLRoleProvider"] | None:
     try:
         from .postgresql import PostgreSQLRoleProvider
