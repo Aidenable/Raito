@@ -1,14 +1,5 @@
-from raito.utils.configuration import Configuration
+from raito import rt
 
 from .core.raito import Raito
-from .plugins.roles import Role, roles
-
-
-class rt:
-    Raito = Raito
-    roles = roles
-    Role = Role
-    Configuration = Configuration
-
 
 __all__ = ("Raito", "rt")
