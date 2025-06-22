@@ -79,7 +79,7 @@ class RoleMiddleware(BaseMiddleware):
             raise RuntimeError(msg)
 
         roles = handler_object.flags.get(self.flag_name, [])
-        if not await raito.role_manager.has_any_roles(event.bot.id, user_id, *roles):
+        if roles and not await raito.role_manager.has_any_roles(event.bot.id, user_id, *roles):
             await self._answer(event, "🚫 Access denied")
             return None
 
