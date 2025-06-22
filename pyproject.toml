@@ -1,0 +1,126 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "raito"
+version = "1.0.0"
+description = "REPL, hot-reload, keyboards, pagination, and internal dev tools — all in one. That's Raito."
+authors = [{ name = "Aiden", email = "aidenthedev@gmail.com" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "aiogram>=3.20.0",
+    "cachetools>=6.0.0",
+    "pydantic>=2.11.6",
+    "watchfiles>=1.0.5",
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Plugins",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Debuggers",
+    "Topic :: Software Development :: User Interfaces",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+
+keywords = [
+    "aiogram",
+    "telegram",
+    "keyboard",
+    "pagination",
+    "repl",
+    "hot-reload",
+    "devtools",
+    "bot",
+    "aiogram3",
+    "raito",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+    "ipdb",
+    "pre-commit",
+    "types-cachetools>=6.0.0.20250525",
+    "python-dotenv",
+]
+docs = ["sphinx", "furo", "sphinx-autodoc-typehints"]
+redis = ["redis>=6.2.0"]
+postgresql = ["sqlalchemy[asyncio]>=2.0.0", "asyncpg>=0.29.0"]
+sqlite = ["sqlalchemy[asyncio]>=2.0.0", "aiosqlite>=0.20.0"]
+
+[project.urls]
+Repository = "https://github.com/Aidenable/raito"
+Documentation = "https://aidenable.github.io/raito"
+
+[tool.hatch.build]
+packages = ["raito"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+ignore = [
+    "E501",    # line-too-long
+    "D100",    # undocumented-public-module
+    "D104",    # undocumented-public-package
+    "D103",    # undocumented-public-function
+    "D203",    # one-blank-line-before-class
+    "D213",    # multi-line-summary-second-line
+    "PLC0415", # import-outside-top-level
+]
+fixable = ["ALL"]
+extend-select = [
+    "E",   # pycodestyle: basic style issues
+    "F",   # pyflakes: undefined variables, imports, unused code
+    "B",   # bugbear: likely bugs and design problems
+    "C4",  # flake8-comprehensions: improve list/set/dict comprehensions
+    "SIM", # flake8-simplify: overly complex constructs
+    "I",   # isort: import sorting
+    "UP",  # pyupgrade: outdated syntax for your Python version
+    "RUF", # ruff-specific: best practices from ruff itself
+    "ANN", # flake8-annotations: type annotations
+    "BLE", # flake8-blind-except: ignore base exceptions without an exception type
+]
+
+[tool.ruff.lint.pylint]
+max-args = 10
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ALL"]
+"examples/*" = ["ALL"]
+"*/handlers/*.py" = ["INP001"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+exclude = ["tests", "examples"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+python_files = "tests/test_*.py"
+
+[dependency-groups]
+dev = ["types-cachetools>=6.0.0.20250525"]
