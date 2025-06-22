@@ -1,13 +1,11 @@
 import logging
-import sys
 from datetime import datetime
 from typing import Literal, cast
 
 __all__ = (
     "ColoredFormatter",
     "core",
-    "debug",
-    "logging",
+    "log",
     "middlewares",
     "plugins",
     "roles",
@@ -54,17 +52,9 @@ class ColoredFormatter(logging.Formatter):
         return f"{left}{tab} {tag} {message}"
 
 
-handler = logging.StreamHandler(sys.stdout)
-handler.setFormatter(ColoredFormatter())
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    handlers=[handler],
-)
-
 core = logging.getLogger("raito.core")
 middlewares = logging.getLogger("raito.middlewares")
 plugins = logging.getLogger("raito.plugins")
 roles = logging.getLogger("raito.plugins.roles")
 
-debug = logging.debug
+log = logging.getLogger()
