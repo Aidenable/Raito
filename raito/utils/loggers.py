@@ -43,8 +43,8 @@ class ColoredFormatter(logging.Formatter):
 
         now = datetime.fromtimestamp(record.created).strftime("%d.%m.%Y %H:%M:%S")
 
-        left = f"{WHITE}{record.name}{RESET} {BRIGHT_BLACK}{now}{RESET}"
-        tab = " " * (56 - len(left))
+        left = f"{BRIGHT_BLACK}{now}{RESET} {WHITE}{record.name}{RESET}"
+        tab = " " * (64 - len(left))
 
         tag = f"{background_color} {levelname[0]} {RESET}"
         message = f"{foreground_color}{record.getMessage()}{RESET}"
@@ -53,6 +53,8 @@ class ColoredFormatter(logging.Formatter):
 
 
 core = logging.getLogger("raito.core")
+routers = logging.getLogger("raito.core.routers")
+
 middlewares = logging.getLogger("raito.middlewares")
 plugins = logging.getLogger("raito.plugins")
 roles = logging.getLogger("raito.plugins.roles")

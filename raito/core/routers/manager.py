@@ -83,7 +83,7 @@ class RouterManager:
             if router.name in names:
                 suffix = hex(id(router))
                 unique_name = f"{router.name}_{suffix}"
-                loggers.core.warning(
+                loggers.routers.warning(
                     "Duplicate router name: %s. Will rename to %s...",
                     router.name,
                     unique_name,
@@ -100,7 +100,7 @@ class RouterManager:
             )
             loader.load()
             self.loaders[unique_name] = loader
-            loggers.core.debug("Router loaded: %s", unique_name)
+            loggers.routers.debug("Router loaded: %s", unique_name)
 
     async def start_watchdog(self, directory: StrOrPath) -> None:
         """Start file watching service.
@@ -111,7 +111,7 @@ class RouterManager:
         :param directory: Directory to watch for changes
         :type directory: StrOrPath
         """
-        loggers.core.info("Router watchdog started for: %s", directory)
+        loggers.routers.info("Router watchdog started for: %s", directory)
         async for changes in awatch(directory, step=500):
             for event_type, changed_path in changes:
                 path_object = Path(changed_path).resolve()
@@ -123,14 +123,14 @@ class RouterManager:
                         break
 
                 if not current_loader:
-                    loggers.core.error(
+                    loggers.routers.error(
                         "File changed: %s. No routers found.",
                         changed_path,
                     )
                     continue
 
                 if event_type in (Change.modified, Change.added):
-                    loggers.core.info(
+                    loggers.routers.info(
                         "File changed: %s. Reloading router '%s'...",
                         changed_path,
                         current_loader.name,
@@ -139,7 +139,7 @@ class RouterManager:
                     try:
                         await current_loader.reload()
                     except Exception as exc:  # noqa: BLE001
-                        loggers.core.error(
+                        loggers.routers.error(
                             "Router '%s' has an error '%s'. Unloading router...",
                             current_loader.path,
                             exc,
@@ -148,7 +148,7 @@ class RouterManager:
                         continue
 
                 elif event_type == Change.deleted:
-                    loggers.core.info(
+                    loggers.routers.info(
                         "File removed: %s. Unloading router '%s'...",
                         changed_path,
                         current_loader.name,
