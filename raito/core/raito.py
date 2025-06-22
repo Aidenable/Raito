@@ -45,8 +45,8 @@ class Raito:
         self,
         dispatcher: "Dispatcher",
         routers_dir: "StrOrPath",
-        developers: list[int],
         *,
+        developers: list[int] | None = None,
         production: bool = True,
         configuration: Configuration | None = None,
         storage: BaseStorage | None = None,
@@ -57,8 +57,8 @@ class Raito:
         :type dispatcher: Dispatcher
         :param routers_dir: Directory containing router files
         :type routers_dir: StrOrPath
-        :param developers: List of developer user IDs with special privileges
-        :type developers: list[int]
+        :param developers: List of developer user IDs with special privileges, defaults to None
+        :type developers: list[int] | None, optional
         :param production: Whether running in production mode, defaults to True
         :type production: bool, optional
         :param configuration: Configuration instance, defaults to Configuration()
@@ -68,7 +68,7 @@ class Raito:
         """
         self.dispatcher = dispatcher
         self.routers_dir = routers_dir
-        self.developers = developers
+        self.developers = developers or []
         self.production = production
         self.configuration = configuration or Configuration()
         self.storage = storage or MemoryStorage()
