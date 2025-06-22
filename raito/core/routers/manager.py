@@ -100,7 +100,7 @@ class RouterManager:
             )
             loader.load()
             self.loaders[unique_name] = loader
-            loggers.core.info("Router loaded: %s", unique_name)
+            loggers.core.debug("Router loaded: %s", unique_name)
 
     async def start_watchdog(self, directory: StrOrPath) -> None:
         """Start file watching service.
