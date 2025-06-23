@@ -16,7 +16,7 @@ from raito.plugins.roles.providers.sql import (
     get_sqlite_provider,
 )
 from raito.utils import loggers
-from raito.utils.configuration import Configuration
+from raito.utils.configuration import RaitoConfiguration
 from raito.utils.const import ROOT_DIR
 from raito.utils.middlewares import ThrottlingMiddleware
 from raito.utils.storages import (
@@ -48,7 +48,7 @@ class Raito:
         *,
         developers: list[int] | None = None,
         production: bool = True,
-        configuration: Configuration | None = None,
+        configuration: RaitoConfiguration | None = None,
         storage: BaseStorage | None = None,
     ) -> None:
         """Initialize the Raito.
@@ -70,7 +70,7 @@ class Raito:
         self.routers_dir = routers_dir
         self.developers = developers or []
         self.production = production
-        self.configuration = configuration or Configuration()
+        self.configuration = configuration or RaitoConfiguration()
         self.storage = storage or MemoryStorage()
 
         self.router_manager = RouterManager(dispatcher)

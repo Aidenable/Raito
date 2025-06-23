@@ -5,7 +5,7 @@ from aiogram.types import Message
 
 from raito.plugins.roles import Role, roles
 from raito.utils.ascii.tree import AsciiTree, dot_paths_to_tree
-from raito.utils.configuration import Configuration
+from raito.utils.configuration import RouterListStyle
 from raito.utils.const import ROOT_DIR
 from raito.utils.filters import RaitoCommand
 
@@ -29,11 +29,11 @@ class Emojis(NamedTuple):
 @roles(Role.DEVELOPER)
 async def list_routers(message: Message, raito: "Raito") -> None:
     match raito.configuration.router_list_style:
-        case Configuration.RouterListStyle.CIRCLES:
+        case RouterListStyle.CIRCLES:
             emojis = Emojis("🟢", "🟡", "🔴", "⚪")
-        case Configuration.RouterListStyle.RHOMBUSES:
+        case RouterListStyle.DIAMONDS:
             emojis = Emojis("🔹", "🔸", "🔸", "🔸")
-        case Configuration.RouterListStyle.RHOMBUSES_REVERSED:
+        case RouterListStyle.DIAMONDS_REVERSED:
             emojis = Emojis("🔸", "🔹", "🔹", "🔹")
         case _:
             emojis = Emojis("🟩", "🟨", "🟥", "⬜")
