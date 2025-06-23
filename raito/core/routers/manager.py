@@ -130,14 +130,14 @@ class RouterManager:
                         break
 
                 if not current_loader:
-                    loggers.routers.error(
+                    loggers.routers.debug(
                         "File changed: %s. No routers found.",
                         changed_path,
                     )
                     continue
 
                 if event_type in (Change.modified, Change.added):
-                    loggers.routers.info(
+                    loggers.routers.debug(
                         "File changed: %s. Reloading router '%s'...",
                         changed_path,
                         current_loader.name,
@@ -155,7 +155,7 @@ class RouterManager:
                         continue
 
                 elif event_type == Change.deleted:
-                    loggers.routers.info(
+                    loggers.routers.debug(
                         "File removed: %s. Unloading router '%s'...",
                         changed_path,
                         current_loader.name,
