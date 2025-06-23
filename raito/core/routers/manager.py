@@ -70,7 +70,14 @@ class RouterManager:
         dir_path = Path(directory)
 
         for file_path in self.resolve_paths(dir_path):
-            router = RouterParser.extract_router(file_path)
+            try:
+                router = RouterParser.extract_router(file_path)
+            except (ModuleNotFoundError, TypeError) as exc:
+                loggers.routers.error(
+                    "Error while trying to load router from %s: %s", file_path, exc
+                )
+                continue
+
             if router.name in self.loaders:
                 continue
 
