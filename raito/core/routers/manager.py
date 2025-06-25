@@ -147,7 +147,7 @@ class RouterManager:
                         await current_loader.reload()
                     except Exception as exc:  # noqa: BLE001
                         loggers.routers.error(
-                            "Router '%s' has an error '%s'. Skipping router...",
+                            "Router '%s' has an error '%s'. Skipping...",
                             current_loader.path,
                             exc,
                         )
