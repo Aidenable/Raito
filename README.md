@@ -102,10 +102,7 @@ Whenever you change a file with handlers, Raito automatically reloads it without
 
 You can also manage your routers manually using the `.rt load`, `.rt unload`, `.rt reload`, or `.rt routers` commands in the bot.
 
-<video width="600" autoplay muted loop controls align="left">
-  <source src=".github/assets/hot-reload.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/c7ecfb7e-b709-4f92-9de3-efc4982cc926
 
 ---
 
