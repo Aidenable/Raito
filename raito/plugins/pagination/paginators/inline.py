@@ -86,6 +86,7 @@ class InlinePaginator(BasePaginator):
 
     def _get_reply_markup(
         self,
+        reply_markup: InlineKeyboardMarkup | None = None,
         buttons: list[InlineKeyboardButton] | InlineKeyboardMarkup | None = None,
     ) -> InlineKeyboardMarkup:
         """Build reply markup with content and navigation.
@@ -100,10 +101,13 @@ class InlinePaginator(BasePaginator):
         if isinstance(buttons, list):
             builder.row(*buttons, width=1)
         elif isinstance(buttons, InlineKeyboardMarkup):
-            content_builder = InlineKeyboardBuilder.from_markup(buttons)
-            builder.attach(content_builder)
+            builder.attach(builder.from_markup(buttons))
 
-        builder.attach(builder.from_markup(self.build_navigation()))
+        if reply_markup is not None:
+            builder.attach(builder.from_markup(reply_markup))
+        else:
+            builder.attach(builder.from_markup(self.build_navigation()))
+
         return builder.as_markup()
 
     async def answer(
@@ -163,7 +167,11 @@ class InlinePaginator(BasePaginator):
         protect_content = protect_content or Default("protect_content")
         disable_web_page_preview = disable_web_page_preview or Default("link_preview_is_disabled")
 
-        reply_markup = reply_markup or self._get_reply_markup(buttons)
+        reply_markup = (
+            reply_markup
+            if reply_markup is not None and buttons is None
+            else self._get_reply_markup(reply_markup, buttons)
+        )
 
         if self.existing_message is None:
             self.existing_message = await self.bot.send_message(
