@@ -9,9 +9,9 @@ class PaginationMode(IntEnum):
 
     :cvar INLINE: inline keyboard pagination
     :cvar TEXT: text-based pagination
-    :cvar MEDIA: media gallery pagination
+    :cvar PHOTO: photo pagination
     """
 
     INLINE = 0
     TEXT = 1
-    MEDIA = 2
+    PHOTO = 2
