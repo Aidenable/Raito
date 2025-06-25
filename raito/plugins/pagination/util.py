@@ -1,6 +1,7 @@
-from raito.plugins.pagination.enums import PaginationMode
-from raito.plugins.pagination.paginators.base import BasePaginator
-from raito.plugins.pagination.paginators.inline import InlinePaginator
+from .enums import PaginationMode
+from .paginators.base import BasePaginator
+from .paginators.inline import InlinePaginator
+from .paginators.text import TextPaginator
 
 __all__ = ("get_paginator",)
 
@@ -17,7 +18,7 @@ def get_paginator(mode: PaginationMode) -> type[BasePaginator]:
     if mode == PaginationMode.INLINE:
         return InlinePaginator
     if mode == PaginationMode.TEXT:
-        raise NotImplementedError("Text pagination not implemented yet")
+        return TextPaginator
     if mode == PaginationMode.MEDIA:
         raise NotImplementedError("Media pagination not implemented yet")
 
