@@ -131,13 +131,9 @@ class PhotoPaginator(BasePaginator):
                 allow_sending_without_reply=allow_sending_without_reply,
                 reply_to_message_id=reply_to_message_id,
             )
-        elif caption != self.existing_message.caption:
-            await self.existing_message.edit_caption(caption=caption, reply_markup=reply_markup)
-        elif photo != self.existing_message.photo:
+        else:
             await self.existing_message.edit_media(
                 media=InputMediaPhoto(media=photo, caption=caption, reply_markup=reply_markup),
                 caption=caption,
                 reply_markup=reply_markup,
             )
-        else:
-            await self.existing_message.edit_reply_markup(reply_markup=reply_markup)
