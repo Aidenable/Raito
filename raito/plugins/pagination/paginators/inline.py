@@ -18,6 +18,35 @@ __all__ = ("InlinePaginator",)
 class InlinePaginator(BasePaginator):
     """Inline keyboard paginator."""
 
+    def _validate_parameters(
+        self,
+        name: str,
+        current_page: int,
+        total_pages: int | None,
+        limit: int,
+    ) -> None:
+        """Validate paginator parameters.
+
+        :param name: pagination name
+        :type name: str
+        :param current_page: current page number
+        :type current_page: int
+        :param total_pages: total pages count
+        :type total_pages: int | None
+        :param limit: items per page
+        :type limit: int
+        :raises ValueError: if parameters are invalid
+        """
+        if limit > 90:
+            raise ValueError("limit must be less than or equal to 90")
+
+        return super()._validate_parameters(
+            name=name,
+            current_page=current_page,
+            total_pages=total_pages,
+            limit=limit,
+        )
+
     @property
     def mode(self) -> PaginationMode:
         """Get inline pagination mode.
