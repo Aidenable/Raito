@@ -147,11 +147,10 @@ class RouterManager:
                         await current_loader.reload()
                     except Exception as exc:  # noqa: BLE001
                         loggers.routers.error(
-                            "Router '%s' has an error '%s'. Unloading router...",
+                            "Router '%s' has an error '%s'. Skipping router...",
                             current_loader.path,
                             exc,
                         )
-                        current_loader.unload()
                         continue
 
                 elif event_type == Change.deleted:
