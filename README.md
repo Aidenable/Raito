@@ -114,6 +114,39 @@ Use built-in roles to set different access levels for team members.
   <img src=".github/assets/roles.png" alt="Roles" width="600">
 </p>
 
+---
+
+#### 📚 Pagination
+
+The simplest, most native and most effective pagination. Unlike many other libraries, it **does not use internal storage**. \
+It is very user-friendly and fully customizable.
+
+```python
+@router.message(filters.Command("pagination"))
+async def pagination(message: Message, raito: rt.Raito, bot: Bot):
+    if not message.from_user:
+        return
+
+    await raito.paginate(
+        "button_list",
+        chat_id=message.chat.id,
+        bot=bot,
+        from_user=message.from_user,
+        limit=5,
+    )
+
+
+BUTTONS = [
+    InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}")
+    for i in range(10000)
+]
+
+@rt.on_pagination(router, "button_list")
+async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, page: int, limit: int):
+    content = BUTTONS[(page - 1) * limit : page * limit]
+    await paginator.answer(text="Here is your buttons:", buttons=content)
+```
+
 
 ## Contributing
 

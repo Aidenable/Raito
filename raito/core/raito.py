@@ -1,9 +1,13 @@
 from asyncio import create_task
 from typing import TYPE_CHECKING
 
+from aiogram import Bot
 from aiogram.fsm.storage.base import BaseStorage
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.types import Message, User
 
+from raito.plugins.pagination import PaginationMode, PaginatorMiddleware
+from raito.plugins.pagination.util import get_paginator
 from raito.plugins.roles import (
     BaseRoleProvider,
     IRoleProvider,
@@ -93,6 +97,7 @@ class Raito:
         )
 
         await self.role_manager.initialize(self.dispatcher)
+        self.dispatcher.callback_query.middleware(PaginatorMiddleware("is_pagination"))
 
         await self.router_manager.load_routers(self.routers_dir)
         await self.router_manager.load_routers(ROOT_DIR / "handlers")
@@ -146,3 +151,30 @@ class Raito:
             return get_sqlite_provider()(storage)
 
         return BaseRoleProvider(storage)
+
+    async def paginate(
+        self,
+        name: str,
+        chat_id: int,
+        bot: Bot,
+        from_user: User,
+        *,
+        existing_message: Message | None = None,
+        mode: PaginationMode = PaginationMode.INLINE,
+        current_page: int = 1,
+        total_pages: int | None = None,
+        limit: int = 20,
+    ) -> None:
+        Paginator = get_paginator(mode)
+        paginator = Paginator(
+            raito=self,
+            name=name,
+            chat_id=chat_id,
+            bot=bot,
+            from_user=from_user,
+            existing_message=existing_message,
+            current_page=current_page,
+            total_pages=total_pages,
+            limit=limit,
+        )
+        await paginator.paginate()

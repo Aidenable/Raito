@@ -7,7 +7,6 @@ from raito.plugins.roles.providers.protocol import IRoleProvider
 
 __all__ = (
     "PaginationControls",
-    "PaginationLayout",
     "PaginationStyle",
     "PaginationTextFormat",
     "RaitoConfiguration",
@@ -31,14 +30,7 @@ class PaginationControls:
 
 @dataclass
 class PaginationTextFormat:
-    title_template: str = "{title}"
-    counter_template: str = " {current} / {total}"
-
-
-@unique
-class PaginationLayout(IntEnum):
-    ARROWS = 0
-    COUNTER = 1
+    counter_template: str = "{current} / {total}"
 
 
 @dataclass
@@ -46,9 +38,7 @@ class PaginationStyle:
     loop_navigation: bool = True
     controls: PaginationControls = field(default_factory=PaginationControls)
     text_format: PaginationTextFormat = field(default_factory=PaginationTextFormat)
-    layout: list[PaginationLayout] = field(
-        default_factory=lambda: [PaginationLayout.ARROWS, PaginationLayout.COUNTER]
-    )
+    show_counter: bool = True
 
 
 class RaitoConfiguration(BaseModel):
