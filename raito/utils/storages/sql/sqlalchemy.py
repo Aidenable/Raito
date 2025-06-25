@@ -1,7 +1,9 @@
-from datetime import datetime
-from typing import Any
+from __future__ import annotations
 
-from aiogram.fsm.storage.base import BaseStorage, StorageKey
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+
+from aiogram.fsm.storage.base import BaseStorage
 from sqlalchemy import (
     JSON,
     Column,
@@ -18,6 +20,9 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+
+if TYPE_CHECKING:
+    from aiogram.fsm.storage.base import StorageKey
 
 __all__ = ("SQLAlchemyStorage",)
 

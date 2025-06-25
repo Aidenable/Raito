@@ -1,14 +1,17 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from aiogram import F, Router, html
-from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import Message
 
 from raito.plugins.roles import Role, roles
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
+    from aiogram.fsm.context import FSMContext
+    from aiogram.types import Message
+
     from raito.core.raito import Raito
 
 router = Router(name="raito.roles.revoke")
@@ -29,7 +32,7 @@ async def revoke(message: Message, state: FSMContext) -> None:
 
 @router.message(RevokeRoleGroup.user_id, F.text and F.text.isdigit())
 @roles(Role.ADMINISTRATOR, Role.OWNER)
-async def revoke_role(message: Message, raito: "Raito", state: FSMContext) -> None:
+async def revoke_role(message: Message, raito: Raito, state: FSMContext) -> None:
     if not message.bot:
         await message.answer("🚫 Bot not found")
         return

@@ -8,7 +8,7 @@ from aiogram import Bot
 from aiogram.dispatcher.event.handler import HandlerObject
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.types import CallbackQuery, Message, TelegramObject
+from aiogram.types import CallbackQuery, Message
 from aiogram.types.update import Update
 
 from raito.plugins.pagination.data import PaginationCallbackData
@@ -18,6 +18,8 @@ from raito.plugins.pagination.util import get_paginator
 from .paginators.base import BasePaginator
 
 if TYPE_CHECKING:
+    from aiogram.types import TelegramObject
+
     from raito import Raito
 
 R = TypeVar("R")

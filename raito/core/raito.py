@@ -1,22 +1,20 @@
+from __future__ import annotations
+
 from asyncio import create_task
 from typing import TYPE_CHECKING
 
-from aiogram import Bot
-from aiogram.fsm.storage.base import BaseStorage
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.types import Message, User
 
-from raito.plugins.pagination import PaginationMode, PaginatorMiddleware
-from raito.plugins.pagination.util import get_paginator
+from raito.plugins.pagination import PaginationMode, PaginatorMiddleware, get_paginator
 from raito.plugins.roles import (
     BaseRoleProvider,
     IRoleProvider,
     MemoryRoleProvider,
     RoleManager,
 )
-from raito.plugins.roles.providers import get_redis_provider
-from raito.plugins.roles.providers.sql import (
+from raito.plugins.roles.providers import (
     get_postgresql_provider,
+    get_redis_provider,
     get_sqlite_provider,
 )
 from raito.utils import loggers
@@ -25,15 +23,18 @@ from raito.utils.const import ROOT_DIR
 from raito.utils.middlewares import ThrottlingMiddleware
 from raito.utils.storages import (
     get_postgresql_storage,
+    get_redis_storage,
     get_sqlite_storage,
 )
-from raito.utils.storages.sql import get_redis_storage
 
 from .routers.manager import RouterManager
 
 if TYPE_CHECKING:
-    from aiogram import Dispatcher
+    from aiogram import Bot, Dispatcher
+    from aiogram.fsm.storage.base import BaseStorage
+    from aiogram.types import Message, User
 
+    from raito.plugins.roles import IRoleProvider
     from raito.utils.types import StrOrPath
 
 __all__ = ("Raito",)
@@ -47,8 +48,8 @@ class Raito:
 
     def __init__(
         self,
-        dispatcher: "Dispatcher",
-        routers_dir: "StrOrPath",
+        dispatcher: Dispatcher,
+        routers_dir: StrOrPath,
         *,
         developers: list[int] | None = None,
         production: bool = True,
@@ -129,7 +130,7 @@ class Raito:
             ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
         )
 
-    def _get_role_provider(self, storage: BaseStorage) -> "IRoleProvider":
+    def _get_role_provider(self, storage: BaseStorage) -> IRoleProvider:
         """Get the current role provider based on storage.
 
         :return: Role provider instance

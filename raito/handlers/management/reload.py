@@ -1,13 +1,16 @@
+from __future__ import annotations
+
 from asyncio import sleep
 from typing import TYPE_CHECKING
 
 from aiogram import Router, html
-from aiogram.types import Message
 
 from raito.plugins.roles import Role, roles
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
+    from aiogram.types import Message
+
     from raito.core.raito import Raito
 
 router = Router(name="raito.management.reload")
@@ -15,7 +18,7 @@ router = Router(name="raito.management.reload")
 
 @router.message(RaitoCommand("reload"))
 @roles(Role.DEVELOPER)
-async def reload_router(message: Message, raito: "Raito") -> None:
+async def reload_router(message: Message, raito: Raito) -> None:
     args = message.text
     name_position = 3
 

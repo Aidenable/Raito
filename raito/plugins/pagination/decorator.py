@@ -1,7 +1,13 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from aiogram import F, Router
-from aiogram.dispatcher.event.handler import CallbackType
 
 from .data import PaginationCallbackData
+
+if TYPE_CHECKING:
+    from aiogram.dispatcher.event.handler import CallbackType
 
 __all__ = ("on_pagination",)
 

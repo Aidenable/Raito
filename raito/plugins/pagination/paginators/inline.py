@@ -1,16 +1,23 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from aiogram.client.default import Default
-from aiogram.types import (
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    LinkPreviewOptions,
-    MessageEntity,
-    ReplyParameters,
-)
+from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from raito.plugins.pagination.enums import PaginationMode
 
 from .base import BasePaginator
+
+if TYPE_CHECKING:
+    from aiogram.types import (
+        InlineKeyboardButton,
+        LinkPreviewOptions,
+        MessageEntity,
+        ReplyParameters,
+    )
+
 
 __all__ = ("InlinePaginator",)
 

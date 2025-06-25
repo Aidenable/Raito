@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, Literal, overload
 
 __all__ = (
@@ -11,10 +13,10 @@ if TYPE_CHECKING:
 
 
 @overload
-def get_sqlite_provider(*, throw: Literal[True] = True) -> type["SQLiteRoleProvider"]: ...
+def get_sqlite_provider(*, throw: Literal[True] = True) -> type[SQLiteRoleProvider]: ...
 @overload
-def get_sqlite_provider(*, throw: Literal[False]) -> type["SQLiteRoleProvider"] | None: ...
-def get_sqlite_provider(*, throw: bool = True) -> type["SQLiteRoleProvider"] | None:
+def get_sqlite_provider(*, throw: Literal[False]) -> type[SQLiteRoleProvider] | None: ...
+def get_sqlite_provider(*, throw: bool = True) -> type[SQLiteRoleProvider] | None:
     try:
         from .sqlite import SQLiteRoleProvider
     except ImportError as exc:
@@ -28,10 +30,10 @@ def get_sqlite_provider(*, throw: bool = True) -> type["SQLiteRoleProvider"] | N
 
 
 @overload
-def get_postgresql_provider(*, throw: Literal[True] = True) -> type["PostgreSQLRoleProvider"]: ...
+def get_postgresql_provider(*, throw: Literal[True] = True) -> type[PostgreSQLRoleProvider]: ...
 @overload
-def get_postgresql_provider(*, throw: Literal[False]) -> type["PostgreSQLRoleProvider"] | None: ...
-def get_postgresql_provider(*, throw: bool = True) -> type["PostgreSQLRoleProvider"] | None:
+def get_postgresql_provider(*, throw: Literal[False]) -> type[PostgreSQLRoleProvider] | None: ...
+def get_postgresql_provider(*, throw: bool = True) -> type[PostgreSQLRoleProvider] | None:
     try:
         from .postgresql import PostgreSQLRoleProvider
     except ImportError as exc:

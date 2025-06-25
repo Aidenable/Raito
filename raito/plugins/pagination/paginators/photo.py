@@ -1,15 +1,22 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from aiogram.client.default import Default
-from aiogram.types import (
-    InlineKeyboardMarkup,
-    InputFileUnion,
-    InputMediaPhoto,
-    MessageEntity,
-    ReplyParameters,
-)
+from aiogram.types import InputMediaPhoto
 
 from raito.plugins.pagination.enums import PaginationMode
 
 from .base import BasePaginator
+
+if TYPE_CHECKING:
+    from aiogram.types import (
+        InlineKeyboardMarkup,
+        InputFileUnion,
+        MessageEntity,
+        ReplyParameters,
+    )
+
 
 __all__ = ("PhotoPaginator",)
 
