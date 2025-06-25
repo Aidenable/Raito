@@ -1,21 +1,20 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, cast
 
 from aiogram import F, Router, html
 from aiogram.filters.callback_data import CallbackData
-from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import (
-    CallbackQuery,
-    InlineKeyboardMarkup,
-    Message,
-)
+from aiogram.types import InlineKeyboardMarkup, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from raito.plugins.roles import Role, roles
-from raito.plugins.roles.data import ROLES_DATA
+from raito.plugins.roles import ROLES_DATA, Role, roles
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
+    from aiogram.fsm.context import FSMContext
+    from aiogram.types import CallbackQuery
+
     from raito.core.raito import Raito
 
 router = Router(name="raito.roles.assign")
@@ -79,7 +78,7 @@ async def store_role(
 
 @router.message(AssignRoleGroup.user_id, F.text and F.text.isdigit())
 @roles(Role.ADMINISTRATOR, Role.OWNER)
-async def assign_role(message: Message, raito: "Raito", state: FSMContext) -> None:
+async def assign_role(message: Message, raito: Raito, state: FSMContext) -> None:
     data = await state.get_data()
     role_index = data.get("rt_selected_role")
     if role_index is None:

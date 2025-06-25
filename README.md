@@ -102,10 +102,7 @@ Whenever you change a file with handlers, Raito automatically reloads it without
 
 You can also manage your routers manually using the `.rt load`, `.rt unload`, `.rt reload`, or `.rt routers` commands in the bot.
 
-<video width="600" autoplay muted loop controls align="left">
-  <source src=".github/assets/hot-reload.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/c7ecfb7e-b709-4f92-9de3-efc4982cc926
 
 ---
 
@@ -116,6 +113,39 @@ Use built-in roles to set different access levels for team members.
 <p align="left">
   <img src=".github/assets/roles.png" alt="Roles" width="600">
 </p>
+
+---
+
+#### 📚 Pagination
+
+The simplest, most native and most effective pagination. Unlike many other libraries, it **does not use internal storage**. \
+It is very user-friendly and fully customizable.
+
+```python
+@router.message(filters.Command("pagination"))
+async def pagination(message: Message, raito: rt.Raito, bot: Bot):
+    if not message.from_user:
+        return
+
+    await raito.paginate(
+        "button_list",
+        chat_id=message.chat.id,
+        bot=bot,
+        from_user=message.from_user,
+        limit=5,
+    )
+
+
+BUTTONS = [
+    InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}")
+    for i in range(10000)
+]
+
+@rt.on_pagination(router, "button_list")
+async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, page: int, limit: int):
+    content = BUTTONS[(page - 1) * limit : page * limit]
+    await paginator.answer(text="Here is your buttons:", buttons=content)
+```
 
 
 ## Contributing

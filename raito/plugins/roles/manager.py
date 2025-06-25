@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from raito.plugins.roles.middleware import RoleMiddleware
@@ -26,7 +28,7 @@ class RoleManager:
         self.provider = provider
         self._developers = developers
 
-    async def initialize(self, dispatcher: "Dispatcher") -> None:
+    async def initialize(self, dispatcher: Dispatcher) -> None:
         """Initialize the RoleManager and run migrations."""
         await self.provider.migrate()
 

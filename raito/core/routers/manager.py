@@ -70,7 +70,14 @@ class RouterManager:
         dir_path = Path(directory)
 
         for file_path in self.resolve_paths(dir_path):
-            router = RouterParser.extract_router(file_path)
+            try:
+                router = RouterParser.extract_router(file_path)
+            except (ModuleNotFoundError, TypeError) as exc:
+                loggers.routers.error(
+                    "Error while trying to load router from %s: %s", file_path, exc
+                )
+                continue
+
             if router.name in self.loaders:
                 continue
 
@@ -123,14 +130,14 @@ class RouterManager:
                         break
 
                 if not current_loader:
-                    loggers.routers.error(
+                    loggers.routers.debug(
                         "File changed: %s. No routers found.",
                         changed_path,
                     )
                     continue
 
                 if event_type in (Change.modified, Change.added):
-                    loggers.routers.info(
+                    loggers.routers.debug(
                         "File changed: %s. Reloading router '%s'...",
                         changed_path,
                         current_loader.name,
@@ -140,15 +147,14 @@ class RouterManager:
                         await current_loader.reload()
                     except Exception as exc:  # noqa: BLE001
                         loggers.routers.error(
-                            "Router '%s' has an error '%s'. Unloading router...",
+                            "Router '%s' has an error '%s'. Skipping...",
                             current_loader.path,
                             exc,
                         )
-                        current_loader.unload()
                         continue
 
                 elif event_type == Change.deleted:
-                    loggers.routers.info(
+                    loggers.routers.debug(
                         "File removed: %s. Unloading router '%s'...",
                         changed_path,
                         current_loader.name,

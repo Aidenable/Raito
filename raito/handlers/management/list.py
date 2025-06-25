@@ -1,15 +1,18 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, NamedTuple
 
 from aiogram import Router, html
-from aiogram.types import Message
 
 from raito.plugins.roles import Role, roles
-from raito.utils.ascii.tree import AsciiTree, dot_paths_to_tree
-from raito.utils.configuration import Configuration
+from raito.utils.ascii import AsciiTree, dot_paths_to_tree
+from raito.utils.configuration import RouterListStyle
 from raito.utils.const import ROOT_DIR
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
+    from aiogram.types import Message
+
     from raito.core.raito import Raito
     from raito.core.routers.loader import RouterLoader
 
@@ -27,13 +30,13 @@ class Emojis(NamedTuple):
 
 @router.message(RaitoCommand("routers"))
 @roles(Role.DEVELOPER)
-async def list_routers(message: Message, raito: "Raito") -> None:
+async def list_routers(message: Message, raito: Raito) -> None:
     match raito.configuration.router_list_style:
-        case Configuration.RouterListStyle.CIRCLES:
+        case RouterListStyle.CIRCLES:
             emojis = Emojis("🟢", "🟡", "🔴", "⚪")
-        case Configuration.RouterListStyle.RHOMBUSES:
+        case RouterListStyle.DIAMONDS:
             emojis = Emojis("🔹", "🔸", "🔸", "🔸")
-        case Configuration.RouterListStyle.RHOMBUSES_REVERSED:
+        case RouterListStyle.DIAMONDS_REVERSED:
             emojis = Emojis("🔸", "🔹", "🔹", "🔹")
         case _:
             emojis = Emojis("🟩", "🟨", "🟥", "⬜")
@@ -47,7 +50,7 @@ async def list_routers(message: Message, raito: "Raito") -> None:
                 return emojis.enabled
         return emojis.disabled
 
-    def extract_loader_path(loader: "RouterLoader") -> str:
+    def extract_loader_path(loader: RouterLoader) -> str:
         return (
             loader.path.as_posix()
             .replace(ROOT_DIR.parent.as_posix(), "")

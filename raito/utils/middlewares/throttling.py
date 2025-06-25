@@ -1,9 +1,14 @@
+from __future__ import annotations
+
 from collections.abc import Awaitable, Callable
-from typing import Any, Literal, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, TypeVar
 
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
-from aiogram.types import CallbackQuery, Message, TelegramObject
+from aiogram.types import CallbackQuery, Message
 from cachetools import TTLCache
+
+if TYPE_CHECKING:
+    from aiogram.types import TelegramObject
 
 R = TypeVar("R")
 

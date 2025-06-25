@@ -1,13 +1,17 @@
-from datetime import datetime, timezone
-from typing import Any
+from __future__ import annotations
 
-from aiogram.filters.state import StateType
-from aiogram.fsm.storage.base import StorageKey
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING, Any
+
 from sqlalchemy import URL
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from .sqlalchemy import SQLAlchemyStorage, storage_table
+
+if TYPE_CHECKING:
+    from aiogram.filters.state import StateType
+    from aiogram.fsm.storage.base import StorageKey
 
 __all__ = ("SQLiteStorage",)
 

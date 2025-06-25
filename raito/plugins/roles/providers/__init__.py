@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, overload
 
 from .base import BaseRoleProvider
@@ -19,10 +21,10 @@ __all__ = (
 
 
 @overload
-def get_redis_provider() -> type["RedisRoleProvider"]: ...
+def get_redis_provider() -> type[RedisRoleProvider]: ...
 @overload
-def get_redis_provider(*, throw: bool = False) -> type["RedisRoleProvider"] | None: ...
-def get_redis_provider(*, throw: bool = True) -> type["RedisRoleProvider"] | None:
+def get_redis_provider(*, throw: bool = False) -> type[RedisRoleProvider] | None: ...
+def get_redis_provider(*, throw: bool = True) -> type[RedisRoleProvider] | None:
     try:
         from .redis import RedisRoleProvider
     except ImportError as exc:

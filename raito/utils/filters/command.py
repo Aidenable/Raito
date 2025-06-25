@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 import re
+from typing import TYPE_CHECKING
 
 from aiogram.filters import Filter
-from aiogram.types import Message
+
+if TYPE_CHECKING:
+    from aiogram.types import Message
 
 PREFIX = ".rt"
 

@@ -1,35 +1,40 @@
+from __future__ import annotations
+
 from asyncio import create_task
 from typing import TYPE_CHECKING
 
-from aiogram.fsm.storage.base import BaseStorage
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from raito.plugins.pagination import PaginationMode, PaginatorMiddleware, get_paginator
 from raito.plugins.roles import (
     BaseRoleProvider,
     IRoleProvider,
     MemoryRoleProvider,
     RoleManager,
 )
-from raito.plugins.roles.providers import get_redis_provider
-from raito.plugins.roles.providers.sql import (
+from raito.plugins.roles.providers import (
     get_postgresql_provider,
+    get_redis_provider,
     get_sqlite_provider,
 )
 from raito.utils import loggers
-from raito.utils.configuration import Configuration
+from raito.utils.configuration import RaitoConfiguration
 from raito.utils.const import ROOT_DIR
 from raito.utils.middlewares import ThrottlingMiddleware
 from raito.utils.storages import (
     get_postgresql_storage,
+    get_redis_storage,
     get_sqlite_storage,
 )
-from raito.utils.storages.sql import get_redis_storage
 
 from .routers.manager import RouterManager
 
 if TYPE_CHECKING:
-    from aiogram import Dispatcher
+    from aiogram import Bot, Dispatcher
+    from aiogram.fsm.storage.base import BaseStorage
+    from aiogram.types import Message, User
 
+    from raito.plugins.roles import IRoleProvider
     from raito.utils.types import StrOrPath
 
 __all__ = ("Raito",)
@@ -43,12 +48,12 @@ class Raito:
 
     def __init__(
         self,
-        dispatcher: "Dispatcher",
-        routers_dir: "StrOrPath",
+        dispatcher: Dispatcher,
+        routers_dir: StrOrPath,
         *,
         developers: list[int] | None = None,
         production: bool = True,
-        configuration: Configuration | None = None,
+        configuration: RaitoConfiguration | None = None,
         storage: BaseStorage | None = None,
     ) -> None:
         """Initialize the Raito.
@@ -70,7 +75,7 @@ class Raito:
         self.routers_dir = routers_dir
         self.developers = developers or []
         self.production = production
-        self.configuration = configuration or Configuration()
+        self.configuration = configuration or RaitoConfiguration()
         self.storage = storage or MemoryStorage()
 
         self.router_manager = RouterManager(dispatcher)
@@ -93,6 +98,7 @@ class Raito:
         )
 
         await self.role_manager.initialize(self.dispatcher)
+        self.dispatcher.callback_query.middleware(PaginatorMiddleware("is_pagination"))
 
         await self.router_manager.load_routers(self.routers_dir)
         await self.router_manager.load_routers(ROOT_DIR / "handlers")
@@ -124,7 +130,7 @@ class Raito:
             ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
         )
 
-    def _get_role_provider(self, storage: BaseStorage) -> "IRoleProvider":
+    def _get_role_provider(self, storage: BaseStorage) -> IRoleProvider:
         """Get the current role provider based on storage.
 
         :return: Role provider instance
@@ -146,3 +152,30 @@ class Raito:
             return get_sqlite_provider()(storage)
 
         return BaseRoleProvider(storage)
+
+    async def paginate(
+        self,
+        name: str,
+        chat_id: int,
+        bot: Bot,
+        from_user: User,
+        *,
+        existing_message: Message | None = None,
+        mode: PaginationMode = PaginationMode.INLINE,
+        current_page: int = 1,
+        total_pages: int | None = None,
+        limit: int = 20,
+    ) -> None:
+        Paginator = get_paginator(mode)
+        paginator = Paginator(
+            raito=self,
+            name=name,
+            chat_id=chat_id,
+            bot=bot,
+            from_user=from_user,
+            existing_message=existing_message,
+            current_page=current_page,
+            total_pages=total_pages,
+            limit=limit,
+        )
+        await paginator.paginate()

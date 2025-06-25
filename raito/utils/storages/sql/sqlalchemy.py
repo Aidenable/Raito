@@ -1,7 +1,9 @@
-from datetime import datetime
-from typing import Any
+from __future__ import annotations
 
-from aiogram.fsm.storage.base import BaseStorage, StorageKey
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING, Any
+
+from aiogram.fsm.storage.base import BaseStorage
 from sqlalchemy import (
     JSON,
     Column,
@@ -19,6 +21,9 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
+if TYPE_CHECKING:
+    from aiogram.fsm.storage.base import StorageKey
+
 __all__ = ("SQLAlchemyStorage",)
 
 metadata = MetaData()
@@ -30,12 +35,12 @@ storage_table = Table(
     Column("key", String(255), nullable=False, unique=True, index=True),
     Column("state", String(255), nullable=True),
     Column("data", JSON, nullable=False, default={}),
-    Column("created_at", DateTime, default=datetime.utcnow, nullable=False),
+    Column("created_at", DateTime, default=datetime.now(timezone.utc), nullable=False),
     Column(
         "updated_at",
         DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
+        default=datetime.now(timezone.utc),
+        onupdate=datetime.now(timezone.utc),
         nullable=False,
     ),
 )
@@ -72,7 +77,7 @@ class SQLAlchemyStorage(BaseStorage):
         pool_size: int = 10,
         max_overflow: int = 0,
         **kwargs: Any,  # noqa: ANN401
-    ) -> "SQLAlchemyStorage":
+    ) -> SQLAlchemyStorage:
         """Create storage from database URL.
 
         :param url: Database URL
