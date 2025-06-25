@@ -156,6 +156,7 @@ class PaginatorMiddleware(BaseMiddleware):
 
         data["paginator"] = paginator
         data["page"] = paginator.current_page
+        data["offset"] = (paginator.current_page - 1) * paginator.limit
         data["limit"] = paginator.limit
 
         return await handler(event, data)
