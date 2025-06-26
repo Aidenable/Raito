@@ -55,7 +55,7 @@ def extract_command_metadata(handler: HandlerObject) -> CommandMeta | None:
     if not commands or not commands[0].commands:
         return None
 
-    if handler.flags.get("hidden"):
+    if handler.flags.get("raito__hidden"):
         return None
 
     description: LazyProxy | str | None = handler.flags.get("raito__description", "—")

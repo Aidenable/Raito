@@ -32,7 +32,7 @@ class RoleManager:
         """Initialize the RoleManager and run migrations."""
         await self.provider.migrate()
 
-        middleware = RoleMiddleware(flag_name="raito_roles")
+        middleware = RoleMiddleware(flag_name="raito__roles")
         dispatcher.message.middleware(middleware)
         dispatcher.callback_query.middleware(middleware)
 

@@ -99,7 +99,7 @@ class Raito:
         )
 
         await self.role_manager.initialize(self.dispatcher)
-        self.dispatcher.callback_query.middleware(PaginatorMiddleware("is_pagination"))
+        self.dispatcher.callback_query.middleware(PaginatorMiddleware("raito__is_pagination"))
 
         await self.router_manager.load_routers(self.routers_dir)
         await self.router_manager.load_routers(ROOT_DIR / "handlers")
