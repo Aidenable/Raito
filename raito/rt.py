@@ -1,4 +1,5 @@
 from .core.raito import Raito
+from .plugins.commands.decorator import description, hidden, params
 from .plugins.pagination import on_pagination
 from .plugins.roles import Role, roles
 from .utils.loggers import log
@@ -9,7 +10,10 @@ __all__ = (
     "Raito",
     "Role",
     "debug",
+    "description",
+    "hidden",
     "log",
     "on_pagination",
+    "params",
     "roles",
 )

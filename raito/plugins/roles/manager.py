@@ -182,3 +182,15 @@ class RoleManager:
 
         role = await self.get_role(bot_id, user_id)
         return role in roles
+
+    async def get_users(self, bot_id: int, role: Role) -> list[int]:
+        """Get a list of users with a specific role.
+
+        :param bot_id: The Telegram bot ID
+        :type bot_id: int
+        :param role: The role to check for
+        :type role: Role
+        :returns: A list of Telegram user IDs
+        :rtype: list[int]
+        """
+        return []  # TODO

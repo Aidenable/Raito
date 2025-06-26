@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from raito.plugins.commands.registration import register_bot_commands
 from raito.plugins.pagination import PaginationMode, PaginatorMiddleware, get_paginator
 from raito.plugins.roles import (
     BaseRoleProvider,
@@ -179,3 +180,15 @@ class Raito:
             limit=limit,
         )
         await paginator.paginate()
+
+    async def register_commands(self, bot: Bot, locales: list[str]) -> None:
+        handlers = []
+        for loader in self.router_manager.loaders.values():
+            handlers.extend(loader.router.message.handlers)
+
+        await register_bot_commands(
+            role_manager=self.role_manager,
+            bot=bot,
+            handlers=handlers,
+            locales=locales,
+        )
