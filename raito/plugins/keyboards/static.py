@@ -10,7 +10,6 @@ from aiogram.types import (
 )
 from aiogram.utils.keyboard import (
     InlineKeyboardBuilder,
-    KeyboardBuilder,
     ReplyKeyboardBuilder,
 )
 from typing_extensions import ParamSpec, TypeVar
@@ -68,7 +67,7 @@ def _is_button(row: LayoutRow) -> bool:
 
 
 def _inject_layout(
-    builder: KeyboardBuilder,
+    builder: InlineKeyboardBuilder | ReplyKeyboardBuilder,
     layout: LayoutReturn,
     *,
     inline: bool,
@@ -79,13 +78,18 @@ def _inject_layout(
     :param layout: List of button data or rows
     :param inline: Whether inline buttons are expected
     """
+    expected_type = InlineKeyboardBuilder if inline else ReplyKeyboardBuilder
+    if not isinstance(builder, expected_type):
+        kind = "Inline" if inline else "Reply"
+        raise ValueError(f"{kind} buttons are not supported for {type(builder).__name__}")
+
     for row in layout:
         if _is_button(row):
-            button = cast(ButtonData, row)
-            builder.row(_get_button(button, inline=inline), width=1)
+            button = _get_button(cast(ButtonData, row), inline=inline)
+            builder.row(button, width=1)  # type: ignore[arg-type]
         else:
             buttons = [_get_button(data, inline=inline) for data in row]
-            builder.row(*buttons, width=min(8, len(row)))
+            builder.row(*buttons, width=min(8, len(row)))  # type: ignore[arg-type]
 
 
 @overload
