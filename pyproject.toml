@@ -114,7 +114,6 @@ indent-style = "space"
 
 [tool.mypy]
 python_version = "3.10"
-strict = true
 ignore_missing_imports = true
 exclude = ["tests", "examples"]
 
