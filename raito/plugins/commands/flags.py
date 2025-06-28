@@ -18,5 +18,5 @@ def hidden() -> FlagDecorator:
     return FlagDecorator(Flag("raito__hidden", value=True))
 
 
-def params(**kwargs: str | int | bool) -> FlagDecorator:
+def params(**kwargs: type[str] | type[int] | type[bool] | type[float]) -> FlagDecorator:
     return FlagDecorator(Flag("raito__params", value=True))(kwargs)
