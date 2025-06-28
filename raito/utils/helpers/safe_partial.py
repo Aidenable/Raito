@@ -1,13 +1,13 @@
 import inspect
 from collections.abc import Callable
 from functools import partial, update_wrapper
-from typing import ParamSpec, TypeVar
+from typing import ParamSpec, TypeVar, cast
 
 P = ParamSpec("P")
 R = TypeVar("R")
 
 
-def safe_partial(func: Callable[P, R], /, **kwargs: object) -> Callable[..., R]:
+def safe_partial(func: Callable[P, R], /, **kwargs: object) -> Callable[P, R]:
     """
     Creates a partial version of a function, keeping only keyword arguments
     that are accepted by the original function.
@@ -26,4 +26,4 @@ def safe_partial(func: Callable[P, R], /, **kwargs: object) -> Callable[..., R]:
 
     filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_parameters}
     wrapped = partial(func, **filtered_kwargs)
-    return update_wrapper(wrapped, func)
+    return cast(Callable[P, R], update_wrapper(wrapped, func))

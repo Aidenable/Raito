@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from functools import wraps
-from typing import Concatenate, Literal, TypeAlias, overload
+from typing import Concatenate, Literal, TypeAlias, cast, overload
 
 from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
@@ -75,7 +75,8 @@ def dynamic_keyboard(
         @wraps(fn)
         def wrapped(*args: P.args, **kwargs: P.kwargs) -> KeyboardMarkupT:
             builder = Builder()
-            safe_partial(fn, builder=builder)(*args, **kwargs)
+            bound_fn = cast(Callable[P, object], safe_partial(fn, builder=builder))
+            bound_fn(*args, **kwargs)
             if adjust:
                 builder.adjust(*sizes, repeat=repeat)
             return builder.as_markup(**builder_kwargs)
