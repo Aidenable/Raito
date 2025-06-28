@@ -115,6 +115,8 @@ class AsciiTree:
         folder_icon: str = "📁",
         folder_suffix: str = "/",
         tree_chars: TreeChars | None = None,
+        *,
+        sort: bool = True,
     ) -> None:
         """Initialize AsciiTree.
 
@@ -124,10 +126,13 @@ class AsciiTree:
         :type folder_suffix: str
         :param tree_chars: Tree characters (last, middle, vertical)
         :type tree_chars: TreeChars
+        :param sort: Sort children alphabetically
+        :type sort: bool
         """
         self.folder_icon = folder_icon
         self.folder_suffix = folder_suffix
         self.tree_chars = tree_chars or TreeChars()
+        self.sort = sort
 
     def render(self, root: TreeNode) -> str:
         """Render the tree to ASCII format.
@@ -159,10 +164,12 @@ class AsciiTree:
         :param lines: List to accumulate rendered lines
         :type lines: list[str]
         """
-        sorted_children = sorted(children.items())
-        last_index = len(sorted_children) - 1
+        nodes = children.items()
+        if self.sort:
+            nodes = sorted(nodes)
+        last_index = len(nodes) - 1
 
-        for i, (_, node) in enumerate(sorted_children):
+        for i, (_, node) in enumerate(nodes):
             is_last = i == last_index
             branch = self.tree_chars.last if is_last else self.tree_chars.middle
 
