@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 router = Router(name="raito.roles.assign")
 
 
-class AssignRoleCallback(CallbackData, prefix="rt_assign_role"):
+class AssignRoleCallback(CallbackData, prefix="rt_assign_role"):  # type: ignore[call-arg]
     """Callback data for assigning roles."""
 
     role_index: int
