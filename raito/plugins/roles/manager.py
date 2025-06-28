@@ -193,4 +193,4 @@ class RoleManager:
         :returns: A list of Telegram user IDs
         :rtype: list[int]
         """
-        return []  # TODO
+        return await self.provider.get_users(bot_id, role)
