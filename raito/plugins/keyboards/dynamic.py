@@ -40,7 +40,7 @@ def dynamic_keyboard(
     inline: Literal[False],
     **builder_kwargs: object,
 ) -> Callable[[ReplyFn[P]], ReplySyncFn[P]]: ...
-def dynamic_keyboard(
+def dynamic_keyboard(  # type: ignore[misc]
     *sizes: int,
     repeat: bool = True,
     adjust: bool = True,
