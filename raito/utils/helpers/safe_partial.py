@@ -1,13 +1,13 @@
 import inspect
 from collections.abc import Callable
 from functools import partial, update_wrapper
-from typing import ParamSpec, TypeVar, cast
+from typing import Any, ParamSpec, TypeVar, cast
 
 P = ParamSpec("P")
 R = TypeVar("R")
 
 
-def safe_partial(func: Callable[P, R], /, **kwargs: object) -> Callable[P, R]:
+def safe_partial(func: Callable[P, R], /, **kwargs: Any) -> Callable[P, R]:  # noqa: ANN401
     """
     Creates a partial version of a function, keeping only keyword arguments
     that are accepted by the original function.
