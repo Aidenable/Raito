@@ -69,7 +69,7 @@ def dynamic_keyboard(
     if not sizes:
         sizes = (1,)
 
-    Builder: type[BuilderT] = InlineKeyboardBuilder if inline else ReplyKeyboardBuilder  # type: ignore
+    Builder = InlineKeyboardBuilder if inline else ReplyKeyboardBuilder
 
     def wrapper(fn: Callable[Concatenate[BuilderT, P], object]) -> Callable[P, KeyboardMarkupT]:
         @wraps(fn)
