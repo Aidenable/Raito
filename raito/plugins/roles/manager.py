@@ -193,4 +193,7 @@ class RoleManager:
         :returns: A list of Telegram user IDs
         :rtype: list[int]
         """
-        return await self.provider.get_users(bot_id, role)
+        users = await self.provider.get_users(bot_id, role)
+        if role == Role.DEVELOPER and self._developers:
+            users.extend(self._developers)
+        return users
