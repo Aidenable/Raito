@@ -85,7 +85,7 @@ For commands like `/ban 1234`, use `@rt.params` to extract and validate the argu
 @rt.roles(rt.Role.OWNER, rt.Role.ADMINISTRATOR, rt.Role.MODERATOR)
 @rt.description("Ban a user")
 @rt.params(user_id=int)
-async def ban(message: types.Message, params: rt.Params, bot: Bot):
+async def ban(message: types.Message, user_id: int, bot: Bot):
     if not params.user_id:
         await message.answer("Please provide a user ID.")
         return
