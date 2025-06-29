@@ -164,7 +164,7 @@ class AsciiTree:
         :param lines: List to accumulate rendered lines
         :type lines: list[str]
         """
-        nodes = children.items()
+        nodes = list(children.items())
         if self.sort:
             nodes = sorted(nodes)
         last_index = len(nodes) - 1
