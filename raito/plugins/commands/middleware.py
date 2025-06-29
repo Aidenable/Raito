@@ -49,8 +49,11 @@ class CommandMiddleware(BaseMiddleware):
         for i, (key, value_type) in enumerate(params.items()):
             arg = args[i]
             if value_type is bool:
-                arg = arg.lower() in ("true", "yes", "on", "1", "ok", "+")
-            data[key] = value_type(arg)
+                value = arg.lower() in ("true", "yes", "on", "1", "ok", "+")
+            else:
+                value = value_type(arg)
+
+            data[key] = value
         return data
 
     async def __call__(
