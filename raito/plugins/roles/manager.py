@@ -32,7 +32,7 @@ class RoleManager:
         """Initialize the RoleManager and run migrations."""
         await self.provider.migrate()
 
-        middleware = RoleMiddleware(flag_name="raito_roles")
+        middleware = RoleMiddleware(flag_name="raito__roles")
         dispatcher.message.middleware(middleware)
         dispatcher.callback_query.middleware(middleware)
 
@@ -182,3 +182,18 @@ class RoleManager:
 
         role = await self.get_role(bot_id, user_id)
         return role in roles
+
+    async def get_users(self, bot_id: int, role: Role) -> list[int]:
+        """Get a list of users with a specific role.
+
+        :param bot_id: The Telegram bot ID
+        :type bot_id: int
+        :param role: The role to check for
+        :type role: Role
+        :returns: A list of Telegram user IDs
+        :rtype: list[int]
+        """
+        users = await self.provider.get_users(bot_id, role)
+        if role == Role.DEVELOPER and self._developers:
+            users.extend(self._developers)
+        return users

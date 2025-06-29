@@ -54,6 +54,7 @@ class ColoredFormatter(logging.Formatter):
 
 core = logging.getLogger("raito.core")
 routers = logging.getLogger("raito.core.routers")
+commands = logging.getLogger("raito.core.commands")
 
 middlewares = logging.getLogger("raito.middlewares")
 plugins = logging.getLogger("raito.plugins")

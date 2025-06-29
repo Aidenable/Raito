@@ -85,7 +85,7 @@ For commands like `/ban 1234`, use `@rt.params` to extract and validate the argu
 @rt.roles(rt.Role.OWNER, rt.Role.ADMINISTRATOR, rt.Role.MODERATOR)
 @rt.description("Ban a user")
 @rt.params(user_id=int)
-async def ban(message: types.Message, params: rt.Params, bot: Bot):
+async def ban(message: types.Message, user_id: int, bot: Bot):
     if not params.user_id:
         await message.answer("Please provide a user ID.")
         return
@@ -147,6 +147,30 @@ async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, page: 
     await paginator.answer(text="Here is your buttons:", buttons=content)
 ```
 
+---
+
+#### ⌨️ Keyboards
+
+Sometimes you want quick layouts. Sometimes — full control. You get both.
+
+##### Static (layout-based)
+```python
+@rt.keyboard.static(inline=True)
+def information():
+    return [
+        ("📄 Terms of Service", "tos"),
+        [("ℹ️ About", "about"), ("⚙️ Website", "web")],
+    ]
+```
+
+##### Dynamic (builder-based)
+```python
+@rt.keyboard.dynamic(1, 2, adjust=True, inline=False)
+def start_menu(builder: ReplyKeyboardBuilder, app_url: str):
+    builder.button(text="📱 Open App", web_app=WebAppInfo(url=app_url))
+    builder.button(text="💬 Support")
+    builder.button(text="📢 Channel")
+```
 
 ## Contributing
 

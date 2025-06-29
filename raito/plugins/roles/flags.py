@@ -6,4 +6,4 @@ __all__ = ("roles",)
 
 
 def roles(*allowed_roles: Role) -> FlagDecorator:
-    return FlagDecorator(Flag("raito_roles", value=True))(allowed_roles)
+    return FlagDecorator(Flag("raito__roles", value=True))(allowed_roles)

@@ -24,5 +24,5 @@ def on_pagination(router: Router, name: str) -> CallbackType:
     """
     return router.callback_query(
         PaginationCallbackData.filter(F.name == name),
-        flags={"is_pagination": True},
+        flags={"raito__is_pagination": True},
     )
