@@ -89,3 +89,23 @@ class SQLAlchemyRoleProvider(IRoleProvider):
     async def close(self) -> None:
         """Close the database connection."""
         await self.engine.dispose()
+
+    async def get_users(self, bot_id: int, role: Role) -> list[int]:
+        """Get all users with a specific role.
+
+        :param bot_id: The Telegram bot ID
+        :type bot_id: int
+        :param role: The role to check for
+        :type role: Role
+        :return: A list of Telegram user IDs
+        :rtype: list[int]
+        """
+        async with self.session_factory() as session:
+            query = select(roles_table.c.user_id).where(
+                and_(
+                    roles_table.c.bot_id == bot_id,
+                    roles_table.c.role == role.value,
+                )
+            )
+            result = await session.execute(query)
+            return [row[0] for row in result.all()]

@@ -31,7 +31,7 @@ __all__ = ("PaginatorMiddleware",)
 class PaginatorMiddleware(BaseMiddleware):
     """Middleware for pagination handling."""
 
-    def __init__(self, flag_name: str = "is_pagination") -> None:
+    def __init__(self, flag_name: str = "raito__is_pagination") -> None:
         """Initialize pagination middleware.
 
         :param flag_name: flag name to filter
