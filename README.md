@@ -86,11 +86,7 @@ For commands like `/ban 1234`, use `@rt.params` to extract and validate the argu
 @rt.description("Ban a user")
 @rt.params(user_id=int)
 async def ban(message: types.Message, user_id: int, bot: Bot):
-    if not params.user_id:
-        await message.answer("Please provide a user ID.")
-        return
-
-    await bot.ban_chat_member(chat_id=message.chat.id, user_id=params.user_id)
+    await bot.ban_chat_member(chat_id=message.chat.id, user_id=user_id)
     await message.answer(text="✅ User banned successfully!")
 ```
 
