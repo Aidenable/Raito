@@ -1,9 +1,12 @@
 from collections.abc import Awaitable, Callable
 from typing import Any, TypeVar
 
+from aiogram.dispatcher.event.bases import REJECTED
 from aiogram.dispatcher.event.handler import HandlerObject
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.types import Message, TelegramObject
+
+from raito.utils.helpers.command_help import get_command_help
 
 DataT = TypeVar("DataT", bound=dict[str, Any])
 R = TypeVar("R")
@@ -23,20 +26,15 @@ class CommandMiddleware(BaseMiddleware):
     def __init__(self) -> None:
         """Initialize CommandMiddleware."""
 
-    def _unpack_params(self, handler_object: HandlerObject, event: Message, data: DataT) -> DataT:
+    def _unpack_params(self, params: dict[str, type[Any]], event: Message, data: DataT) -> DataT:
         """Unpack command parameters into the metadata.
 
         :param handler_object: Handler object
         :param event: Telegram message
         :param data: Current metadata
         :return: Updated context with parsed parameters
-        :raises ValueError: If parameter is missing or invalid
+        :raises ValueError, IndexError: If parameter is missing or invalid
         """
-        params: dict[str, type[int] | type[str] | type[bool] | type[float]] | None = (
-            handler_object.flags.get("raito__params")
-        )
-        if not params:
-            return data
 
         if not event.entities or event.entities[0].type != "bot_command":
             return data
@@ -49,16 +47,10 @@ class CommandMiddleware(BaseMiddleware):
         args = text[command_entity.offset + command_entity.length :].strip().split()
 
         for i, (key, value_type) in enumerate(params.items()):
-            try:
-                value = value_type(args[i])
-            except ValueError as exc:
-                msg = f"Invalid value for parameter '{key}'"
-                raise ValueError(msg) from exc
-            except IndexError as exc:
-                msg = f"Missing value for parameter '{key}'"
-                raise ValueError(msg) from exc
-
-            data[key] = value
+            arg = args[i]
+            if value_type is bool:
+                arg = arg.lower() in ("true", "yes", "on", "1", "ok", "+")
+            data[key] = value_type(arg)
         return data
 
     async def __call__(
@@ -84,5 +76,16 @@ class CommandMiddleware(BaseMiddleware):
         if handler_object is None:
             raise RuntimeError("Handler object not found")
 
-        data = self._unpack_params(handler_object, event, data)
+        params: dict[str, type[int] | type[str] | type[bool] | type[float]] | None = (
+            handler_object.flags.get("raito__params")
+        )
+        if params:
+            try:
+                data = self._unpack_params(params, event, data)
+            except (ValueError, IndexError):
+                command = data.get("command")
+                if command:
+                    await event.reply(get_command_help(command, params))
+                return REJECTED
+
         return await handler(event, data)
