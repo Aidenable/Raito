@@ -13,7 +13,7 @@
 <img alt="uv" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fastral-sh%2Fuv%2Fmain%2Fassets%2Fbadge%2Fv0.json&style=flat-square&labelColor=232226&color=6341AC&link=https%3A%2F%2Fastral.sh%2Fuv">
 <img alt="Ruff" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fastral-sh%2Fruff%2Fmain%2Fassets%2Fbadge%2Fv2.json&style=flat-square&labelColor=232226&color=6341AC&link=https%3A%2F%2Fastral.sh%2Fruff">
 <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/raito?style=flat-square&labelColor=222426&color=19A4F3">
-<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Aidenable/Raito/test.yml?style=flat-square&labelColor=232622">
+<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Aidenable/Raito/ci.yml?style=flat-square&labelColor=232622">
 </div>
 
 ---
