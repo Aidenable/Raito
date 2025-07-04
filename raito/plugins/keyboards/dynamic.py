@@ -6,8 +6,6 @@ from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from typing_extensions import ParamSpec, TypeVar
 
-from raito.utils.helpers.safe_partial import safe_partial
-
 __all__ = ("dynamic_keyboard",)
 
 
@@ -75,8 +73,7 @@ def dynamic_keyboard(  # type: ignore[misc]
         @wraps(fn)
         def wrapped(*args: P.args, **kwargs: P.kwargs) -> KeyboardMarkupT:
             builder = Builder()
-            bound_fn = cast(Callable[P, object], safe_partial(fn, builder=builder))
-            bound_fn(*args, **kwargs)
+            fn(cast(BuilderT, builder), *args, **kwargs)
             if adjust:
                 builder.adjust(*sizes, repeat=repeat)
             return builder.as_markup(**builder_kwargs)
