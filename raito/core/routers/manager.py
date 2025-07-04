@@ -66,7 +66,6 @@ class RouterManager:
         :type directory: StrOrPath
         :raises AttributeError: If a router doesn't have a name attribute
         """
-        names = set()
         dir_path = Path(directory)
 
         for file_path in self.resolve_paths(dir_path):
@@ -78,16 +77,13 @@ class RouterManager:
                 )
                 continue
 
-            if router.name in self.loaders:
-                continue
-
             try:
                 unique_name: str = router.name
             except AttributeError as e:
                 msg = "The router has no name"
                 raise AttributeError(msg) from e
 
-            if router.name in names:
+            if unique_name in self.loaders:
                 suffix = hex(id(router))
                 unique_name = f"{router.name}_{suffix}"
                 loggers.routers.warning(
@@ -96,8 +92,6 @@ class RouterManager:
                     unique_name,
                 )
                 router.name = unique_name
-
-            names.add(router.name)
 
             loader = RouterLoader(
                 unique_name,

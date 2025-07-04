@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 __all__ = ("on_pagination",)
 
 
-def on_pagination(router: Router, name: str) -> CallbackType:
+def on_pagination(router: Router, name: str, *filters: CallbackType) -> CallbackType:
     """Register pagination handler for specific name.
 
     :param router: aiogram router
@@ -24,5 +24,6 @@ def on_pagination(router: Router, name: str) -> CallbackType:
     """
     return router.callback_query(
         PaginationCallbackData.filter(F.name == name),
+        *filters,
         flags={"raito__is_pagination": True},
     )
