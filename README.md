@@ -119,7 +119,7 @@ It is very user-friendly and fully customizable.
 
 ```python
 @router.message(filters.Command("pagination"))
-async def pagination(message: Message, raito: rt.Raito, bot: Bot):
+async def pagination(message: Message, raito: Raito, bot: Bot):
     if not message.from_user:
         return
 
@@ -132,14 +132,15 @@ async def pagination(message: Message, raito: rt.Raito, bot: Bot):
     )
 
 
+# mock data
 BUTTONS = [
     InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}")
     for i in range(10000)
 ]
 
 @rt.on_pagination(router, "button_list")
-async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, page: int, limit: int):
-    content = BUTTONS[(page - 1) * limit : page * limit]
+async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, offset: int, limit: int):
+    content = BUTTONS[offset : offset + limit]
     await paginator.answer(text="Here is your buttons:", buttons=content)
 ```
 
