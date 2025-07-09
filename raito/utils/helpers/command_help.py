@@ -16,11 +16,12 @@ EXAMPLE_VALUES = {
 
 
 def get_command_help(
-    command: CommandObject,
+    command_object: CommandObject,
     params: dict[str, type[Any]],
+    description: str | None = None,
 ) -> str:
     """Get the help message of a command."""
-    cmd = command.prefix + command.command
+    cmd = command_object.prefix + command_object.command
 
     signature = cmd
     example = cmd
@@ -28,9 +29,13 @@ def get_command_help(
         signature += f" [{param}]"
         example += " " + EXAMPLE_VALUES[value_type]
 
+    description = "\n" + html.expandable_blockquote(html.italic(description)) if description else ""
+
     return (
-        html.italic("— Signature:\n")
+        html.bold(cmd)
+        + description
+        + html.italic("\n\n— Signature:\n")
         + html.code(signature)
-        + html.italic("\n\n— Example: ")
-        + html.blockquote(example)
+        + html.italic("\n\n— Example:\n")
+        + html.code(example)
     )
