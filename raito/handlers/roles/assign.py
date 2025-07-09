@@ -8,6 +8,8 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import InlineKeyboardMarkup, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from raito.plugins.commands import description
+from raito.plugins.commands.flags import hidden
 from raito.plugins.roles import ROLES_DATA, Role, roles
 from raito.utils.filters import RaitoCommand
 
@@ -44,7 +46,9 @@ def roles_list_markup() -> InlineKeyboardMarkup:
 
 
 @router.message(RaitoCommand("roles", "assign"))
+@description("Assigns a role to a user")
 @roles(Role.ADMINISTRATOR, Role.OWNER)
+@hidden
 async def show_roles(message: Message) -> None:
     await message.answer("🎭 Select role to assign:", reply_markup=roles_list_markup())
 

@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, NamedTuple
 
 from aiogram import Router, html
 
+from raito.plugins.commands import description, hidden
 from raito.plugins.roles import Role, roles
 from raito.utils.ascii import AsciiTree, TreeNode
 from raito.utils.configuration import RouterListStyle
@@ -29,7 +30,9 @@ class Emojis(NamedTuple):
 
 
 @router.message(RaitoCommand("routers"))
+@description("Lists all routers")
 @roles(Role.DEVELOPER)
+@hidden
 async def list_routers(message: Message, raito: Raito) -> None:
     match raito.configuration.router_list_style:
         case RouterListStyle.CIRCLES:

@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from aiogram import Router, html
 
+from raito.plugins.commands import description, hidden
 from raito.plugins.roles import Role, roles
 from raito.utils.ascii import AsciiTree, TreeNode
 from raito.utils.filters import RaitoCommand
@@ -18,7 +19,9 @@ router = Router(name="raito.roles.staff")
 
 
 @router.message(RaitoCommand("staff"))
+@description("Shows users with roles")
 @roles(Role.DEVELOPER)
+@hidden
 async def list_staff(message: Message, raito: Raito, bot: Bot) -> None:
     root = TreeNode("staff", is_folder=True)
 
