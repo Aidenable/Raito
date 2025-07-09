@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 from collections.abc import Sequence
-from typing import override
 
 from aiogram.filters import Command, CommandObject
 from aiogram.filters.command import CommandException, CommandPatternType
@@ -64,7 +63,6 @@ class RaitoCommand(Command):
         )
         self._regex = re.compile(pattern)
 
-    @override
     def extract_command(self, text: str) -> CommandObject:
         # First step: separate command with arguments
         # ".rt command arg1 arg2" -> ".rt", "command", ["arg1 arg2"]
