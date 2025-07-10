@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from aiogram import F, Router, html
 from aiogram.fsm.state import State, StatesGroup
 
+from raito.plugins.commands import description, hidden
 from raito.plugins.roles import Role, roles
 from raito.utils.filters import RaitoCommand
 
@@ -24,7 +25,9 @@ class RevokeRoleGroup(StatesGroup):
 
 
 @router.message(RaitoCommand("revoke"))
+@description("Revokes a role from a user")
 @roles(Role.ADMINISTRATOR, Role.OWNER)
+@hidden
 async def revoke(message: Message, state: FSMContext) -> None:
     await message.answer("👤 Enter user ID:")
     await state.set_state(RevokeRoleGroup.user_id)

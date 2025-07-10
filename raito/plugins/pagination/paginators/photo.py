@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from aiogram.types import (
         InlineKeyboardMarkup,
         InputFileUnion,
+        Message,
         MessageEntity,
         ReplyParameters,
     )
@@ -78,7 +79,7 @@ class PhotoPaginator(BasePaginator):
         reply_markup: InlineKeyboardMarkup | None = None,
         allow_sending_without_reply: bool | None = None,
         reply_to_message_id: int | None = None,
-    ) -> None:
+    ) -> Message:
         """Send or edit paginated message.
 
         :param photo: photo file
@@ -109,6 +110,8 @@ class PhotoPaginator(BasePaginator):
         :type allow_sending_without_reply: bool | None
         :param reply_to_message_id: reply to message id
         :type reply_to_message_id: int | None
+        :return: paginated message
+        :rtype: Message
         :raises RuntimeError: if bot instance not set
         """
         if not self.bot:
@@ -144,3 +147,5 @@ class PhotoPaginator(BasePaginator):
                 caption=caption,
                 reply_markup=reply_markup,
             )
+
+        return self.existing_message

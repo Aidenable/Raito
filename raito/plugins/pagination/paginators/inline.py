@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from aiogram.types import (
         InlineKeyboardButton,
         LinkPreviewOptions,
+        Message,
         MessageEntity,
         ReplyParameters,
     )
@@ -126,7 +127,7 @@ class InlinePaginator(BasePaginator):
         allow_sending_without_reply: bool | None = None,
         disable_web_page_preview: bool | Default | None = None,
         reply_to_message_id: int | None = None,
-    ) -> None:
+    ) -> Message:
         """Send or edit paginated message.
 
         :param text: message text
@@ -157,6 +158,8 @@ class InlinePaginator(BasePaginator):
         :type disable_web_page_preview: bool | Default | None
         :param reply_to_message_id: reply to message id
         :type reply_to_message_id: int | None
+        :return: paginated message
+        :rtype: Message
         :raises RuntimeError: if bot instance not set
         """
         if not self.bot:
@@ -194,3 +197,5 @@ class InlinePaginator(BasePaginator):
             await self.existing_message.edit_text(text=text, reply_markup=reply_markup)
         else:
             await self.existing_message.edit_reply_markup(reply_markup=reply_markup)
+
+        return self.existing_message

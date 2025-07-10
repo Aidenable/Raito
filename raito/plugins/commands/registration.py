@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 __all__ = ("register_bot_commands",)
 
 
-class CommandMeta(NamedTuple):
+class _CommandMeta(NamedTuple):
     """Command metadata.
 
     :param command: Command name (without prefix)
@@ -43,7 +43,7 @@ class CommandMeta(NamedTuple):
     role: Role | None
 
 
-def extract_command_metadata(handler: HandlerObject) -> CommandMeta | None:
+def _extract_command_metadata(handler: HandlerObject) -> _CommandMeta | None:
     """Extract command metadata from a handler's flags.
 
     :param handler: Message handler object
@@ -64,12 +64,12 @@ def extract_command_metadata(handler: HandlerObject) -> CommandMeta | None:
     roles: list[Role] | None = handler.flags.get("raito__roles")
     highest_role = max(roles, key=lambda role: role.value) if roles else None
 
-    return CommandMeta(
+    return _CommandMeta(
         command=commands[0].commands[0], description=description_str, role=highest_role
     )
 
 
-def format_description(meta: CommandMeta, text: str) -> str:
+def _format_description(meta: _CommandMeta, text: str) -> str:
     """Format description with role emoji if available.
 
     :param meta: CommandMeta instance
@@ -86,7 +86,7 @@ def format_description(meta: CommandMeta, text: str) -> str:
 
 async def _apply_bot_commands(
     bot: Bot,
-    meta_entries: list[CommandMeta],
+    meta_entries: list[_CommandMeta],
     locale: str,
     scope: BotCommandScopeUnion,
 ) -> None:
@@ -95,7 +95,7 @@ async def _apply_bot_commands(
     :param bot: Bot instance
     :type bot: Bot
     :param meta_entries: List of command metadata
-    :type meta_entries: list[CommandMeta]
+    :type meta_entries: list[_CommandMeta]
     :param locale: Locale string (e.g., "en", "ru")
     :type locale: str
     :param scope: Scope for which to set commands
@@ -117,7 +117,7 @@ async def _apply_bot_commands(
         bot_commands.append(
             BotCommand(
                 command=meta.command,
-                description=format_description(meta, description),
+                description=_format_description(meta, description),
             )
         )
 
@@ -141,10 +141,10 @@ async def register_bot_commands(
     :param locales: List of supported locales (e.g., "en", "ru")
     :type locales: list[str]
     """
-    role_command_map: dict[Role | None, list[CommandMeta]] = defaultdict(list)
+    role_command_map: dict[Role | None, list[_CommandMeta]] = defaultdict(list)
 
     for handler in handlers:
-        meta = extract_command_metadata(handler)
+        meta = _extract_command_metadata(handler)
         if meta:
             role_command_map[meta.role].append(meta)
 
@@ -160,7 +160,7 @@ async def register_bot_commands(
         (role for role in role_command_map if role is not None),
         key=lambda r: r.value,
     )
-    inherited_command_map: dict[Role, list[CommandMeta]] = {}
+    inherited_command_map: dict[Role, list[_CommandMeta]] = {}
 
     for i, role in enumerate(sorted_roles):
         visible_commands = []
