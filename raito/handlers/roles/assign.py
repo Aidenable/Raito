@@ -1,16 +1,17 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 from aiogram import F, Router, html
 from aiogram.filters import or_f
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import InlineKeyboardMarkup, Message
+from aiogram.types import Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from raito.plugins.commands import description
 from raito.plugins.commands.flags import hidden
+from raito.plugins.keyboards import dynamic
 from raito.plugins.roles.data import RoleData
 from raito.plugins.roles.roles import ADMINISTRATOR, DEVELOPER, OWNER
 from raito.utils.filters import RaitoCommand
@@ -36,15 +37,13 @@ class AssignRoleGroup(StatesGroup):
     user_id = State()
 
 
-def roles_list_markup(roles: list[RoleData]) -> InlineKeyboardMarkup:
-    builder = InlineKeyboardBuilder()
+@dynamic(2)
+def roles_list_markup(builder: InlineKeyboardBuilder, roles: list[RoleData]) -> None:
     for role in roles:
         builder.button(
             text=role.emoji + " " + role.name,
             callback_data=AssignRoleCallback(role_slug=role.slug),
         )
-
-    return cast(InlineKeyboardMarkup, builder.adjust(2).as_markup())
 
 
 @router.message(RaitoCommand("roles", "assign"), or_f(DEVELOPER, OWNER, ADMINISTRATOR))
