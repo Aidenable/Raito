@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Sequence
+from typing import Any
 
 from aiogram.filters import Command, CommandObject
 from aiogram.filters.command import CommandException, CommandPatternType
@@ -73,3 +74,7 @@ class RaitoCommand(Command):
             raise CommandException(msg) from exc
 
         return CommandObject(prefix=prefix + " ", command=command, args=args[0] if args else None)
+
+    def update_handler_flags(self, flags: dict[str, Any]) -> None:
+        super().update_handler_flags(flags)
+        flags["raito__hidden"] = True
