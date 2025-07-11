@@ -81,8 +81,10 @@ The `@rt.description` decorator adds a description to each command — they will
 For commands like `/ban 1234`, use `@rt.params` to extract and validate the arguments.
 
 ```python
-@router.message(filters.Command("ban"))
-@rt.roles(rt.Role.OWNER, rt.Role.ADMINISTRATOR, rt.Role.MODERATOR)
+@router.message(
+    filters.Command("ban"),
+    filters.or_f(rt.OWNER, rt.ADMINISTRATOR, rt.MODERATOR),
+)
 @rt.description("Ban a user")
 @rt.params(user_id=int)
 async def ban(message: types.Message, user_id: int, bot: Bot):
