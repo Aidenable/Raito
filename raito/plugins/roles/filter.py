@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, override
+from typing import TYPE_CHECKING, Any
 
 from aiogram import Bot
 from aiogram.filters import Filter
 from aiogram.types import TelegramObject, User
+from typing_extensions import override
 
 from .data import RoleData
 
@@ -49,7 +50,12 @@ class RoleFilter(Filter):
         :param data: RoleData instance containing role metadata
         :return: A new RoleFilter instance
         """
-        return RoleFilter(**data.__dataclass_fields__)
+        return RoleFilter(
+            slug=data.slug,
+            name=data.name,
+            description=data.description,
+            emoji=data.emoji,
+        )
 
     @override
     def update_handler_flags(self, flags: dict[str, Any]) -> None:

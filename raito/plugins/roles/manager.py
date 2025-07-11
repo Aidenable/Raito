@@ -134,12 +134,12 @@ class RoleManager:
         :returns: A list of Telegram user IDs
         """
         users = await self.provider.get_users(bot_id, role)
-        users = set(users)
+        unique_users = set(users)
 
         if role == "developer":
-            users.update(self.developers)
+            unique_users.update(self.developers)
 
-        return users
+        return unique_users
 
     @property
     def available_roles(self) -> list[RoleData]:

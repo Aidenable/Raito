@@ -155,13 +155,13 @@ async def register_bot_commands(
         for role in meta.roles:
             role_commands[role].append(meta)
 
-    role_users: dict[RoleData, list[int]] = defaultdict(list)
-    for role in role_commands:
+    role_users: dict[RoleData, set[int]] = defaultdict(set)
+    for role in role_commands:  # type: ignore
         if role is None:
             continue
 
         users = await role_manager.get_users(bot.id, role.slug)
-        role_users[role].extend(users)
+        role_users[role].update(users)
 
     for locale in locales:
         for role, users in role_users.items():
