@@ -74,11 +74,11 @@ class CommandMiddleware(BaseMiddleware):
 
         handler_object: HandlerObject | None = data.get("handler")
         if handler_object is None:
-            raise RuntimeError("Handler object not found")
+            return await handler(event, data)
 
         command: CommandObject | None = data.get("command")
         if command is None:
-            raise RuntimeError("Command object not found")
+            return await handler(event, data)
 
         params: dict[str, type[int] | type[str] | type[bool] | type[float]] | None = (
             handler_object.flags.get("raito__params")
