@@ -171,6 +171,23 @@ def start_menu(builder: ReplyKeyboardBuilder, app_url: str):
     builder.button(text="📢 Channel")
 ```
 
+---
+
+#### 🍃 Lifespan
+
+Define startup and shutdown logic in one place.
+
+```python
+@rt.lifespan(router)
+async def lifespan(bot: Bot):
+    user = await bot.get_me()
+    rt.debug("🚀 Bot [%s] is starting...", user.full_name)
+
+    yield
+
+    rt.debug("👋🏻 Bye!")
+```
+
 ## Contributing
 
 Have an idea, found a bug, or want to improve something? \
