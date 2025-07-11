@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 
 from aiogram import F, Router, html
+from aiogram.filters import or_f
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import InlineKeyboardMarkup, Message
@@ -10,7 +11,8 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from raito.plugins.commands import description
 from raito.plugins.commands.flags import hidden
-from raito.plugins.roles import ROLES_DATA, Role, roles
+from raito.plugins.roles.data import RoleData
+from raito.plugins.roles.roles import ADMINISTRATOR, DEVELOPER, OWNER
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
@@ -25,7 +27,7 @@ router = Router(name="raito.roles.assign")
 class AssignRoleCallback(CallbackData, prefix="rt_assign_role"):  # type: ignore[call-arg]
     """Callback data for assigning roles."""
 
-    role_index: int
+    role_slug: str
 
 
 class AssignRoleGroup(StatesGroup):
@@ -34,31 +36,33 @@ class AssignRoleGroup(StatesGroup):
     user_id = State()
 
 
-def roles_list_markup() -> InlineKeyboardMarkup:
+def roles_list_markup(roles: list[RoleData]) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
-    for index, data in ROLES_DATA.items():
+    for role in roles:
         builder.button(
-            text=data.emoji + " " + data.name,
-            callback_data=AssignRoleCallback(role_index=index),
+            text=role.emoji + " " + role.name,
+            callback_data=AssignRoleCallback(role_slug=role.slug),
         )
 
     return cast(InlineKeyboardMarkup, builder.adjust(2).as_markup())
 
 
-@router.message(RaitoCommand("roles", "assign"))
+@router.message(RaitoCommand("roles", "assign"), or_f(DEVELOPER, OWNER, ADMINISTRATOR))
 @description("Assigns a role to a user")
-@roles(Role.ADMINISTRATOR, Role.OWNER)
 @hidden
-async def show_roles(message: Message) -> None:
-    await message.answer("🎭 Select role to assign:", reply_markup=roles_list_markup())
+async def show_roles(message: Message, raito: Raito) -> None:
+    await message.answer(
+        "🎭 Select role to assign:",
+        reply_markup=roles_list_markup(raito.role_manager.available_roles),
+    )
 
 
-@router.callback_query(AssignRoleCallback.filter())
-@roles(Role.ADMINISTRATOR, Role.OWNER)
+@router.callback_query(AssignRoleCallback.filter(), or_f(DEVELOPER, OWNER, ADMINISTRATOR))
 async def store_role(
     query: CallbackQuery,
     state: FSMContext,
     callback_data: AssignRoleCallback,
+    raito: Raito,
 ) -> None:
     if not query.bot:
         await query.answer("🚫 Bot not found", show_alert=True)
@@ -67,8 +71,8 @@ async def store_role(
         await query.answer("🚫 Invalid message", show_alert=True)
         return
 
-    role = Role(callback_data.role_index)
-    await state.update_data(rt_selected_role=role.value)
+    role = raito.role_manager.get_role_data(callback_data.role_slug)
+    await state.update_data(rt_selected_role=role.slug)
     await state.set_state(AssignRoleGroup.user_id)
 
     chat_id = query.message.chat.id
@@ -80,12 +84,15 @@ async def store_role(
     await query.bot.send_message(chat_id=chat_id, text="👤 Enter user ID:")
 
 
-@router.message(AssignRoleGroup.user_id, F.text and F.text.isdigit())
-@roles(Role.ADMINISTRATOR, Role.OWNER)
+@router.message(
+    AssignRoleGroup.user_id,
+    F.text and F.text.isdigit(),
+    or_f(DEVELOPER, OWNER, ADMINISTRATOR),
+)
 async def assign_role(message: Message, raito: Raito, state: FSMContext) -> None:
     data = await state.get_data()
-    role_index = data.get("rt_selected_role")
-    if role_index is None:
+    role_slug = data.get("rt_selected_role")
+    if role_slug is None:
         await message.answer("🚫 Role not selected")
         return
     if not message.from_user:
@@ -101,13 +108,13 @@ async def assign_role(message: Message, raito: Raito, state: FSMContext) -> None
     await state.update_data(rt_selected_role=None)
     await state.set_state()
 
-    role = Role(role_index)
+    role = raito.role_manager.get_role_data(role_slug)
     try:
         await raito.role_manager.assign_role(
             message.bot.id,
             message.from_user.id,
             int(message.text),
-            role,
+            role.slug,
         )
     except PermissionError:
         await message.answer("🚫 Permission denied")

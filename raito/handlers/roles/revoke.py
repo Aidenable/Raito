@@ -3,10 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from aiogram import F, Router, html
+from aiogram.filters import or_f
 from aiogram.fsm.state import State, StatesGroup
 
 from raito.plugins.commands import description, hidden
-from raito.plugins.roles import Role, roles
+from raito.plugins.roles.roles import ADMINISTRATOR, DEVELOPER, OWNER
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
@@ -24,17 +25,19 @@ class RevokeRoleGroup(StatesGroup):
     user_id = State()
 
 
-@router.message(RaitoCommand("revoke"))
+@router.message(RaitoCommand("revoke"), or_f(DEVELOPER, OWNER, ADMINISTRATOR))
 @description("Revokes a role from a user")
-@roles(Role.ADMINISTRATOR, Role.OWNER)
 @hidden
 async def revoke(message: Message, state: FSMContext) -> None:
     await message.answer("👤 Enter user ID:")
     await state.set_state(RevokeRoleGroup.user_id)
 
 
-@router.message(RevokeRoleGroup.user_id, F.text and F.text.isdigit())
-@roles(Role.ADMINISTRATOR, Role.OWNER)
+@router.message(
+    RevokeRoleGroup.user_id,
+    F.text and F.text.isdigit(),
+    or_f(DEVELOPER, OWNER, ADMINISTRATOR),
+)
 async def revoke_role(message: Message, raito: Raito, state: FSMContext) -> None:
     if not message.bot:
         await message.answer("🚫 Bot not found")
@@ -47,11 +50,11 @@ async def revoke_role(message: Message, raito: Raito, state: FSMContext) -> None
         return
     await state.set_state()
 
-    role = await raito.role_manager.get_role(
+    role_slug = await raito.role_manager.get_role(
         message.bot.id,
         int(message.text),
     )
-    if not role:
+    if not role_slug:
         await message.answer("⚠️ User does not have the role")
         return
 
@@ -65,4 +68,5 @@ async def revoke_role(message: Message, raito: Raito, state: FSMContext) -> None
         await message.answer("🚫 Permission denied")
         return
 
+    role = raito.role_manager.get_role_data(role_slug)
     await message.answer(f"🛑 User revoked from {html.bold(role.label)}", parse_mode="HTML")

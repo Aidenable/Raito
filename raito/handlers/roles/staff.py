@@ -3,9 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from aiogram import Router, html
+from aiogram.filters import or_f
 
 from raito.plugins.commands import description, hidden
-from raito.plugins.roles import Role, roles
+from raito.plugins.roles.roles import ADMINISTRATOR, DEVELOPER, OWNER
 from raito.utils.ascii import AsciiTree, TreeNode
 from raito.utils.filters import RaitoCommand
 
@@ -18,16 +19,15 @@ if TYPE_CHECKING:
 router = Router(name="raito.roles.staff")
 
 
-@router.message(RaitoCommand("staff"))
+@router.message(RaitoCommand("staff"), or_f(DEVELOPER, OWNER, ADMINISTRATOR))
 @description("Shows users with roles")
-@roles(Role.DEVELOPER)
 @hidden
 async def list_staff(message: Message, raito: Raito, bot: Bot) -> None:
     root = TreeNode("staff", is_folder=True)
 
-    for role in Role:
+    for role in raito.role_manager.available_roles:
         role_node = root.add_child(role.label, prefix=role.emoji, is_folder=True)
-        user_ids = await raito.role_manager.get_users(bot_id=bot.id, role=role)
+        user_ids = await raito.role_manager.get_users(bot_id=bot.id, role=role.slug)
 
         for user_id in user_ids:
             role_node.add_child(html.code(str(user_id)))

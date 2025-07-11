@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from aiogram import Router, html
 
 from raito.plugins.commands import description, hidden, params
-from raito.plugins.roles import Role, roles
+from raito.plugins.roles.roles import DEVELOPER
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
@@ -17,9 +17,8 @@ if TYPE_CHECKING:
 router = Router(name="raito.management.load")
 
 
-@router.message(RaitoCommand("load"))
+@router.message(RaitoCommand("load"), DEVELOPER)
 @description("Loads a router by name")
-@roles(Role.DEVELOPER)
 @params(name=str)
 @hidden
 async def load_router(message: Message, raito: Raito, name: str) -> None:

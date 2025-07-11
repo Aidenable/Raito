@@ -99,7 +99,7 @@ class Raito:
             "production" if self.production else "development",
         )
 
-        await self.role_manager.initialize(self.dispatcher)
+        await self.role_manager.migrate()
         self.dispatcher.callback_query.middleware(PaginatorMiddleware("raito__is_pagination"))
         self.dispatcher.message.middleware(CommandMiddleware())
 
