@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+import sys
 from asyncio import create_task
 from typing import TYPE_CHECKING
 
@@ -191,3 +193,25 @@ class Raito:
             handlers=handlers,
             locales=locales,
         )
+
+    def init_logging(self, *mute_loggers: str) -> None:
+        """Configure global logging with a colored formatter.
+
+        :param mute_loggers: List of logger names to suppress from output
+        """
+        logging.captureWarnings(True)
+
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(loggers.ColoredFormatter())
+        if mute_loggers:
+            handler.addFilter(loggers.MuteLoggersFilter(*mute_loggers))
+
+        root_logger = logging.getLogger()
+        root_logger.handlers.clear()
+        root_logger.addHandler(handler)
+
+        level = logging.DEBUG if not self.production else logging.INFO
+        root_logger.setLevel(level)
+        for name in logging.root.manager.loggerDict:
+            if name.startswith("raito."):
+                logging.getLogger(name).setLevel(level)

@@ -4,6 +4,7 @@ from typing import Literal, cast
 
 __all__ = (
     "ColoredFormatter",
+    "MuteLoggersFilter",
     "core",
     "log",
     "middlewares",
@@ -50,6 +51,15 @@ class ColoredFormatter(logging.Formatter):
         message = f"{foreground_color}{record.getMessage()}{RESET}"
 
         return f"{left}{tab} {tag} {message}"
+
+
+class MuteLoggersFilter(logging.Filter):
+    def __init__(self, *names: str) -> None:
+        self.names = set(names)
+        super().__init__()
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        return record.name not in self.names
 
 
 core = logging.getLogger("raito.core")
