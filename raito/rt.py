@@ -13,6 +13,7 @@ from .plugins.roles import (
     SUPPORT,
     TESTER,
 )
+from .plugins.throttling.flag import limiter
 from .utils.lifespan import lifespan
 from .utils.loggers import log
 
@@ -34,6 +35,7 @@ __all__ = (
     "hidden",
     "keyboard",
     "lifespan",
+    "limiter",
     "log",
     "on_pagination",
     "params",

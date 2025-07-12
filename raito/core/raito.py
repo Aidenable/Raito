@@ -19,10 +19,10 @@ from raito.plugins.roles.providers import (
     get_redis_provider,
     get_sqlite_provider,
 )
+from raito.plugins.throttling.middleware import THROTTLING_MODE, ThrottlingMiddleware
 from raito.utils import loggers
 from raito.utils.configuration import RaitoConfiguration
 from raito.utils.const import ROOT_DIR
-from raito.utils.middlewares import ThrottlingMiddleware
 from raito.utils.storages import (
     get_postgresql_storage,
     get_redis_storage,
@@ -109,10 +109,10 @@ class Raito:
         if not self.production:
             create_task(self.router_manager.start_watchdog(self.routers_dir))  # noqa: RUF006
 
-    def add_global_throttling(
+    def add_throttling(
         self,
         rate_limit: float,
-        mode: ThrottlingMiddleware.MODE = "chat",
+        mode: THROTTLING_MODE = "chat",
         max_size: int = 10_000,
     ) -> None:
         """Add global throttling middleware to prevent spam.
@@ -126,12 +126,9 @@ class Raito:
         :param max_size: Maximum cache size for throttling records, defaults to 10_000
         :type max_size: int, optional
         """
-        self.dispatcher.callback_query.outer_middleware(
-            ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
-        )
-        self.dispatcher.message.outer_middleware(
-            ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
-        )
+        middleware = ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size)
+        self.dispatcher.callback_query.middleware(middleware)
+        self.dispatcher.message.middleware(middleware)
 
     def _get_role_provider(self, storage: BaseStorage) -> IRoleProvider:
         """Get the current role provider based on storage.
