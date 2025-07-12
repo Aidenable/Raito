@@ -5,6 +5,7 @@ import sys
 from asyncio import create_task
 from typing import TYPE_CHECKING
 
+from aiogram.dispatcher.router import EventObserver
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from raito.plugins.commands.middleware import CommandMiddleware
@@ -91,6 +92,8 @@ class Raito:
             self.storage,
         )
         self.role_manager = RoleManager(self._role_provider, developers=self.developers)
+
+        self.command_parameters_error = EventObserver()
 
     async def setup(self) -> None:
         """Set up the Raito by loading routers and starting watchdog.

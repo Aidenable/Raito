@@ -1,5 +1,5 @@
 from collections.abc import Awaitable, Callable
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeAlias, TypeVar
 
 from aiogram.dispatcher.event.bases import REJECTED
 from aiogram.dispatcher.event.handler import HandlerObject
@@ -9,8 +9,12 @@ from aiogram.types import Message, TelegramObject
 
 from raito.utils.helpers.command_help import get_command_help
 
+if TYPE_CHECKING:
+    from raito.core.raito import Raito
+
 DataT = TypeVar("DataT", bound=dict[str, Any])
 R = TypeVar("R")
+ParamT: TypeAlias = type[int] | type[str] | type[bool] | type[float]
 
 
 __all__ = ("CommandMiddleware",)
@@ -30,7 +34,7 @@ class CommandMiddleware(BaseMiddleware):
     def _unpack_params(
         self,
         command: CommandObject,
-        params: dict[str, type[Any]],
+        params: dict[str, ParamT],
         event: Message,
         data: DataT,
     ) -> DataT:
@@ -52,6 +56,26 @@ class CommandMiddleware(BaseMiddleware):
 
             data[key] = value
         return data
+
+    async def _send_help_message(
+        self,
+        handler_object: HandlerObject,
+        command: CommandObject,
+        params: dict[str, ParamT],
+        event: Message,
+        data: dict[str, Any],
+    ) -> None:
+        description = handler_object.flags.get("raito__description")
+        raito: Raito | None = data.get("raito")
+
+        if raito is not None and raito.command_parameters_error.handlers:
+            target = {"handler": handler_object, "command": command}
+            await raito.command_parameters_error.trigger(event, target=target)
+        else:
+            await event.reply(
+                get_command_help(command, params, description=description),
+                parse_mode="HTML",
+            )
 
     async def __call__(
         self,
@@ -80,18 +104,12 @@ class CommandMiddleware(BaseMiddleware):
         if command is None:
             return await handler(event, data)
 
-        params: dict[str, type[int] | type[str] | type[bool] | type[float]] | None = (
-            handler_object.flags.get("raito__params")
-        )
+        params: dict[str, ParamT] | None = handler_object.flags.get("raito__params")
         if params:
             try:
                 data = self._unpack_params(command, params, event, data)
             except (ValueError, IndexError):
-                description = handler_object.flags.get("raito__description")
-                await event.reply(
-                    get_command_help(command, params, description=description),
-                    parse_mode="HTML",
-                )
+                await self._send_help_message(handler_object, command, params, event, data)
                 return REJECTED
 
         return await handler(event, data)
