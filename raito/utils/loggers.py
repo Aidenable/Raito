@@ -70,4 +70,7 @@ middlewares = logging.getLogger("raito.middlewares")
 plugins = logging.getLogger("raito.plugins")
 roles = logging.getLogger("raito.plugins.roles")
 
+utils = logging.getLogger("raito.utils")
+storages = logging.getLogger("raito.utils.storages")
+
 log = logging.getLogger()
