@@ -21,6 +21,7 @@ from raito.plugins.roles.providers import (
     get_redis_provider,
     get_sqlite_provider,
 )
+from raito.plugins.roles.providers.json import JSONRoleProvider
 from raito.plugins.throttling.middleware import THROTTLING_MODE, ThrottlingMiddleware
 from raito.utils import loggers
 from raito.utils.configuration import RaitoConfiguration
@@ -30,6 +31,7 @@ from raito.utils.storages import (
     get_redis_storage,
     get_sqlite_storage,
 )
+from raito.utils.storages.json import JSONStorage
 
 from .routers.manager import RouterManager
 
@@ -101,7 +103,14 @@ class Raito:
             "production" if self.production else "development",
         )
 
+        provider = self.role_manager.provider
+        if self.production and isinstance(provider, (MemoryRoleProvider | JSONRoleProvider)):
+            loggers.roles.warn(
+                "Using %s. It's not recommended for production use.",
+                provider.__class__.__name__,
+            )
         await self.role_manager.migrate()
+
         self.dispatcher.callback_query.middleware(PaginatorMiddleware("raito__is_pagination"))
         self.dispatcher.message.middleware(CommandMiddleware())
 
@@ -140,6 +149,9 @@ class Raito:
         """
         if isinstance(storage, MemoryStorage):
             return MemoryRoleProvider(storage)
+
+        if isinstance(storage, JSONStorage):
+            return JSONRoleProvider(storage)
 
         redis_storage = get_redis_storage(throw=False)
         if redis_storage is not None and isinstance(storage, redis_storage):

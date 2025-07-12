@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 from raito.plugins.roles.data import RoleData
-from raito.utils import loggers
 
-from .providers.memory import MemoryRoleProvider
 from .providers.protocol import IRoleProvider
 from .roles import AVAILABLE_ROLES, AVAILABLE_ROLES_BY_SLUG
 
@@ -21,11 +19,6 @@ class RoleManager:
         """
         self.provider = provider
         self.developers = developers or []
-
-        if isinstance(self.provider, MemoryRoleProvider):
-            loggers.roles.warn(
-                "Using MemoryRoleProvider. It's not recommended for production use.",
-            )
 
     async def migrate(self) -> None:
         """Run provider migrations."""
