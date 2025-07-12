@@ -1,6 +1,7 @@
 from .core.raito import Raito
 from .plugins import keyboards as keyboard
 from .plugins.commands.flags import description, hidden, params
+from .plugins.lifespan.decorator import lifespan
 from .plugins.pagination import on_pagination
 from .plugins.roles import (
     ADMINISTRATOR,
@@ -14,7 +15,6 @@ from .plugins.roles import (
     TESTER,
 )
 from .plugins.throttling.flag import limiter
-from .utils.lifespan import lifespan
 from .utils.loggers import log
 
 debug = log.debug
