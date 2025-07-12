@@ -35,7 +35,6 @@ class CommandMiddleware(BaseMiddleware):
         self,
         command: CommandObject,
         params: dict[str, ParamT],
-        event: Message,
         data: DataT,
     ) -> DataT:
         """Unpack command parameters into the metadata.
@@ -50,11 +49,11 @@ class CommandMiddleware(BaseMiddleware):
         for i, (key, value_type) in enumerate(params.items()):
             arg = args[i]
             if value_type is bool:
-                value = arg.lower() in ("true", "yes", "on", "1", "ok", "+")
+                bool_value: bool = arg.lower() in ("true", "yes", "on", "1", "ok", "+")
+                data[key] = bool_value
             else:
-                value = value_type(arg)
+                data[key] = value_type(arg)
 
-            data[key] = value
         return data
 
     async def _send_help_message(
@@ -107,7 +106,7 @@ class CommandMiddleware(BaseMiddleware):
         params: dict[str, ParamT] | None = handler_object.flags.get("raito__params")
         if params:
             try:
-                data = self._unpack_params(command, params, event, data)
+                data = self._unpack_params(command, params, data)
             except (ValueError, IndexError):
                 await self._send_help_message(handler_object, command, params, event, data)
                 return REJECTED
