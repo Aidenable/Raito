@@ -20,7 +20,7 @@ def description(description: str | LazyProxy) -> FlagDecorator:
     :param description: A string or LazyProxy representing the description.
     :return: A FlagDecorator to be applied to the handler.
     """
-    return FlagDecorator(Flag("raito__description", value=True))(description)
+    return FlagDecorator(Flag("raito__description", value=description))
 
 
 def hidden(func: Callable) -> Callable[..., Any]:
@@ -52,4 +52,4 @@ def params(**kwargs: type[str] | type[int] | type[bool] | type[float]) -> FlagDe
     :param kwargs: A mapping of parameter names to their expected types.
     :return: A FlagDecorator to be applied to the handler with param data.
     """
-    return FlagDecorator(Flag("raito__params", value=True))(kwargs)
+    return FlagDecorator(Flag("raito__params", value=kwargs))
