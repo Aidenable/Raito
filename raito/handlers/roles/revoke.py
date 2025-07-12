@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from aiogram import F, Router, html
-from aiogram.filters import or_f
 from aiogram.fsm.state import State, StatesGroup
 
 from raito.plugins.commands import description, hidden
@@ -25,7 +24,7 @@ class RevokeRoleGroup(StatesGroup):
     user_id = State()
 
 
-@router.message(RaitoCommand("revoke"), or_f(DEVELOPER, OWNER, ADMINISTRATOR))
+@router.message(RaitoCommand("revoke"), DEVELOPER | OWNER | ADMINISTRATOR)
 @description("Revokes a role from a user")
 @hidden
 async def revoke(message: Message, state: FSMContext) -> None:
@@ -36,7 +35,7 @@ async def revoke(message: Message, state: FSMContext) -> None:
 @router.message(
     RevokeRoleGroup.user_id,
     F.text and F.text.isdigit(),
-    or_f(DEVELOPER, OWNER, ADMINISTRATOR),
+    DEVELOPER | OWNER | ADMINISTRATOR,
 )
 async def revoke_role(message: Message, raito: Raito, state: FSMContext) -> None:
     if not message.bot:

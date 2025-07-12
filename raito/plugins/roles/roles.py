@@ -1,4 +1,5 @@
-from raito.plugins.roles.filter import RoleFilter
+from .constraint import RoleConstraint
+from .filter import RoleFilter
 
 __all__ = (
     "ADMINISTRATOR",
@@ -15,63 +16,74 @@ __all__ = (
 )
 
 
-DEVELOPER = RoleFilter(
+def _create_role(slug: str, name: str, description: str, emoji: str) -> RoleConstraint:
+    return RoleConstraint(
+        RoleFilter(
+            slug=slug,
+            name=name,
+            description=description,
+            emoji=emoji,
+        )
+    )
+
+
+DEVELOPER = _create_role(
     slug="developer",
     name="Developer",
     description="Has full access to all internal features, including debug tools and unsafe operations.",
     emoji="🖥️",
 )
 
-OWNER = RoleFilter(
+OWNER = _create_role(
     slug="owner",
     name="Owner",
     description="Top-level administrator with permissions to manage administrators and global settings.",
     emoji="👑",
 )
 
-ADMINISTRATOR = RoleFilter(
+ADMINISTRATOR = _create_role(
     slug="administrator",
     name="Administrator",
     description="Can manage users, moderate content, and configure most system settings.",
     emoji="💼",
 )
 
-MODERATOR = RoleFilter(
+MODERATOR = _create_role(
     slug="moderator",
     name="Moderator",
     description="Can moderate user activity, issue warnings, and enforce rules within their scope.",
     emoji="🛡️",
 )
 
-MANAGER = RoleFilter(
+MANAGER = _create_role(
     slug="manager",
     name="Manager",
     description="Oversees non-technical operations like campaigns, tasks, or content planning.",
     emoji="📊",
 )
 
-SPONSOR = RoleFilter(
+SPONSOR = _create_role(
     slug="sponsor",
     name="Sponsor",
     description="Supporter of the project. Usually does not have administrative privileges.",
     emoji="❤️",
 )
 
-GUEST = RoleFilter(
+GUEST = _create_role(
     slug="guest",
     name="Guest",
     description="Has temporary access to specific internal features (e.g., analytics). Typically used for invited external users.",
     emoji="👤",
 )
 
-SUPPORT = RoleFilter(
+SUPPORT = _create_role(
     slug="support",
     name="Support",
     description="Handles user support requests and assists with onboarding or issues.",
     emoji="💬",
 )
 
-TESTER = RoleFilter(
+TESTER = _create_role(
     slug="tester",
     name="Tester",
     description="Helps test new features and provide feedback. May have access to experimental tools.",
@@ -79,7 +91,7 @@ TESTER = RoleFilter(
 )
 
 AVAILABLE_ROLES = [
-    i.data
+    i.filter.data
     for i in [
         ADMINISTRATOR,
         DEVELOPER,

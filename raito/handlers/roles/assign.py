@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from aiogram import F, Router, html
-from aiogram.filters import or_f
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
@@ -46,7 +45,7 @@ def roles_list_markup(builder: InlineKeyboardBuilder, roles: list[RoleData]) -> 
         )
 
 
-@router.message(RaitoCommand("roles", "assign"), or_f(DEVELOPER, OWNER, ADMINISTRATOR))
+@router.message(RaitoCommand("roles", "assign"), DEVELOPER | OWNER | ADMINISTRATOR)
 @description("Assigns a role to a user")
 @hidden
 async def show_roles(message: Message, raito: Raito) -> None:
@@ -56,7 +55,7 @@ async def show_roles(message: Message, raito: Raito) -> None:
     )
 
 
-@router.callback_query(AssignRoleCallback.filter(), or_f(DEVELOPER, OWNER, ADMINISTRATOR))
+@router.callback_query(AssignRoleCallback.filter(), DEVELOPER | OWNER | ADMINISTRATOR)
 async def store_role(
     query: CallbackQuery,
     state: FSMContext,
@@ -86,7 +85,7 @@ async def store_role(
 @router.message(
     AssignRoleGroup.user_id,
     F.text and F.text.isdigit(),
-    or_f(DEVELOPER, OWNER, ADMINISTRATOR),
+    DEVELOPER | OWNER | ADMINISTRATOR,
 )
 async def assign_role(message: Message, raito: Raito, state: FSMContext) -> None:
     data = await state.get_data()

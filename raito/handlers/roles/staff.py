@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from aiogram import Router, html
-from aiogram.filters import or_f
 
 from raito.plugins.commands import description, hidden
 from raito.plugins.roles.roles import ADMINISTRATOR, DEVELOPER, OWNER
@@ -19,7 +18,7 @@ if TYPE_CHECKING:
 router = Router(name="raito.roles.staff")
 
 
-@router.message(RaitoCommand("staff"), or_f(DEVELOPER, OWNER, ADMINISTRATOR))
+@router.message(RaitoCommand("staff"), DEVELOPER | OWNER | ADMINISTRATOR)
 @description("Shows users with roles")
 @hidden
 async def list_staff(message: Message, raito: Raito, bot: Bot) -> None:
