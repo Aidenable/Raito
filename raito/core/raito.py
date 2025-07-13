@@ -224,9 +224,4 @@ class Raito:
         root_logger = logging.getLogger()
         root_logger.handlers.clear()
         root_logger.addHandler(handler)
-
-        level = logging.DEBUG if not self.production else logging.INFO
-        root_logger.setLevel(level)
-        for name in logging.root.manager.loggerDict:
-            if name.startswith("raito."):
-                logging.getLogger(name).setLevel(level)
+        root_logger.setLevel(logging.DEBUG if not self.production else logging.INFO)
