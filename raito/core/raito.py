@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import logging
+import sys
 from asyncio import create_task
 from typing import TYPE_CHECKING
 
+from aiogram.dispatcher.event.event import EventObserver
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from raito.plugins.commands.middleware import CommandMiddleware
@@ -19,15 +22,17 @@ from raito.plugins.roles.providers import (
     get_redis_provider,
     get_sqlite_provider,
 )
+from raito.plugins.roles.providers.json import JSONRoleProvider
+from raito.plugins.throttling.middleware import THROTTLING_MODE, ThrottlingMiddleware
 from raito.utils import loggers
 from raito.utils.configuration import RaitoConfiguration
 from raito.utils.const import ROOT_DIR
-from raito.utils.middlewares import ThrottlingMiddleware
 from raito.utils.storages import (
     get_postgresql_storage,
     get_redis_storage,
     get_sqlite_storage,
 )
+from raito.utils.storages.json import JSONStorage
 
 from .routers.manager import RouterManager
 
@@ -83,10 +88,12 @@ class Raito:
         self.router_manager = RouterManager(dispatcher)
         self.dispatcher["raito"] = self
 
-        self._role_provider = self.configuration.role_provider or self._get_role_provider(
-            self.storage,
+        self._role_provider = self._get_role_provider(self.storage)
+        self.role_manager = self.configuration.role_manager or RoleManager(
+            self._role_provider, developers=self.developers
         )
-        self.role_manager = RoleManager(self._role_provider, developers=self.developers)
+
+        self.command_parameters_error = EventObserver()
 
     async def setup(self) -> None:
         """Set up the Raito by loading routers and starting watchdog.
@@ -99,7 +106,14 @@ class Raito:
             "production" if self.production else "development",
         )
 
-        await self.role_manager.initialize(self.dispatcher)
+        provider = self.role_manager.provider
+        if self.production and isinstance(provider, (MemoryRoleProvider | JSONRoleProvider)):
+            loggers.roles.warn(
+                "Using %s. It's not recommended for production use.",
+                provider.__class__.__name__,
+            )
+        await self.role_manager.migrate()
+
         self.dispatcher.callback_query.middleware(PaginatorMiddleware("raito__is_pagination"))
         self.dispatcher.message.middleware(CommandMiddleware())
 
@@ -109,10 +123,10 @@ class Raito:
         if not self.production:
             create_task(self.router_manager.start_watchdog(self.routers_dir))  # noqa: RUF006
 
-    def add_global_throttling(
+    def add_throttling(
         self,
         rate_limit: float,
-        mode: ThrottlingMiddleware.MODE = "chat",
+        mode: THROTTLING_MODE = "chat",
         max_size: int = 10_000,
     ) -> None:
         """Add global throttling middleware to prevent spam.
@@ -126,12 +140,9 @@ class Raito:
         :param max_size: Maximum cache size for throttling records, defaults to 10_000
         :type max_size: int, optional
         """
-        self.dispatcher.callback_query.outer_middleware(
-            ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
-        )
-        self.dispatcher.message.outer_middleware(
-            ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size),
-        )
+        middleware = ThrottlingMiddleware(rate_limit=rate_limit, mode=mode, max_size=max_size)
+        self.dispatcher.callback_query.middleware(middleware)
+        self.dispatcher.message.middleware(middleware)
 
     def _get_role_provider(self, storage: BaseStorage) -> IRoleProvider:
         """Get the current role provider based on storage.
@@ -141,6 +152,9 @@ class Raito:
         """
         if isinstance(storage, MemoryStorage):
             return MemoryRoleProvider(storage)
+
+        if isinstance(storage, JSONStorage):
+            return JSONRoleProvider(storage)
 
         redis_storage = get_redis_storage(throw=False)
         if redis_storage is not None and isinstance(storage, redis_storage):
@@ -194,3 +208,20 @@ class Raito:
             handlers=handlers,
             locales=locales,
         )
+
+    def init_logging(self, *mute_loggers: str) -> None:
+        """Configure global logging with a colored formatter.
+
+        :param mute_loggers: List of logger names to suppress from output
+        """
+        logging.captureWarnings(True)
+
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(loggers.ColoredFormatter())
+        if mute_loggers:
+            handler.addFilter(loggers.MuteLoggersFilter(*mute_loggers))
+
+        root_logger = logging.getLogger()
+        root_logger.handlers.clear()
+        root_logger.addHandler(handler)
+        root_logger.setLevel(logging.DEBUG if not self.production else logging.INFO)

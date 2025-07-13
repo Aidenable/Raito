@@ -1,7 +1,5 @@
 from typing import Protocol, runtime_checkable
 
-from raito.plugins.roles.data import Role
-
 __all__ = ("IRoleProvider",)
 
 
@@ -9,27 +7,21 @@ __all__ = ("IRoleProvider",)
 class IRoleProvider(Protocol):
     """Protocol for providers that manage user roles."""
 
-    async def get_role(self, bot_id: int, user_id: int) -> Role | None:
+    async def get_role(self, bot_id: int, user_id: int) -> str | None:
         """Get the role for a specific user.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
         :param user_id: The Telegram user ID
-        :type user_id: int
-        :return: The user's role or None if not found
-        :rtype: Role | None
+        :return: The role slug or None if not found
         """
         ...
 
-    async def set_role(self, bot_id: int, user_id: int, role: Role) -> None:
+    async def set_role(self, bot_id: int, user_id: int, role_slug: str) -> None:
         """Set the role for a specific user.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
         :param user_id: The Telegram user ID
-        :type user_id: int
-        :param role: The role to assign
-        :type role: Role
+        :param role_slug: The role slug to assign
         """
         ...
 
@@ -37,9 +29,7 @@ class IRoleProvider(Protocol):
         """Remove the role for a specific user.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
         :param user_id: The Telegram user ID
-        :type user_id: int
         """
         ...
 
@@ -47,14 +37,11 @@ class IRoleProvider(Protocol):
         """Initialize the storage backend (create tables, etc.)."""
         ...
 
-    async def get_users(self, bot_id: int, role: Role) -> list[int]:
+    async def get_users(self, bot_id: int, role_slug: str) -> list[int]:
         """Get all users with a specific role.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
-        :param role: The role to check for
-        :type role: Role
+        :param role_slug: The role slug to check for
         :return: A list of Telegram user IDs
-        :rtype: list[int]
         """
         ...

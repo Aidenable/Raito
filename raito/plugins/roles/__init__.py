@@ -1,7 +1,6 @@
-from .data import ROLES_DATA, Role
-from .flags import roles
+from .data import RoleData
+from .filter import RoleFilter
 from .manager import RoleManager
-from .middleware import RoleMiddleware
 from .providers import (
     BaseRoleProvider,
     IRoleProvider,
@@ -10,17 +9,39 @@ from .providers import (
     get_redis_provider,
     get_sqlite_provider,
 )
+from .roles import (
+    ADMINISTRATOR,
+    AVAILABLE_ROLES,
+    AVAILABLE_ROLES_BY_SLUG,
+    DEVELOPER,
+    GUEST,
+    MANAGER,
+    MODERATOR,
+    OWNER,
+    SPONSOR,
+    SUPPORT,
+    TESTER,
+)
 
 __all__ = (
-    "ROLES_DATA",
+    "ADMINISTRATOR",
+    "AVAILABLE_ROLES",
+    "AVAILABLE_ROLES_BY_SLUG",
+    "DEVELOPER",
+    "GUEST",
+    "MANAGER",
+    "MODERATOR",
+    "OWNER",
+    "SPONSOR",
+    "SUPPORT",
+    "TESTER",
     "BaseRoleProvider",
     "IRoleProvider",
     "MemoryRoleProvider",
-    "Role",
+    "RoleData",
+    "RoleFilter",
     "RoleManager",
-    "RoleMiddleware",
     "get_postgresql_provider",
     "get_redis_provider",
     "get_sqlite_provider",
-    "roles",
 )

@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, overload
 
 from .base import BaseRoleProvider
+from .json import JSONRoleProvider
 from .memory import MemoryRoleProvider
 from .protocol import IRoleProvider
 from .sql import get_postgresql_provider, get_sqlite_provider
@@ -13,6 +14,7 @@ if TYPE_CHECKING:
 __all__ = (
     "BaseRoleProvider",
     "IRoleProvider",
+    "JSONRoleProvider",
     "MemoryRoleProvider",
     "get_postgresql_provider",
     "get_redis_provider",

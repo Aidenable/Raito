@@ -81,8 +81,7 @@ The `@rt.description` decorator adds a description to each command — they will
 For commands like `/ban 1234`, use `@rt.params` to extract and validate the arguments.
 
 ```python
-@router.message(filters.Command("ban"))
-@rt.roles(rt.Role.OWNER, rt.Role.ADMINISTRATOR, rt.Role.MODERATOR)
+@router.message(filters.Command("ban"), OWNER | ADMINISTRATOR | MODERATOR)
 @rt.description("Ban a user")
 @rt.params(user_id=int)
 async def ban(message: types.Message, user_id: int, bot: Bot):
@@ -167,6 +166,23 @@ def start_menu(builder: ReplyKeyboardBuilder, app_url: str):
     builder.button(text="📱 Open App", web_app=WebAppInfo(url=app_url))
     builder.button(text="💬 Support")
     builder.button(text="📢 Channel")
+```
+
+---
+
+#### 🍃 Lifespan
+
+Define startup and shutdown logic in one place.
+
+```python
+@rt.lifespan(router)
+async def lifespan(bot: Bot):
+    user = await bot.get_me()
+    rt.debug("🚀 Bot [%s] is starting...", user.full_name)
+
+    yield
+
+    rt.debug("👋🏻 Bye!")
 ```
 
 ## Contributing

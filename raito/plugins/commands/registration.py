@@ -14,7 +14,7 @@ from aiogram.types import (
 )
 from aiogram.utils.i18n.context import gettext
 
-from raito.plugins.roles.data import Role
+from raito.plugins.roles.data import RoleData
 from raito.utils import loggers
 
 if TYPE_CHECKING:
@@ -40,7 +40,7 @@ class _CommandMeta(NamedTuple):
 
     command: str
     description: str
-    role: Role | None
+    roles: list[RoleData]
 
 
 def _extract_command_metadata(handler: HandlerObject) -> _CommandMeta | None:
@@ -59,13 +59,12 @@ def _extract_command_metadata(handler: HandlerObject) -> _CommandMeta | None:
         return None
 
     description: LazyProxy | str | None = handler.flags.get("raito__description", "—")
-    description_str = str(description).strip()
-
-    roles: list[Role] | None = handler.flags.get("raito__roles")
-    highest_role = max(roles, key=lambda role: role.value) if roles else None
+    roles: list[RoleData] | None = handler.flags.get("raito__roles")
 
     return _CommandMeta(
-        command=commands[0].commands[0], description=description_str, role=highest_role
+        command=commands[0].commands[0],
+        description=str(description).strip(),
+        roles=roles or [],
     )
 
 
@@ -79,16 +78,18 @@ def _format_description(meta: _CommandMeta, text: str) -> str:
     :return: Formatted description
     :rtype: str
     """
-    if meta.role is None:
+    if meta.roles is None:
         return text
-    return f"[{meta.role.emoji}] {text}"
+
+    emojis = "".join([r.emoji for r in meta.roles])
+    return f"[{emojis}] {text}"
 
 
 async def _apply_bot_commands(
     bot: Bot,
     meta_entries: list[_CommandMeta],
-    locale: str,
     scope: BotCommandScopeUnion,
+    locale: str | None = None,
 ) -> None:
     """Set commands for a given scope and locale.
 
@@ -141,49 +142,48 @@ async def register_bot_commands(
     :param locales: List of supported locales (e.g., "en", "ru")
     :type locales: list[str]
     """
-    role_command_map: dict[Role | None, list[_CommandMeta]] = defaultdict(list)
+    role_commands: dict[RoleData | None, list[_CommandMeta]] = defaultdict(list)
 
     for handler in handlers:
         meta = _extract_command_metadata(handler)
-        if meta:
-            role_command_map[meta.role].append(meta)
+        if not meta:
+            continue
 
-    role_user_ids: dict[Role, list[int]] = defaultdict(list)
-    for role in role_command_map:
+        if not meta.roles:
+            role_commands[None].append(meta)
+
+        for role in meta.roles:
+            role_commands[role].append(meta)
+
+    role_users: dict[RoleData, set[int]] = defaultdict(set)
+    for role in role_commands:  # type: ignore
         if role is None:
             continue
 
-        users = await role_manager.get_users(bot.id, role)
-        role_user_ids[role].extend(users)
-
-    sorted_roles = sorted(
-        (role for role in role_command_map if role is not None),
-        key=lambda r: r.value,
-    )
-    inherited_command_map: dict[Role, list[_CommandMeta]] = {}
-
-    for i, role in enumerate(sorted_roles):
-        visible_commands = []
-        for lower_role in sorted_roles[: i + 1]:
-            visible_commands.extend(role_command_map[lower_role])
-
-        visible_commands.extend(role_command_map.get(None, []))
-        inherited_command_map[role] = visible_commands
+        users = await role_manager.get_users(bot.id, role.slug)
+        role_users[role].update(users)
 
     for locale in locales:
-        for role, user_ids in role_user_ids.items():
-            commands = inherited_command_map.get(role, [])
-            for user_id in user_ids:
+        for role, users in role_users.items():
+            commands = role_commands.get(role, [])
+            for user_id in users:
                 await _apply_bot_commands(
-                    bot,
-                    commands,
-                    locale,
-                    BotCommandScopeChat(chat_id=user_id),
+                    bot=bot,
+                    meta_entries=commands,
+                    scope=BotCommandScopeChat(chat_id=user_id),
+                    locale=locale,
                 )
 
         await _apply_bot_commands(
-            bot,
-            role_command_map.get(None, []),
-            locale,
-            BotCommandScopeDefault(),
+            bot=bot,
+            meta_entries=role_commands.get(None, []),
+            scope=BotCommandScopeDefault(),
+            locale=locale,
         )
+
+    await _apply_bot_commands(
+        bot=bot,
+        meta_entries=role_commands.get(None, []),
+        scope=BotCommandScopeDefault(),
+        locale=None,
+    )
