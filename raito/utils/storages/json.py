@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from aiogram.fsm.state import State
 from aiogram.fsm.storage.base import BaseStorage, StateType, StorageKey
 
 from raito.utils import loggers
@@ -81,6 +82,9 @@ class JSONStorage(BaseStorage):
         :param key: FSM storage key
         :param state: New state to store
         """
+        if isinstance(state, State):
+            state = state.state
+
         str_key = self._build_key(key)
         self._data.setdefault(str_key, {})["state"] = state
         self._save()
