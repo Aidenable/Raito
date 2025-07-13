@@ -67,7 +67,14 @@ class RoleFilter(Filter):
         roles.append(self.data)
 
     @override
-    async def __call__(self, event: TelegramObject, raito: Raito, bot: Bot) -> bool:
+    async def __call__(
+        self,
+        event: TelegramObject,
+        raito: Raito,
+        bot: Bot,
+        *args: Any,
+        **kwargs: Any,
+    ) -> bool:
         """Check if the user in the event has the required role.
 
         This method is automatically called by aiogram when the filter is used.
