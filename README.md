@@ -33,7 +33,7 @@
 - 📊 **Metrics** — inspect memory usage, uptime, and caching stats
 - 📃 **Logging** — view and filter runtime logs without leaving Telegram
 - 🧰 **Debug Utils** — run shell commands, monitor jobs, inspect command states, and more
-
+- 🌅 **Lifespan** — `@raito.lifespan` decorator for clean router startup and shutdown lifecycle management
 
 ## Installation
 
