@@ -5,7 +5,7 @@ import sys
 from asyncio import create_task
 from typing import TYPE_CHECKING
 
-from aiogram.dispatcher.router import EventObserver
+from aiogram.dispatcher.event.event import EventObserver
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from raito.plugins.commands.middleware import CommandMiddleware
@@ -88,10 +88,10 @@ class Raito:
         self.router_manager = RouterManager(dispatcher)
         self.dispatcher["raito"] = self
 
-        self._role_provider = self.configuration.role_provider or self._get_role_provider(
-            self.storage,
+        self._role_provider = self._get_role_provider(self.storage)
+        self.role_manager = self.configuration.role_manager or RoleManager(
+            self._role_provider, developers=self.developers
         )
-        self.role_manager = RoleManager(self._role_provider, developers=self.developers)
 
         self.command_parameters_error = EventObserver()
 
