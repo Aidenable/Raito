@@ -78,7 +78,7 @@ def _format_description(meta: _CommandMeta, text: str) -> str:
     :return: Formatted description
     :rtype: str
     """
-    if meta.roles is None:
+    if not meta.roles:
         return text
 
     emojis = "".join([r.emoji for r in meta.roles])
