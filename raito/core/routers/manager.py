@@ -113,9 +113,16 @@ class RouterManager:
         :type directory: StrOrPath
         """
         loggers.routers.info("Router watchdog started for: %s", directory)
+        base_directory = Path(directory).resolve()
+
         async for changes in awatch(directory, step=500):
             for event_type, changed_path in changes:
                 path_object = Path(changed_path).resolve()
+
+                try:
+                    relative_path = Path("/") / path_object.relative_to(base_directory.parent)
+                except ValueError:
+                    relative_path = path_object
 
                 current_loader: RouterLoader | None = None
                 for loader in self.loaders.values():
@@ -124,18 +131,11 @@ class RouterManager:
                         break
 
                 if not current_loader:
-                    loggers.routers.debug(
-                        "File changed: %s. No routers found.",
-                        changed_path,
-                    )
+                    loggers.routers.debug("File changed: %s. No routers found.", relative_path)
                     continue
 
                 if event_type in (Change.modified, Change.added):
-                    loggers.routers.debug(
-                        "File changed: %s. Reloading router '%s'...",
-                        changed_path,
-                        current_loader.name,
-                    )
+                    loggers.routers.debug("File changed: %s. Reloading...", relative_path)
 
                     try:
                         await current_loader.reload()
@@ -148,10 +148,6 @@ class RouterManager:
                         continue
 
                 elif event_type == Change.deleted:
-                    loggers.routers.debug(
-                        "File removed: %s. Unloading router '%s'...",
-                        changed_path,
-                        current_loader.name,
-                    )
+                    loggers.routers.debug("File removed: %s. Unloading...", relative_path)
                     current_loader.unload()
                 break
