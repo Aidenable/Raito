@@ -63,7 +63,7 @@ class RoleFilter(Filter):
 
         This allows external tools to collect and display role-related constraints.
         """
-        roles = flags.setdefault("roles", [])
+        roles = flags.setdefault("raito__roles", [])
         roles.append(self.data)
 
     @override
