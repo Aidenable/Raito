@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -97,7 +98,7 @@ class JSONStorage(BaseStorage):
         """
         return self._data.get(self._build_key(key), {}).get("data", {})
 
-    async def set_data(self, key: StorageKey, data: dict[str, Any]) -> None:
+    async def set_data(self, key: StorageKey, data: Mapping[str, Any]) -> None:
         """Set data dictionary for the key.
 
         :param key: FSM storage key
@@ -107,7 +108,7 @@ class JSONStorage(BaseStorage):
         self._data.setdefault(str_key, {})["data"] = data
         self._save()
 
-    async def update_data(self, key: StorageKey, data: dict[str, Any]) -> dict[str, Any]:
+    async def update_data(self, key: StorageKey, data: Mapping[str, Any]) -> dict[str, Any]:
         """Update the current data for the key.
 
         :param key: FSM storage key

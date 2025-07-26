@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
@@ -54,7 +55,7 @@ class PostgreSQLStorage(SQLAlchemyStorage):
             await session.execute(query)
             await session.commit()
 
-    async def set_data(self, key: StorageKey, data: dict[str, Any]) -> None:
+    async def set_data(self, key: StorageKey, data: Mapping[str, Any]) -> None:
         """Write data (replace).
 
         :param key: Storage key

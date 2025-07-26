@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
@@ -146,7 +147,7 @@ class SQLAlchemyStorage(BaseStorage):
             result = await session.execute(query)
             return result.scalar_one_or_none() or {}
 
-    async def update_data(self, key: StorageKey, data: dict[str, Any]) -> dict[str, Any]:
+    async def update_data(self, key: StorageKey, data: Mapping[str, Any]) -> dict[str, Any]:
         """Update data in the storage for key.
 
         :param key: Storage key
