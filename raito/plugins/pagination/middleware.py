@@ -10,6 +10,7 @@ from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, Message
 from aiogram.types.update import Update
+from typing_extensions import override
 
 from raito.plugins.pagination.data import PaginationCallbackData
 from raito.plugins.pagination.enums import PaginationMode
@@ -113,6 +114,7 @@ class PaginatorMiddleware(BaseMiddleware):
             limit=callback_data.limit,
         )
 
+    @override
     async def __call__(
         self,
         handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[R]],

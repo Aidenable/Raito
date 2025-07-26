@@ -21,6 +21,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+from typing_extensions import override
 
 if TYPE_CHECKING:
     from aiogram.fsm.storage.base import StorageKey
@@ -119,7 +120,8 @@ class SQLAlchemyStorage(BaseStorage):
             parts.append(key.destiny)
         return self.key_separator.join(parts)
 
-    async def get_state(self, key: StorageKey) -> Any | None:  # noqa: ANN401
+    @override
+    async def get_state(self, key: StorageKey) -> Any | None:
         """Get key state.
 
         :param key: Storage key
@@ -133,6 +135,7 @@ class SQLAlchemyStorage(BaseStorage):
             result = await session.execute(query)
             return result.scalar_one_or_none()
 
+    @override
     async def get_data(self, key: StorageKey) -> dict[str, Any]:
         """Get current data for key.
 
@@ -147,6 +150,7 @@ class SQLAlchemyStorage(BaseStorage):
             result = await session.execute(query)
             return result.scalar_one_or_none() or {}
 
+    @override
     async def update_data(self, key: StorageKey, data: Mapping[str, Any]) -> dict[str, Any]:
         """Update data in the storage for key.
 
@@ -162,6 +166,7 @@ class SQLAlchemyStorage(BaseStorage):
         await self.set_data(key, current_data)
         return current_data
 
+    @override
     async def close(self) -> None:
         """Close the storage."""
         await self.engine.dispose()

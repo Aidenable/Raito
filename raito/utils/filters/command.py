@@ -7,6 +7,7 @@ from typing import Any
 from aiogram.filters import Command, CommandObject
 from aiogram.filters.command import CommandException, CommandPatternType
 from aiogram.utils.magic_filter import MagicFilter
+from typing_extensions import override
 
 PREFIX = ".rt "
 
@@ -64,6 +65,7 @@ class RaitoCommand(Command):
         )
         self._regex = re.compile(pattern)
 
+    @override
     def extract_command(self, text: str) -> CommandObject:
         # First step: separate command with arguments
         # ".rt command arg1 arg2" -> ".rt", "command", ["arg1 arg2"]
@@ -75,6 +77,7 @@ class RaitoCommand(Command):
 
         return CommandObject(prefix=prefix + " ", command=command, args=args[0] if args else None)
 
+    @override
     def update_handler_flags(self, flags: dict[str, Any]) -> None:
         super().update_handler_flags(flags)
         flags["raito__hidden"] = True

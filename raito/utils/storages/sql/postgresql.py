@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 from sqlalchemy import URL
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import create_async_engine
+from typing_extensions import override
 
 from .sqlalchemy import SQLAlchemyStorage, storage_table
 
@@ -33,6 +34,7 @@ class PostgreSQLStorage(SQLAlchemyStorage):
         engine = create_async_engine(url=self.url)
         super().__init__(engine=engine)
 
+    @override
     async def set_state(self, key: StorageKey, state: StateType | None = None) -> None:
         """Set state for specified key.
 
@@ -55,6 +57,7 @@ class PostgreSQLStorage(SQLAlchemyStorage):
             await session.execute(query)
             await session.commit()
 
+    @override
     async def set_data(self, key: StorageKey, data: Mapping[str, Any]) -> None:
         """Write data (replace).
 

@@ -3,6 +3,8 @@ import shutil
 from datetime import datetime
 from typing import Literal, cast
 
+from typing_extensions import override
+
 __all__ = (
     "ColoredFormatter",
     "MuteLoggersFilter",
@@ -44,6 +46,7 @@ class ColoredFormatter(logging.Formatter):
         except OSError:
             return 80
 
+    @override
     def format(self, record: logging.LogRecord) -> str:
         levelname = cast(LEVEL, record.levelname)
 
