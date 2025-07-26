@@ -7,6 +7,7 @@ from aiogram.dispatcher.event.handler import HandlerObject
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.types import CallbackQuery, Message
 from cachetools import TTLCache
+from typing_extensions import override
 
 if TYPE_CHECKING:
     from aiogram.types import TelegramObject
@@ -106,6 +107,7 @@ class ThrottlingMiddleware(BaseMiddleware):
         cache[entity_id] = True
         return await handler(event, data)
 
+    @override
     async def __call__(
         self,
         handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[R]],

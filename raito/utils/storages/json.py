@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
 from aiogram.fsm.state import State
 from aiogram.fsm.storage.base import BaseStorage, StateType, StorageKey
+from typing_extensions import override
 
 from raito.utils import loggers
 
@@ -68,6 +70,7 @@ class JSONStorage(BaseStorage):
             parts.append(key.destiny)
         return self.key_separator.join(parts)
 
+    @override
     async def get_state(self, key: StorageKey) -> str | None:
         """Retrieve the current state for a key.
 
@@ -76,6 +79,7 @@ class JSONStorage(BaseStorage):
         """
         return self._data.get(self._build_key(key), {}).get("state")
 
+    @override
     async def set_state(self, key: StorageKey, state: StateType | None = None) -> None:
         """Set a new state for the given key.
 
@@ -89,6 +93,7 @@ class JSONStorage(BaseStorage):
         self._data.setdefault(str_key, {})["state"] = state
         self._save()
 
+    @override
     async def get_data(self, key: StorageKey) -> dict[str, Any]:
         """Retrieve data dictionary for the key.
 
@@ -97,7 +102,8 @@ class JSONStorage(BaseStorage):
         """
         return self._data.get(self._build_key(key), {}).get("data", {})
 
-    async def set_data(self, key: StorageKey, data: dict[str, Any]) -> None:
+    @override
+    async def set_data(self, key: StorageKey, data: Mapping[str, Any]) -> None:
         """Set data dictionary for the key.
 
         :param key: FSM storage key
@@ -107,7 +113,8 @@ class JSONStorage(BaseStorage):
         self._data.setdefault(str_key, {})["data"] = data
         self._save()
 
-    async def update_data(self, key: StorageKey, data: dict[str, Any]) -> dict[str, Any]:
+    @override
+    async def update_data(self, key: StorageKey, data: Mapping[str, Any]) -> dict[str, Any]:
         """Update the current data for the key.
 
         :param key: FSM storage key
@@ -125,6 +132,7 @@ class JSONStorage(BaseStorage):
         self._data.clear()
         self._save()
 
+    @override
     async def close(self) -> None:
         """Close the storage (optional flush)"""
         self._save()

@@ -6,6 +6,7 @@ from aiogram.dispatcher.event.handler import HandlerObject
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 from aiogram.filters.command import CommandObject
 from aiogram.types import Message, TelegramObject
+from typing_extensions import override
 
 from raito.utils.helpers.command_help import get_command_help
 
@@ -76,6 +77,7 @@ class CommandMiddleware(BaseMiddleware):
                 parse_mode="HTML",
             )
 
+    @override
     async def __call__(
         self,
         handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[R]],

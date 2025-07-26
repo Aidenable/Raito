@@ -59,6 +59,7 @@ class Raito:
         routers_dir: StrOrPath,
         *,
         developers: list[int] | None = None,
+        locales: list[str] | None = None,
         production: bool = True,
         configuration: RaitoConfiguration | None = None,
         storage: BaseStorage | None = None,
@@ -71,6 +72,8 @@ class Raito:
         :type routers_dir: StrOrPath
         :param developers: List of developer user IDs with special privileges, defaults to None
         :type developers: list[int] | None, optional
+        :param locales: List of supported locales (e.g., "en", "ru")
+        :type locales: list[str]
         :param production: Whether running in production mode, defaults to True
         :type production: bool, optional
         :param configuration: Configuration instance, defaults to Configuration()
@@ -81,6 +84,7 @@ class Raito:
         self.dispatcher = dispatcher
         self.routers_dir = routers_dir
         self.developers = developers or []
+        self.locales = locales or []
         self.production = production
         self.configuration = configuration or RaitoConfiguration()
         self.storage = storage or MemoryStorage()
@@ -197,7 +201,7 @@ class Raito:
         )
         await paginator.paginate()
 
-    async def register_commands(self, bot: Bot, locales: list[str]) -> None:
+    async def register_commands(self, bot: Bot) -> None:
         handlers = []
         for loader in self.router_manager.loaders.values():
             handlers.extend(loader.router.message.handlers)
@@ -206,7 +210,7 @@ class Raito:
             role_manager=self.role_manager,
             bot=bot,
             handlers=handlers,
-            locales=locales,
+            locales=self.locales,
         )
 
     def init_logging(self, *mute_loggers: str) -> None:

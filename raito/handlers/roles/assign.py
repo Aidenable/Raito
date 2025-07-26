@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from aiogram import F, Router, html
+from aiogram import Bot, F, Router, html
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
@@ -10,6 +10,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from raito.plugins.commands import description
 from raito.plugins.commands.flags import hidden
+from raito.plugins.commands.registration import register_bot_commands
 from raito.plugins.keyboards import dynamic
 from raito.plugins.roles.data import RoleData
 from raito.plugins.roles.roles import ADMINISTRATOR, DEVELOPER, OWNER
@@ -87,7 +88,7 @@ async def store_role(
     F.text and F.text.isdigit(),
     DEVELOPER | OWNER | ADMINISTRATOR,
 )
-async def assign_role(message: Message, raito: Raito, state: FSMContext) -> None:
+async def assign_role(message: Message, raito: Raito, state: FSMContext, bot: Bot) -> None:
     data = await state.get_data()
     role_slug = data.get("rt_selected_role")
     if role_slug is None:
@@ -119,3 +120,9 @@ async def assign_role(message: Message, raito: Raito, state: FSMContext) -> None
         return
 
     await message.answer(f"❇️ User assigned to {html.bold(role.label)}", parse_mode="HTML")
+
+    handlers = []
+    for loader in raito.router_manager.loaders.values():
+        handlers.extend(loader.router.message.handlers)
+
+    await register_bot_commands(raito.role_manager, bot, handlers, raito.locales)

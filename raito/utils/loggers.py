@@ -1,6 +1,9 @@
 import logging
+import shutil
 from datetime import datetime
 from typing import Literal, cast
+
+from typing_extensions import override
 
 __all__ = (
     "ColoredFormatter",
@@ -36,21 +39,48 @@ LEVEL_FOREGROUND_COLORS: dict[LEVEL, str] = {
 
 
 class ColoredFormatter(logging.Formatter):
+    @property
+    def terminal_width(self) -> int:
+        try:
+            return shutil.get_terminal_size().columns
+        except OSError:
+            return 80
+
+    @override
     def format(self, record: logging.LogRecord) -> str:
         levelname = cast(LEVEL, record.levelname)
 
-        background_color = LEVEL_BACKGROUND_COLORS.get(levelname, "")
-        foreground_color = LEVEL_FOREGROUND_COLORS.get(levelname, "")
+        meta = self.get_meta(record)
+        message = self.get_message(record, levelname)
 
-        now = datetime.fromtimestamp(record.created).strftime("%d.%m.%Y %H:%M:%S")
+        if not meta:
+            return message
+        return f"{meta} {message}"
 
-        left = f"{BRIGHT_BLACK}{now}{RESET} {WHITE}{record.name}{RESET}"
-        tab = " " * (64 - len(left))
+    def get_meta(self, record: logging.LogRecord) -> str:
+        dt = datetime.fromtimestamp(record.created)
+        date = dt.strftime("%d.%m.%Y")
+        time = dt.strftime("%H:%M:%S")
+        now = date + " " + time
 
-        tag = f"{background_color} {levelname[0]} {RESET}"
-        message = f"{foreground_color}{record.getMessage()}{RESET}"
+        if self.terminal_width >= 140:
+            info = f"{BRIGHT_BLACK}{now}{RESET} {WHITE}{record.name}{RESET}"
+            tabs = " " * (64 - len(info))
+            return info + tabs
+        elif self.terminal_width >= 100:
+            return f"{BRIGHT_BLACK}{now}{RESET}"
+        elif self.terminal_width >= 70:
+            return f"{BRIGHT_BLACK}{time}{RESET}"
+        else:
+            return ""
 
-        return f"{left}{tab} {tag} {message}"
+    def get_message(self, record: logging.LogRecord, levelname: LEVEL) -> str:
+        background = LEVEL_BACKGROUND_COLORS.get(levelname, "")
+        tag = f"{background} {levelname[0]} {RESET}"
+
+        foreground = LEVEL_FOREGROUND_COLORS.get(levelname, "")
+        message = f"{foreground}{record.getMessage()}{RESET}"
+        return f"{tag} {message}"
 
 
 class MuteLoggersFilter(logging.Filter):
