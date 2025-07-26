@@ -80,9 +80,12 @@ The `@rt.description` decorator adds a description to each command — they will
 
 For commands like `/ban 1234`, use `@rt.params` to extract and validate the arguments.
 
+Limit command usage with `@rt.limiter` and control the rate by mode.
+
 ```python
 @router.message(filters.Command("ban"), OWNER | ADMINISTRATOR | MODERATOR)
 @rt.description("Ban a user")
+@rt.limiter(300, mode="chat")
 @rt.params(user_id=int)
 async def ban(message: types.Message, user_id: int, bot: Bot):
     await bot.ban_chat_member(chat_id=message.chat.id, user_id=user_id)
