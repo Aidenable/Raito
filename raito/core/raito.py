@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from aiogram.dispatcher.event.event import EventObserver
 from aiogram.fsm.storage.memory import MemoryStorage
 
+from raito.plugins.album.middleware import AlbumMiddleware
 from raito.plugins.commands.middleware import CommandMiddleware
 from raito.plugins.commands.registration import register_bot_commands
 from raito.plugins.pagination import PaginationMode, PaginatorMiddleware, get_paginator
@@ -120,6 +121,7 @@ class Raito:
 
         self.dispatcher.callback_query.middleware(PaginatorMiddleware("raito__is_pagination"))
         self.dispatcher.message.middleware(CommandMiddleware())
+        self.dispatcher.message.middleware(AlbumMiddleware())
 
         await self.router_manager.load_routers(self.routers_dir)
         await self.router_manager.load_routers(ROOT_DIR / "handlers")
