@@ -33,7 +33,7 @@ class AlbumMiddleware(BaseMiddleware):
         :type flag_name: str
         """
         self.delay = delay
-        self._album_data = TTLCache(maxsize=max_size, ttl=delay * 5)
+        self._album_data = TTLCache[str, list[Message]](maxsize=max_size, ttl=delay * 5)
 
     @override
     async def __call__(
