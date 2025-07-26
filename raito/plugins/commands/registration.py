@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, NamedTuple
 
 from aiogram import Bot
 from aiogram.dispatcher.event.handler import HandlerObject
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import (
     BotCommand,
     BotCommandScopeChat,
@@ -103,10 +104,10 @@ async def _apply_bot_commands(
     :type scope: BotCommandScopeUnion
     """
     loggers.commands.debug(
-        "Applying %s commands for user %s with locale %s",
+        "Setting %d command(s) for scope=%s, locale='%s'",
         len(meta_entries),
-        getattr(scope, "chat_id", None),
-        locale,
+        getattr(scope, "chat_id", "default"),
+        locale or "default",
     )
 
     bot_commands: list[BotCommand] = []
@@ -122,7 +123,15 @@ async def _apply_bot_commands(
             )
         )
 
-    await bot.set_my_commands(commands=bot_commands, scope=scope, language_code=locale)
+    try:
+        await bot.set_my_commands(commands=bot_commands, scope=scope, language_code=locale)
+    except TelegramBadRequest as exc:
+        loggers.commands.warning(
+            "Failed to set commands for scope=%s, locale='%s': %s",
+            getattr(scope, "chat_id", "default"),
+            locale or "default",
+            exc,
+        )
 
 
 async def register_bot_commands(
@@ -142,7 +151,7 @@ async def register_bot_commands(
     :param locales: List of supported locales (e.g., "en", "ru")
     :type locales: list[str]
     """
-    role_commands: dict[RoleData | None, list[_CommandMeta]] = defaultdict(list)
+    role_commands: dict[str | None, list[_CommandMeta]] = defaultdict(list)
 
     for handler in handlers:
         meta = _extract_command_metadata(handler)
@@ -153,19 +162,19 @@ async def register_bot_commands(
             role_commands[None].append(meta)
 
         for role in meta.roles:
-            role_commands[role].append(meta)
+            role_commands[role.slug].append(meta)
 
-    role_users: dict[RoleData, set[int]] = defaultdict(set)
-    for role in role_commands:  # type: ignore
-        if role is None:
+    role_users: dict[str, set[int]] = defaultdict(set)
+    for role_slug in role_commands:  # type: ignore
+        if role_slug is None:
             continue
 
-        users = await role_manager.get_users(bot.id, role.slug)
-        role_users[role].update(users)
+        users = await role_manager.get_users(bot.id, role_slug)
+        role_users[role_slug].update(users)
 
     for locale in locales:
-        for role, users in role_users.items():
-            commands = role_commands.get(role, [])
+        for role_slug, users in role_users.items():
+            commands = role_commands.get(role_slug, [])
             for user_id in users:
                 await _apply_bot_commands(
                     bot=bot,
