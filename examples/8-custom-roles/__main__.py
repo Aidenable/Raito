@@ -13,7 +13,7 @@ from raito.utils.storages.json import JSONStorage
 TOKEN = "TOKEN"
 HANDLERS_DIR = Path(__file__).parent / "handlers"
 DEBUG = False
-DEVELOPERS = [1234]
+DEVELOPER = 1234
 ROOT_DIR = Path(__file__).parent
 
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
@@ -23,12 +23,13 @@ json_storage = JSONStorage(ROOT_DIR / "raito.json")
 raito = Raito(
     dispatcher,
     HANDLERS_DIR,
-    developers=DEVELOPERS,
+    developers=[DEVELOPER],
+    locales=["en"],
     production=not DEBUG,
     configuration=RaitoConfiguration(
         role_manager=CustomRoleManager(
             provider=JSONRoleProvider(json_storage),
-            developers=DEVELOPERS,
+            developers=[DEVELOPER],
         ),
     ),
 )

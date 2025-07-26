@@ -21,18 +21,19 @@
 ## Highlights
 
 - 🔥 **Hot Reload** — automatic router loading and file watching for instant development cycles
-- 🎭 **Role System** — `@raito.roles` with pre-configured roles (admin, mod, support, etc) and selector UI
+- 🎭 **Role System** — pre-configured roles (owner, support, tester, etc) and selector UI
 - 📚 **Pagination** — easy pagination over text and media using inline buttons
 - 💬 **FSM Toolkit** — interactive confirmations, questionnaires, and mockable message flow
 - 🚀 **CLI Generator** — `$ raito init` creates a ready-to-use bot template in seconds
+- ⌨️ **Keyboard Factory** — static and dynamic generation
 - 🛠️ **Command Registration** — automatic setup of bot commands with descriptions for each
+- 🖼️ **Album Support** — groups media albums and passes them to handlers
 - 🛡️ **Rate Limiting** — apply global or per-command throttling via decorators or middleware
-- 💾 **Database Storages** — optional SQL support
+- 💾 **Database Storages** — optional JSON & SQL support
 - 🧪 **REPL** — execute async Python in context (`_msg`, `_user`, `_raito`)
 - 🔍 **Params Parser** — extracts and validates command arguments
+- ✏️ **Logging Formatter** — beautiful, readable logs out of the box
 - 📊 **Metrics** — inspect memory usage, uptime, and caching stats
-- 📃 **Logging** — view and filter runtime logs without leaving Telegram
-- 🧰 **Debug Utils** — run shell commands, monitor jobs, inspect command states, and more
 
 
 ## Installation
@@ -80,9 +81,12 @@ The `@rt.description` decorator adds a description to each command — they will
 
 For commands like `/ban 1234`, use `@rt.params` to extract and validate the arguments.
 
+Limit command usage with `@rt.limiter` and control the rate by mode.
+
 ```python
 @router.message(filters.Command("ban"), OWNER | ADMINISTRATOR | MODERATOR)
 @rt.description("Ban a user")
+@rt.limiter(300, mode="chat")
 @rt.params(user_id=int)
 async def ban(message: types.Message, user_id: int, bot: Bot):
     await bot.ban_chat_member(chat_id=message.chat.id, user_id=user_id)

@@ -15,7 +15,7 @@ async def lifespan(raito: Raito, bot: Bot, dispatcher: Dispatcher) -> AsyncGener
     rt.log.info("🚀 Launching bot : [@%s] %s", bot_info.username, bot_info.full_name)
 
     rt.debug("Registering commands...")
-    await raito.register_commands(bot, locales=["en"])
+    await raito.register_commands(bot)
 
     yield
 

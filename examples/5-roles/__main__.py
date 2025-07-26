@@ -13,7 +13,9 @@ DEVELOPER = 1234
 
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 dispatcher = Dispatcher()
-raito = Raito(dispatcher, HANDLERS_DIR, developers=[DEVELOPER], production=not DEBUG)
+raito = Raito(
+    dispatcher, HANDLERS_DIR, developers=[DEVELOPER], locales=["en"], production=not DEBUG
+)
 raito.init_logging("aiogram.dispatcher", "watchfiles.main")
 
 

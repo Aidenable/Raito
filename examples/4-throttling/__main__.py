@@ -12,7 +12,7 @@ DEBUG = False
 
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
 dispatcher = Dispatcher()
-raito = Raito(dispatcher, HANDLERS_DIR, developers=[], production=not DEBUG)
+raito = Raito(dispatcher, HANDLERS_DIR, developers=[], locales=["en"], production=not DEBUG)
 raito.init_logging()
 raito.add_throttling(0.5, mode="chat")
 
