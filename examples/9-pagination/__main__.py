@@ -22,6 +22,7 @@ raito = Raito(
     dispatcher,
     HANDLERS_DIR,
     developers=[],
+    locales=["en"],
     production=not DEBUG,
     configuration=RaitoConfiguration(
         pagination_style=PaginationStyle(

@@ -24,6 +24,7 @@ raito = Raito(
     dispatcher,
     ROOT_DIR / "handlers",
     developers=[DEVELOPER],
+    locales=["en"],
     production=not DEBUG,
     storage=SQLiteStorage(sqlite_url),
 )
