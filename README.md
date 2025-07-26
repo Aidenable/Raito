@@ -207,4 +207,6 @@ Use in production at your own risk.
 Open an issue or start a discussion in the GitHub Discussions tab. \
 You can also ping [@Aidenable](https://github.com/Aidenable) for feedback or ideas.
 
+![Alt](https://repobeats.axiom.co/api/embed/6ba46ed9f14186eb039044610072e123c0afeb08.svg "Repobeats analytics image")
+
 [![GO TOP](https://img.shields.io/badge/GO%20TOP-black?style=for-the-badge)](#header)
