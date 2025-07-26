@@ -35,6 +35,13 @@ class RoleConstraint(Filter):
 
     __ror__ = __or__
 
+    def update_handler_flags(self, flags: dict[str, Any]) -> None:
+        """Attach role metadata to handler flags.
+
+        This allows external tools to collect and display role-related constraints.
+        """
+        self.filter.update_handler_flags(flags)
+
     async def __call__(self, *args: Any, **kwargs: Any) -> bool:  # noqa: ANN401
         """Delegate the call to the inner filter."""
         return await self.filter(*args, **kwargs)
@@ -59,6 +66,16 @@ class RoleGroupConstraint(Filter):
         if isinstance(other, RoleGroupConstraint):
             return RoleGroupConstraint(*self.filters, *other.filters)
         return RoleGroupConstraint(*self.filters, other)
+
+    __ror__ = __or__
+
+    def update_handler_flags(self, flags: dict[str, Any]) -> None:
+        """Attach role metadata to handler flags.
+
+        This allows external tools to collect and display role-related constraints.
+        """
+        for filter in self.filters:
+            filter.update_handler_flags(flags)
 
     async def __call__(self, *args: Any, **kwargs: Any) -> bool:  # noqa: ANN401
         """Convert the group into an `_OrFilter` filter."""
