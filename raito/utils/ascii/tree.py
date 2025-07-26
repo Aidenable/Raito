@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from collections.abc import Callable
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
 from pydantic import BaseModel
 
@@ -63,7 +65,7 @@ class TreeNode:
         suffix: str = "",
         *,
         is_folder: bool = False,
-    ) -> "TreeNode":
+    ) -> TreeNode:
         """Add a child node to this node.
 
         :param name: Child node name
@@ -88,7 +90,7 @@ class TreeNode:
                 self.children[name].is_folder = True
         return self.children[name]
 
-    def get_child(self, name: str) -> Optional["TreeNode"]:
+    def get_child(self, name: str) -> TreeNode | None:
         """Get a child node by name.
 
         :param name: Child node name
