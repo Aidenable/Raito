@@ -256,4 +256,4 @@ class BasePaginator(IPaginator):
         if limit <= 0:
             raise ValueError("Limit must be greater than 0")
 
-        return (total_items + limit - 1) // limit
+        return ((total_items or 1) + limit - 1) // limit
