@@ -16,6 +16,7 @@ from .plugins.roles import (
 )
 from .plugins.throttling.flag import limiter
 from .utils.errors import SuppressNotModifiedError
+from .utils.helpers.retry_method import retry_method as retry
 from .utils.loggers import log
 
 debug = log.debug
@@ -41,4 +42,5 @@ __all__ = (
     "log",
     "on_pagination",
     "params",
+    "retry",
 )
