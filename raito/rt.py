@@ -15,6 +15,7 @@ from .plugins.roles import (
     TESTER,
 )
 from .plugins.throttling.flag import limiter
+from .utils.errors import SuppressNotModifiedError
 from .utils.loggers import log
 
 debug = log.debug
@@ -30,6 +31,7 @@ __all__ = (
     "SUPPORT",
     "TESTER",
     "Raito",
+    "SuppressNotModifiedError",
     "debug",
     "description",
     "hidden",
