@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, Literal, TypeVar
 
 from aiogram.dispatcher.event.handler import HandlerObject
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, Update
 from cachetools import TTLCache
 from typing_extensions import override
 
@@ -116,6 +116,10 @@ class ThrottlingMiddleware(BaseMiddleware):
     ) -> R | None:
         handler_object: HandlerObject | None = data.get("handler")
         if handler_object is None:
+            return await handler(event, data)
+
+        event_update: Update | None = data.get("event_update")
+        if event_update is not None and event_update.update_id == 0:
             return await handler(event, data)
 
         limiter_data: dict[str, Any] = handler_object.flags.get("raito__limiter", {})
