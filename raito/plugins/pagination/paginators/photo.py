@@ -6,6 +6,7 @@ from aiogram.client.default import Default
 from aiogram.types import InputMediaPhoto
 
 from raito.plugins.pagination.enums import PaginationMode
+from raito.utils.errors import SuppressNotModifiedError
 
 from .base import BasePaginator
 
@@ -142,10 +143,11 @@ class PhotoPaginator(BasePaginator):
                 reply_to_message_id=reply_to_message_id,
             )
         else:
-            await self.existing_message.edit_media(
-                media=InputMediaPhoto(media=photo, caption=caption, reply_markup=reply_markup),
-                caption=caption,
-                reply_markup=reply_markup,
-            )
+            with SuppressNotModifiedError():
+                await self.existing_message.edit_media(
+                    media=InputMediaPhoto(media=photo, caption=caption, reply_markup=reply_markup),
+                    caption=caption,
+                    reply_markup=reply_markup,
+                )
 
         return self.existing_message

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from aiogram.client.default import Default
 
 from raito.plugins.pagination.enums import PaginationMode
+from raito.utils.errors import SuppressNotModifiedError
 
 from .base import BasePaginator
 
@@ -137,8 +138,10 @@ class TextPaginator(BasePaginator):
                 reply_to_message_id=reply_to_message_id,
             )
         elif text != self.existing_message.text:
-            await self.existing_message.edit_text(text=text, reply_markup=reply_markup)
+            with SuppressNotModifiedError():
+                await self.existing_message.edit_text(text=text, reply_markup=reply_markup)
         else:
-            await self.existing_message.edit_reply_markup(reply_markup=reply_markup)
+            with SuppressNotModifiedError():
+                await self.existing_message.edit_reply_markup(reply_markup=reply_markup)
 
         return self.existing_message
