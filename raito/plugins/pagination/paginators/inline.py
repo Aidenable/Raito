@@ -1,16 +1,25 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from aiogram.client.default import Default
-from aiogram.types import (
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    LinkPreviewOptions,
-    MessageEntity,
-    ReplyParameters,
-)
+from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from raito.plugins.pagination.enums import PaginationMode
+from raito.utils.errors import SuppressNotModifiedError
 
 from .base import BasePaginator
+
+if TYPE_CHECKING:
+    from aiogram.types import (
+        InlineKeyboardButton,
+        LinkPreviewOptions,
+        Message,
+        MessageEntity,
+        ReplyParameters,
+    )
+
 
 __all__ = ("InlinePaginator",)
 
@@ -79,6 +88,7 @@ class InlinePaginator(BasePaginator):
 
     def _get_reply_markup(
         self,
+        reply_markup: InlineKeyboardMarkup | None = None,
         buttons: list[InlineKeyboardButton] | InlineKeyboardMarkup | None = None,
     ) -> InlineKeyboardMarkup:
         """Build reply markup with content and navigation.
@@ -93,10 +103,13 @@ class InlinePaginator(BasePaginator):
         if isinstance(buttons, list):
             builder.row(*buttons, width=1)
         elif isinstance(buttons, InlineKeyboardMarkup):
-            content_builder = InlineKeyboardBuilder.from_markup(buttons)
-            builder.attach(content_builder)
+            builder.attach(builder.from_markup(buttons))
 
-        builder.attach(builder.from_markup(self.build_navigation()))
+        if reply_markup is not None:
+            builder.attach(builder.from_markup(reply_markup))
+        else:
+            builder.attach(builder.from_markup(self.build_navigation()))
+
         return builder.as_markup()
 
     async def answer(
@@ -115,7 +128,7 @@ class InlinePaginator(BasePaginator):
         allow_sending_without_reply: bool | None = None,
         disable_web_page_preview: bool | Default | None = None,
         reply_to_message_id: int | None = None,
-    ) -> None:
+    ) -> Message:
         """Send or edit paginated message.
 
         :param text: message text
@@ -146,6 +159,8 @@ class InlinePaginator(BasePaginator):
         :type disable_web_page_preview: bool | Default | None
         :param reply_to_message_id: reply to message id
         :type reply_to_message_id: int | None
+        :return: paginated message
+        :rtype: Message
         :raises RuntimeError: if bot instance not set
         """
         if not self.bot:
@@ -156,7 +171,11 @@ class InlinePaginator(BasePaginator):
         protect_content = protect_content or Default("protect_content")
         disable_web_page_preview = disable_web_page_preview or Default("link_preview_is_disabled")
 
-        reply_markup = reply_markup or self._get_reply_markup(buttons)
+        reply_markup = (
+            reply_markup
+            if reply_markup is not None and buttons is None
+            else self._get_reply_markup(reply_markup, buttons)
+        )
 
         if self.existing_message is None:
             self.existing_message = await self.bot.send_message(
@@ -176,6 +195,10 @@ class InlinePaginator(BasePaginator):
                 reply_to_message_id=reply_to_message_id,
             )
         elif text != self.existing_message.text:
-            await self.existing_message.edit_text(text=text, reply_markup=reply_markup)
+            with SuppressNotModifiedError():
+                await self.existing_message.edit_text(text=text, reply_markup=reply_markup)
         else:
-            await self.existing_message.edit_reply_markup(reply_markup=reply_markup)
+            with SuppressNotModifiedError():
+                await self.existing_message.edit_reply_markup(reply_markup=reply_markup)
+
+        return self.existing_message

@@ -1,13 +1,9 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, cast
 from uuid import uuid4
 
-from aiogram import Bot
-from aiogram.types import (
-    CallbackQuery,
-    InlineKeyboardMarkup,
-    Message,
-    Update,
-)
+from aiogram.types import CallbackQuery, Update
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from raito.plugins.pagination.data import PaginationCallbackData
@@ -16,7 +12,12 @@ from raito.plugins.pagination.paginators.protocol import IPaginator
 from raito.utils.configuration import RaitoConfiguration
 
 if TYPE_CHECKING:
-    from aiogram.types import User
+    from aiogram import Bot
+    from aiogram.types import (
+        InlineKeyboardMarkup,
+        Message,
+        User,
+    )
 
     from raito.core.raito import Raito
 
@@ -28,11 +29,11 @@ class BasePaginator(IPaginator):
 
     def __init__(
         self,
-        raito: "Raito",
+        raito: Raito,
         name: str,
         chat_id: int,
         bot: Bot,
-        from_user: "User",
+        from_user: User,
         *,
         existing_message: Message | None = None,
         current_page: int = 1,
@@ -255,4 +256,4 @@ class BasePaginator(IPaginator):
         if limit <= 0:
             raise ValueError("Limit must be greater than 0")
 
-        return (total_items + limit - 1) // limit
+        return ((total_items or 1) + limit - 1) // limit

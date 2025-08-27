@@ -66,7 +66,6 @@ class RouterManager:
         :type directory: StrOrPath
         :raises AttributeError: If a router doesn't have a name attribute
         """
-        names = set()
         dir_path = Path(directory)
 
         for file_path in self.resolve_paths(dir_path):
@@ -78,16 +77,13 @@ class RouterManager:
                 )
                 continue
 
-            if router.name in self.loaders:
-                continue
-
             try:
                 unique_name: str = router.name
             except AttributeError as e:
                 msg = "The router has no name"
                 raise AttributeError(msg) from e
 
-            if router.name in names:
+            if unique_name in self.loaders:
                 suffix = hex(id(router))
                 unique_name = f"{router.name}_{suffix}"
                 loggers.routers.warning(
@@ -96,8 +92,6 @@ class RouterManager:
                     unique_name,
                 )
                 router.name = unique_name
-
-            names.add(router.name)
 
             loader = RouterLoader(
                 unique_name,
@@ -119,9 +113,16 @@ class RouterManager:
         :type directory: StrOrPath
         """
         loggers.routers.info("Router watchdog started for: %s", directory)
+        base_directory = Path(directory).resolve()
+
         async for changes in awatch(directory, step=500):
             for event_type, changed_path in changes:
                 path_object = Path(changed_path).resolve()
+
+                try:
+                    relative_path = Path("/") / path_object.relative_to(base_directory.parent)
+                except ValueError:
+                    relative_path = path_object
 
                 current_loader: RouterLoader | None = None
                 for loader in self.loaders.values():
@@ -130,35 +131,23 @@ class RouterManager:
                         break
 
                 if not current_loader:
-                    loggers.routers.debug(
-                        "File changed: %s. No routers found.",
-                        changed_path,
-                    )
+                    loggers.routers.debug("File changed: %s. No routers found.", relative_path)
                     continue
 
                 if event_type in (Change.modified, Change.added):
-                    loggers.routers.debug(
-                        "File changed: %s. Reloading router '%s'...",
-                        changed_path,
-                        current_loader.name,
-                    )
+                    loggers.routers.debug("File changed: %s. Reloading...", relative_path)
 
                     try:
                         await current_loader.reload()
                     except Exception as exc:  # noqa: BLE001
                         loggers.routers.error(
-                            "Router '%s' has an error '%s'. Unloading router...",
+                            "Router '%s' has an error '%s'. Skipping...",
                             current_loader.path,
                             exc,
                         )
-                        current_loader.unload()
                         continue
 
                 elif event_type == Change.deleted:
-                    loggers.routers.debug(
-                        "File removed: %s. Unloading router '%s'...",
-                        changed_path,
-                        current_loader.name,
-                    )
+                    loggers.routers.debug("File removed: %s. Unloading...", relative_path)
                     current_loader.unload()
                 break

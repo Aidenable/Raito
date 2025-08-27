@@ -1,12 +1,18 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from aiogram import F, Router
-from aiogram.dispatcher.event.handler import CallbackType
 
 from .data import PaginationCallbackData
+
+if TYPE_CHECKING:
+    from aiogram.dispatcher.event.handler import CallbackType
 
 __all__ = ("on_pagination",)
 
 
-def on_pagination(router: Router, name: str) -> CallbackType:
+def on_pagination(router: Router, name: str, *filters: CallbackType) -> CallbackType:
     """Register pagination handler for specific name.
 
     :param router: aiogram router
@@ -18,5 +24,6 @@ def on_pagination(router: Router, name: str) -> CallbackType:
     """
     return router.callback_query(
         PaginationCallbackData.filter(F.name == name),
-        flags={"is_pagination": True},
+        *filters,
+        flags={"raito__is_pagination": True},
     )

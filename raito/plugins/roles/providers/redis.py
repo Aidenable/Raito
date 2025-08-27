@@ -7,7 +7,7 @@ __all__ = ("RedisRoleProvider",)
 
 
 class RedisRoleProvider(BaseRoleProvider, IRoleProvider):
-    """Redis-based role provider for testing and development.
+    """Redis-based role provider.
 
     Redis storage required :code:`redis` package installed (:code:`pip install raito[redis]`)
     """

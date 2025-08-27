@@ -5,7 +5,7 @@ __all__ = ("PaginationCallbackData",)
 _PREFIX = "rt_p"
 
 
-class PaginationCallbackData(CallbackData, prefix=_PREFIX):
+class PaginationCallbackData(CallbackData, prefix=_PREFIX):  # type: ignore[call-arg]
     """Callback data for inline navigation buttons.
 
     :param mode: pagination mode

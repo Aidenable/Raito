@@ -1,15 +1,9 @@
-from typing import TYPE_CHECKING
+from __future__ import annotations
 
-from raito.plugins.roles.middleware import RoleMiddleware
-from raito.utils import loggers
+from raito.plugins.roles.data import RoleData
 
-from .data import Role
-from .providers.memory import MemoryRoleProvider
 from .providers.protocol import IRoleProvider
-
-if TYPE_CHECKING:
-    from aiogram import Dispatcher
-
+from .roles import AVAILABLE_ROLES, AVAILABLE_ROLES_BY_SLUG
 
 __all__ = ("RoleManager",)
 
@@ -24,98 +18,49 @@ class RoleManager:
         :type provider: IRoleProvider
         """
         self.provider = provider
-        self._developers = developers
+        self.developers = developers or []
 
-    async def initialize(self, dispatcher: "Dispatcher") -> None:
-        """Initialize the RoleManager and run migrations."""
+    async def migrate(self) -> None:
+        """Run provider migrations."""
         await self.provider.migrate()
 
-        middleware = RoleMiddleware(flag_name="raito_roles")
-        dispatcher.message.middleware(middleware)
-        dispatcher.callback_query.middleware(middleware)
-
-        if isinstance(self.provider, MemoryRoleProvider):
-            loggers.roles.warn(
-                "Using MemoryRoleProvider. It's not recommended for production use.",
-            )
-
-    async def get_role(self, bot_id: int, user_id: int) -> Role | None:
+    async def get_role(self, bot_id: int, user_id: int) -> str | None:
         """Get the role for a specific user.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
         :param user_id: The Telegram user ID
-        :type user_id: int
-        :return: The user's role or None if not found
-        :rtype: Role | None
+        :return: The role slug or None if not found
         """
-        return (
-            Role.DEVELOPER
-            if self.is_developer(user_id)
-            else await self.provider.get_role(bot_id, user_id)
-        )
-
-    def is_developer(self, user_id: int) -> bool:
-        """Check whether the user is a developer.
-
-        Developers are treated as superusers with full permissions.
-
-        :param user_id: The Telegram user ID
-        :type user_id: int
-        :return: True if user is a developer, False otherwise
-        :rtype: bool
-        """
-        return self._developers is not None and user_id in self._developers
+        return await self.provider.get_role(bot_id, user_id)
 
     async def can_manage_roles(self, bot_id: int, user_id: int) -> bool:
         """Check whether the user can manage other users' roles.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
         :param user_id: The Telegram user ID
-        :type user_id: int
         :return: True if user can manage roles, False otherwise
-        :rtype: bool
         """
-        if self.is_developer(user_id):
-            return True
+        return await self.has_any_roles(
+            bot_id,
+            user_id,
+            "developer",
+            "administrator",
+            "owner",
+        )
 
-        role = await self.get_role(bot_id, user_id)
-        return role in (Role.ADMINISTRATOR, Role.OWNER)
-
-    async def _check_role_hierarchy(self, bot_id: int, initiator_id: int, target_id: int) -> None:
-        """Check if the initiator can manage the target's role.
-
-        :param bot_id: The Telegram bot ID
-        :type bot_id: int
-        :param initiator_id: The Telegram user ID of the initiator
-        :type initiator_id: int
-        :param target_id: The Telegram user ID of the target
-        :type target_id: int
-        :raises PermissionError: If the initiator cannot manage the target's role
-        """
-        initiator_role = await self.get_role(bot_id, initiator_id)
-        target_role = await self.get_role(bot_id, target_id)
-
-        if initiator_role is None:
-            msg = "Cannot determine initiator's current role."
-            raise PermissionError(msg)
-
-        if initiator_role != Role.DEVELOPER and target_role and target_role < initiator_role:
-            msg = f"Initiator cannot manage roles higher than {initiator_role.name} ({initiator_role.name} < {target_role.name})"
-            raise PermissionError(msg)
-
-    async def assign_role(self, bot_id: int, initiator_id: int, target_id: int, role: Role) -> None:
+    async def assign_role(
+        self,
+        bot_id: int,
+        initiator_id: int,
+        target_id: int,
+        role_slug: str,
+    ) -> None:
         """Assign a role to a user.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
         :param initiator_id: The Telegram user ID of the initiator
-        :type initiator_id: int
         :param target_id: The Telegram user ID of the target
-        :type target_id: int
-        :param role: The role to assign
-        :type role: Role
+        :param role_slug: The role to assign
         :raises PermissionError: If the user does not have permission to assign role
         """
         if initiator_id == target_id:
@@ -126,22 +71,14 @@ class RoleManager:
             msg = "You do not have permission to assign roles."
             raise PermissionError(msg)
 
-        if role == Role.DEVELOPER:
-            msg = "You cannot assign the Developer role."
-            raise PermissionError(msg)
-
-        await self._check_role_hierarchy(bot_id, initiator_id, target_id)
-        await self.provider.set_role(bot_id, target_id, role)
+        await self.provider.set_role(bot_id, target_id, role_slug)
 
     async def revoke_role(self, bot_id: int, initiator_id: int, target_id: int) -> None:
         """Revoke a user's role.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
         :param initiator_id: The Telegram user ID of the initiator
-        :type initiator_id: int
         :param target_id: The Telegram user ID of the target
-        :type target_id: int
         :raises PermissionError: If the user does not have permission to revoke roles
         """
         if initiator_id == target_id:
@@ -152,31 +89,63 @@ class RoleManager:
             msg = "You do not have permission to assign roles."
             raise PermissionError(msg)
 
-        await self._check_role_hierarchy(bot_id, initiator_id, target_id)
         await self.provider.remove_role(bot_id, target_id)
 
-    async def has_any_roles(
-        self,
-        bot_id: int,
-        user_id: int,
-        *roles: Role,
-        allow_developers: bool = True,
-    ) -> bool:
+    async def has_any_roles(self, bot_id: int, user_id: int, *roles: str) -> bool:
         """Check if a user has any of the specified roles.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
         :param user_id: The Telegram user ID
-        :type user_id: int
         :param roles: Roles to check for
-        :type roles: Role
-        :param allow_developers: Whether to allow developers to have roles
-        :type allow_developers: bool
         :returns: True if user has any of the roles, False otherwise
-        :rtype: bool
         """
-        if self.is_developer(user_id) and allow_developers:
+        if user_id in self.developers and "developer" in roles:
             return True
 
         role = await self.get_role(bot_id, user_id)
         return role in roles
+
+    async def has_role(self, bot_id: int, user_id: int, role_slug: str) -> bool:
+        """Check if a user has the specified roles.
+
+        :param bot_id: The Telegram bot ID
+        :param user_id: The Telegram user ID
+        :param role_slug: Role to check for
+        :returns: True if user has the role, False otherwise
+        """
+        if user_id in self.developers and role_slug == "developer":
+            return True
+
+        slug = await self.get_role(bot_id, user_id)
+        return slug == role_slug
+
+    async def get_users(self, bot_id: int, role: str) -> set[int]:
+        """Get a list of users with a specific role.
+
+        :param bot_id: The Telegram bot ID
+        :param role: The role to check for
+        :returns: A list of Telegram user IDs
+        """
+        users = await self.provider.get_users(bot_id, role)
+        unique_users = set(users)
+
+        if role == "developer":
+            unique_users.update(self.developers)
+
+        return unique_users
+
+    @property
+    def available_roles(self) -> list[RoleData]:
+        """Get a list of available roles.
+
+        :returns: A list of roles
+        """
+        return AVAILABLE_ROLES
+
+    def get_role_data(self, slug: str) -> RoleData:
+        """Get data of specified role.
+
+        :returns: A data of role
+        :raises: ...
+        """
+        return AVAILABLE_ROLES_BY_SLUG[slug]

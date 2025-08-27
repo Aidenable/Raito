@@ -1,14 +1,20 @@
+from __future__ import annotations
+
 import re
+from collections.abc import Sequence
+from typing import Any
 
-from aiogram.filters import Filter
-from aiogram.types import Message
+from aiogram.filters import Command, CommandObject
+from aiogram.filters.command import CommandException, CommandPatternType
+from aiogram.utils.magic_filter import MagicFilter
+from typing_extensions import override
 
-PREFIX = ".rt"
+PREFIX = ".rt "
 
 __all__ = ("RaitoCommand",)
 
 
-class RaitoCommand(Filter):
+class RaitoCommand(Command):
     """A filter for Raito bot commands.
 
     This class filters messages that match the Raito command format:
@@ -31,28 +37,47 @@ class RaitoCommand(Filter):
 
     """
 
-    def __init__(self, *commands: str) -> None:
+    def __init__(
+        self,
+        *values: CommandPatternType,
+        commands: Sequence[CommandPatternType] | CommandPatternType | None = None,
+        ignore_case: bool = False,
+        magic: MagicFilter | None = None,
+    ) -> None:
         """Initialize the RaitoCommand filter.
 
         :param commands: One or more command strings to match
-        :type commands: str
+        :param ignore_case: Ignore case (Does not work with regexp, use flags instead)
+        :param magic: Validate command object via Magic filter after all checks done
         :raises ValueError: If no commands are specified
         """
-        if not commands:
-            msg = "At least one command must be specified"
-            raise ValueError(msg)
+        super().__init__(
+            *values,
+            commands=commands,
+            ignore_case=ignore_case,
+            ignore_mention=True,
+            magic=magic,
+        )
 
-        pattern = rf"^{re.escape(PREFIX)} (?:{'|'.join(map(re.escape, commands))})(?: .+)?$"
+        self.prefix = PREFIX
+        pattern = (
+            rf"^{re.escape(self.prefix)} (?:{'|'.join(map(re.escape, self.commands))})(?: .+)?$"
+        )
         self._regex = re.compile(pattern)
 
-    async def __call__(self, message: Message) -> bool:
-        """Check if a message matches the command filter.
+    @override
+    def extract_command(self, text: str) -> CommandObject:
+        # First step: separate command with arguments
+        # ".rt command arg1 arg2" -> ".rt", "command", ["arg1 arg2"]
+        try:
+            prefix, command, *args = text.split(maxsplit=2)
+        except ValueError as exc:
+            msg = "Not enough values to unpack"
+            raise CommandException(msg) from exc
 
-        :param message: The message to check
-        :type message: Message
-        :return: True if message matches command format, False otherwise
-        :rtype: bool
-        """
-        if not message.text:
-            return False
-        return bool(self._regex.fullmatch(message.text.strip()))
+        return CommandObject(prefix=prefix + " ", command=command, args=args[0] if args else None)
+
+    @override
+    def update_handler_flags(self, flags: dict[str, Any]) -> None:
+        super().update_handler_flags(flags)
+        flags["raito__hidden"] = True

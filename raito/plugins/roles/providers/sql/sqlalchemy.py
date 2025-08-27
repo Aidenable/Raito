@@ -4,6 +4,7 @@ from sqlalchemy import (
     Index,
     Integer,
     MetaData,
+    String,
     Table,
     and_,
     select,
@@ -13,7 +14,6 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 
-from raito.plugins.roles.data import Role
 from raito.plugins.roles.providers.protocol import IRoleProvider
 from raito.utils.storages.sql.sqlalchemy import SQLAlchemyStorage
 
@@ -27,7 +27,7 @@ roles_table = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("bot_id", BigInteger, nullable=False),
     Column("user_id", BigInteger, nullable=False),
-    Column("role", Integer, nullable=False),
+    Column("role", String, nullable=False),
     Index("idx_bot_user", "bot_id", "user_id", unique=True),
 )
 
@@ -43,9 +43,7 @@ class SQLAlchemyRoleProvider(IRoleProvider):
         """Initialize SQLAlchemyRoleProvider.
 
         :param engine: SQLAlchemy async engine
-        :type engine: AsyncEngine
         :param session_factory: Optional session factory, defaults to None
-        :type session_factory: async_sessionmaker[AsyncSession] | None
         """
         self.storage = storage
         self.engine = self.storage.engine
@@ -55,15 +53,12 @@ class SQLAlchemyRoleProvider(IRoleProvider):
             expire_on_commit=False,
         )
 
-    async def get_role(self, bot_id: int, user_id: int) -> Role | None:
+    async def get_role(self, bot_id: int, user_id: int) -> str | None:
         """Get the role for a specific user.
 
         :param bot_id: The Telegram bot ID
-        :type bot_id: int
         :param user_id: The Telegram user ID
-        :type user_id: int
-        :return: The user's role or None if not found
-        :rtype: Role | None
+        :return: The role slug or None if not found
         """
         async with self.session_factory() as session:
             query = select(roles_table.c.role).where(
@@ -73,13 +68,7 @@ class SQLAlchemyRoleProvider(IRoleProvider):
                 ),
             )
             result = await session.execute(query)
-            role_value = result.scalar_one_or_none()
-            if role_value is None:
-                return None
-
-            if isinstance(role_value, str):
-                role_value = int(role_value)
-            return Role(role_value)
+            return result.scalar_one_or_none()
 
     async def migrate(self) -> None:
         """Initialize the storage backend (create tables, etc.)."""
@@ -89,3 +78,20 @@ class SQLAlchemyRoleProvider(IRoleProvider):
     async def close(self) -> None:
         """Close the database connection."""
         await self.engine.dispose()
+
+    async def get_users(self, bot_id: int, role_slug: str) -> list[int]:
+        """Get all users with a specific role.
+
+        :param bot_id: The Telegram bot ID
+        :param role_slug: The role slug to check for
+        :return: A list of Telegram user IDs
+        """
+        async with self.session_factory() as session:
+            query = select(roles_table.c.user_id).where(
+                and_(
+                    roles_table.c.bot_id == bot_id,
+                    roles_table.c.role == role_slug,
+                )
+            )
+            result = await session.execute(query)
+            return [row[0] for row in result.all()]

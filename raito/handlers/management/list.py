@@ -1,15 +1,19 @@
+from __future__ import annotations
+
 from typing import TYPE_CHECKING, NamedTuple
 
 from aiogram import Router, html
-from aiogram.types import Message
 
-from raito.plugins.roles import Role, roles
-from raito.utils.ascii.tree import AsciiTree, dot_paths_to_tree
+from raito.plugins.commands import description, hidden
+from raito.plugins.roles import DEVELOPER
+from raito.utils.ascii import AsciiTree, TreeNode
 from raito.utils.configuration import RouterListStyle
 from raito.utils.const import ROOT_DIR
 from raito.utils.filters import RaitoCommand
 
 if TYPE_CHECKING:
+    from aiogram.types import Message
+
     from raito.core.raito import Raito
     from raito.core.routers.loader import RouterLoader
 
@@ -25,9 +29,10 @@ class Emojis(NamedTuple):
     not_found: str
 
 
-@router.message(RaitoCommand("routers"))
-@roles(Role.DEVELOPER)
-async def list_routers(message: Message, raito: "Raito") -> None:
+@router.message(RaitoCommand("routers"), DEVELOPER)
+@description("Lists all routers")
+@hidden
+async def list_routers(message: Message, raito: Raito) -> None:
     match raito.configuration.router_list_style:
         case RouterListStyle.CIRCLES:
             emojis = Emojis("🟢", "🟡", "🔴", "⚪")
@@ -38,27 +43,37 @@ async def list_routers(message: Message, raito: "Raito") -> None:
         case _:
             emojis = Emojis("🟩", "🟨", "🟥", "⬜")
 
-    def get_router_emoji(path: str) -> str:
-        if path in raito.router_manager.loaders:
-            loader = raito.router_manager.loaders[path]
-            if loader.is_restarting:
-                return emojis.restarting
-            if loader.is_loaded:
-                return emojis.enabled
-        return emojis.disabled
-
-    def extract_loader_path(loader: "RouterLoader") -> str:
+    def extract_loader_path(loader: RouterLoader) -> str:
         return (
             loader.path.as_posix()
             .replace(ROOT_DIR.parent.as_posix(), "")
             .replace(".py", "")
-            .replace("/", ".")
+            .strip("/")
         )
 
-    paths = [extract_loader_path(loader) for loader in raito.router_manager.loaders.values()]
-    tree_root = dot_paths_to_tree(paths, prefix_callback=get_router_emoji)
-    tree = AsciiTree().render(tree_root)
+    paths = {
+        extract_loader_path(loader): loader for loader in raito.router_manager.loaders.values()
+    }
 
+    def get_status_icon(path: str) -> str:
+        loader = paths.get(path)
+        if loader and loader.is_restarting:
+            return emojis.restarting
+        if loader and loader.is_loaded:
+            return emojis.enabled
+        return emojis.disabled
+
+    root = TreeNode("routers", is_folder=True)
+    for path in paths:
+        parts = path.split("/")
+        current = root
+        for i, part in enumerate(parts):
+            full_path = "/".join(parts[: i + 1])
+            is_folder = i != len(parts) - 1
+            icon = get_status_icon(full_path) if not is_folder else ""
+            current = current.add_child(part, prefix=icon, is_folder=is_folder)
+
+    tree = AsciiTree().render(root)
     text = (
         html.bold("Here is your routers:")
         + "\n\n"

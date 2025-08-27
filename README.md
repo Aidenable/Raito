@@ -13,7 +13,7 @@
 <img alt="uv" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fastral-sh%2Fuv%2Fmain%2Fassets%2Fbadge%2Fv0.json&style=flat-square&labelColor=232226&color=6341AC&link=https%3A%2F%2Fastral.sh%2Fuv">
 <img alt="Ruff" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fastral-sh%2Fruff%2Fmain%2Fassets%2Fbadge%2Fv2.json&style=flat-square&labelColor=232226&color=6341AC&link=https%3A%2F%2Fastral.sh%2Fruff">
 <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/raito?style=flat-square&labelColor=222426&color=19A4F3">
-<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Aidenable/Raito/test.yml?style=flat-square&labelColor=232622">
+<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Aidenable/Raito/ci.yml?style=flat-square&labelColor=232622">
 </div>
 
 ---
@@ -21,18 +21,19 @@
 ## Highlights
 
 - 🔥 **Hot Reload** — automatic router loading and file watching for instant development cycles
-- 🎭 **Role System** — `@raito.roles` with pre-configured roles (admin, mod, support, etc) and selector UI
+- 🎭 **Role System** — pre-configured roles (owner, support, tester, etc) and selector UI
 - 📚 **Pagination** — easy pagination over text and media using inline buttons
 - 💬 **FSM Toolkit** — interactive confirmations, questionnaires, and mockable message flow
 - 🚀 **CLI Generator** — `$ raito init` creates a ready-to-use bot template in seconds
+- ⌨️ **Keyboard Factory** — static and dynamic generation
 - 🛠️ **Command Registration** — automatic setup of bot commands with descriptions for each
+- 🖼️ **Album Support** — groups media albums and passes them to handlers
 - 🛡️ **Rate Limiting** — apply global or per-command throttling via decorators or middleware
-- 💾 **Database Storages** — optional SQL support
+- 💾 **Database Storages** — optional JSON & SQL support
 - 🧪 **REPL** — execute async Python in context (`_msg`, `_user`, `_raito`)
 - 🔍 **Params Parser** — extracts and validates command arguments
+- ✏️ **Logging Formatter** — beautiful, readable logs out of the box
 - 📊 **Metrics** — inspect memory usage, uptime, and caching stats
-- 📃 **Logging** — view and filter runtime logs without leaving Telegram
-- 🧰 **Debug Utils** — run shell commands, monitor jobs, inspect command states, and more
 
 
 ## Installation
@@ -80,17 +81,15 @@ The `@rt.description` decorator adds a description to each command — they will
 
 For commands like `/ban 1234`, use `@rt.params` to extract and validate the arguments.
 
-```python
-@router.message(filters.Command("ban"))
-@rt.roles(rt.Role.OWNER, rt.Role.ADMINISTRATOR, rt.Role.MODERATOR)
-@rt.description("Ban a user")
-@rt.params(user_id=int)
-async def ban(message: types.Message, params: rt.Params, bot: Bot):
-    if not params.user_id:
-        await message.answer("Please provide a user ID.")
-        return
+Limit command usage with `@rt.limiter` and control the rate by mode.
 
-    await bot.ban_chat_member(chat_id=message.chat.id, user_id=params.user_id)
+```python
+@router.message(filters.Command("ban"), OWNER | ADMINISTRATOR | MODERATOR)
+@rt.description("Ban a user")
+@rt.limiter(300, mode="chat")
+@rt.params(user_id=int)
+async def ban(message: types.Message, user_id: int, bot: Bot):
+    await bot.ban_chat_member(chat_id=message.chat.id, user_id=user_id)
     await message.answer(text="✅ User banned successfully!")
 ```
 
@@ -123,7 +122,7 @@ It is very user-friendly and fully customizable.
 
 ```python
 @router.message(filters.Command("pagination"))
-async def pagination(message: Message, raito: rt.Raito, bot: Bot):
+async def pagination(message: Message, raito: Raito, bot: Bot):
     if not message.from_user:
         return
 
@@ -136,17 +135,59 @@ async def pagination(message: Message, raito: rt.Raito, bot: Bot):
     )
 
 
+# mock data
 BUTTONS = [
     InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}")
     for i in range(10000)
 ]
 
 @rt.on_pagination(router, "button_list")
-async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, page: int, limit: int):
-    content = BUTTONS[(page - 1) * limit : page * limit]
+async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, offset: int, limit: int):
+    content = BUTTONS[offset : offset + limit]
     await paginator.answer(text="Here is your buttons:", buttons=content)
 ```
 
+---
+
+#### ⌨️ Keyboards
+
+Sometimes you want quick layouts. Sometimes — full control. You get both.
+
+##### Static (layout-based)
+```python
+@rt.keyboard.static(inline=True)
+def information():
+    return [
+        ("📄 Terms of Service", "tos"),
+        [("ℹ️ About", "about"), ("⚙️ Website", "web")],
+    ]
+```
+
+##### Dynamic (builder-based)
+```python
+@rt.keyboard.dynamic(1, 2, adjust=True, inline=False)
+def start_menu(builder: ReplyKeyboardBuilder, app_url: str):
+    builder.button(text="📱 Open App", web_app=WebAppInfo(url=app_url))
+    builder.button(text="💬 Support")
+    builder.button(text="📢 Channel")
+```
+
+---
+
+#### 🍃 Lifespan
+
+Define startup and shutdown logic in one place.
+
+```python
+@rt.lifespan(router)
+async def lifespan(bot: Bot):
+    user = await bot.get_me()
+    rt.debug("🚀 Bot [%s] is starting...", user.full_name)
+
+    yield
+
+    rt.debug("👋🏻 Bye!")
+```
 
 ## Contributing
 
@@ -169,5 +210,7 @@ Use in production at your own risk.
 
 Open an issue or start a discussion in the GitHub Discussions tab. \
 You can also ping [@Aidenable](https://github.com/Aidenable) for feedback or ideas.
+
+![Alt](https://repobeats.axiom.co/api/embed/6ba46ed9f14186eb039044610072e123c0afeb08.svg "Repobeats analytics image")
 
 [![GO TOP](https://img.shields.io/badge/GO%20TOP-black?style=for-the-badge)](#header)

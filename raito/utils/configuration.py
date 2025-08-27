@@ -3,7 +3,7 @@ from enum import IntEnum, unique
 
 from pydantic import BaseModel
 
-from raito.plugins.roles.providers.protocol import IRoleProvider
+from raito.plugins.roles.manager import RoleManager
 
 __all__ = (
     "PaginationControls",
@@ -43,7 +43,7 @@ class PaginationStyle:
 
 class RaitoConfiguration(BaseModel):
     router_list_style: RouterListStyle = RouterListStyle.DIAMONDS
-    role_provider: IRoleProvider | None = None
+    role_manager: RoleManager | None = None
     pagination_style: PaginationStyle = PaginationStyle()
 
     class Config:

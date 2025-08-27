@@ -1,14 +1,22 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from aiogram.client.default import Default
-from aiogram.types import (
-    InlineKeyboardMarkup,
-    LinkPreviewOptions,
-    MessageEntity,
-    ReplyParameters,
-)
 
 from raito.plugins.pagination.enums import PaginationMode
+from raito.utils.errors import SuppressNotModifiedError
 
 from .base import BasePaginator
+
+if TYPE_CHECKING:
+    from aiogram.types import (
+        InlineKeyboardMarkup,
+        LinkPreviewOptions,
+        Message,
+        MessageEntity,
+        ReplyParameters,
+    )
 
 __all__ = ("TextPaginator",)
 
@@ -69,7 +77,7 @@ class TextPaginator(BasePaginator):
         allow_sending_without_reply: bool | None = None,
         disable_web_page_preview: bool | Default | None = None,
         reply_to_message_id: int | None = None,
-    ) -> None:
+    ) -> Message:
         """Send or edit paginated message.
 
         :param text: message text
@@ -98,6 +106,8 @@ class TextPaginator(BasePaginator):
         :type disable_web_page_preview: bool | Default | None
         :param reply_to_message_id: reply to message id
         :type reply_to_message_id: int | None
+        :return: paginated message
+        :rtype: Message
         :raises RuntimeError: if bot instance not set
         """
         if not self.bot:
@@ -128,6 +138,10 @@ class TextPaginator(BasePaginator):
                 reply_to_message_id=reply_to_message_id,
             )
         elif text != self.existing_message.text:
-            await self.existing_message.edit_text(text=text, reply_markup=reply_markup)
+            with SuppressNotModifiedError():
+                await self.existing_message.edit_text(text=text, reply_markup=reply_markup)
         else:
-            await self.existing_message.edit_reply_markup(reply_markup=reply_markup)
+            with SuppressNotModifiedError():
+                await self.existing_message.edit_reply_markup(reply_markup=reply_markup)
+
+        return self.existing_message
