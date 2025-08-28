@@ -1,12 +1,7 @@
-from random import sample
-
-from aiogram import Bot, F, Router, filters
+from aiogram import F, Router, filters
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import InputMediaPhoto, InputMediaVideo, Message
-
-from raito.core.raito import Raito
-from raito.plugins.pagination import InlinePaginator
 
 router = Router(name="start")
 
