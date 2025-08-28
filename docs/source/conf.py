@@ -14,19 +14,19 @@ sys.path.insert(0, os.path.abspath("../.."))
 project = "Raito"
 copyright = "2025, Aiden"
 author = "Aiden"
-release = "1.1.0.rc0"
+release = "1.3.3"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = [
+extensions: list[str] = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx_autodoc_typehints",
 ]
 
-templates_path = ["_templates"]
-exclude_patterns = []
+templates_path: list[str] = ["_templates"]
+exclude_patterns: list[str] = []
 
 autodoc_typehints = "description"
 autodoc_member_order = "bysource"
@@ -35,4 +35,4 @@ autodoc_member_order = "bysource"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
-html_static_path = ["_static"]
+html_static_path: list[str] = ["_static"]

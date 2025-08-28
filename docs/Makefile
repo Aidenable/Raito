@@ -18,3 +18,15 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+html:
+	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
+
+clean:
+	rm -rf "$(BUILDDIR)"
+
+preview:
+	@make html
+	uv run watchmedo shell-command \
+		--patterns="*.rst"  --recursive \
+		--command='clear && make html' --drop

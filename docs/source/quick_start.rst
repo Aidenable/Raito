@@ -10,10 +10,13 @@ Minimal setup to get your bot running with **Raito**:
     from aiogram import Bot, Dispatcher
     from raito import Raito
 
+    TOKEN: str = "YOUR_BOT_TOKEN"
+    PRODUCTION: bool = False
+
     async def main() -> None:
-        bot = Bot(token="TOKEN")
+        bot = Bot(token=TOKEN)
         dispatcher = Dispatcher()
-        raito = Raito(dispatcher, "src/handlers")
+        raito = Raito(dispatcher, "src/handlers", production=PRODUCTION)
 
         await raito.setup()
         await dispatcher.start_polling(bot)
@@ -24,14 +27,16 @@ Minimal setup to get your bot running with **Raito**:
 What's happening here?
 -----------------------
 
-- ``Raito(...)`` sets up watchdog, middlewares, managers, etc.
-- It auto-loads routers from the `"src/handlers"` folder.
-- You don't need to register routers manually.
+- ``Raito(...)`` sets up handlers, locales, developers, managers, etc.
+- ``raito.setup()`` auto-loads routers from the `"src/handlers"` folder.
+- *You don't need to register routers manually.*
+- It starts handler hot-reload (watchdog) if production mode is disabled.
 
 -----------------------
 
 .. tip::
-    Try adding a file like `src/handlers/ping.py`
+    Try adding a file with the following content, then modify the message text —
+    the changes will be reflected instantly.
 
 .. code-block:: python
 

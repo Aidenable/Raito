@@ -58,4 +58,4 @@ To install all extras and setup a dev environment:
 
    git clone https://github.com/Aidenable/Raito
    cd Raito
-   uv pip install -e '.[dev,redis,sqlite,postgres]'
+   pip install -e '.[dev,redis,sqlite,postgres]'

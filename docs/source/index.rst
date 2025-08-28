@@ -1,64 +1,57 @@
-.. Raito documentation master file, created by sphinx-quickstart
-
-That's Raito!
+🔦 That's Raito!
 =============
 
 *REPL, hot-reload, keyboards, pagination, and internal dev tools — all in one.*
 
-Highlights
-----------
+Features
+~~~~~~~~
 
-* **🔥 Hot Reload** — automatic router loading and file watching for instant development cycles
-* **🎭 Role System** — ``@raito.roles`` with pre-configured roles (admin, mod, support, etc) and selector UI
-* **📚 Pagination** — easy pagination over text and media using inline buttons
-* **💬 FSM Toolkit** — interactive confirmations, questionnaires, and mockable message flow
-* **🚀 CLI Generator** — ``$ raito init`` creates a ready-to-use bot template in seconds
-* **🛠️ Command Registration** — automatic setup of bot commands with descriptions for each
-* **🛡️ Rate Limiting** — apply global or per-command throttling via decorators or middleware
-* **💾 Database Storages** — optional SQL support
-* **🧪 REPL** — execute async Python in context (``_msg``, ``_user``, ``_raito``)
-* **🔍 Params Parser** — extracts and validates command arguments
-* **📊 Metrics** — inspect memory usage, uptime, and caching stats
-* **📃 Logging** — view and filter runtime logs without leaving Telegram
-* **🧰 Debug Utils** — run shell commands, monitor jobs, inspect command states, and more
+- :doc:`Hot Reload <plugins/hot_reload>` — automatic router loading and file watching for instant development cycles
+- :doc:`Role System <plugins/roles>` — pre-configured roles (owner, support, tester, etc) and selector UI
+- :doc:`Pagination <plugins/pagination>` — easy pagination over text and media using inline buttons
+- **FSM Toolkit** — interactive confirmations, questionnaires, and mockable message flow
+- **CLI Generator** — ``$ raito init`` creates a ready-to-use bot template in seconds
+- :doc:`Keyboard Factory <plugins/keyboards>` — static and dynamic generation
+- :doc:`Command Registration <plugins/commands>` — automatic setup of bot commands with descriptions for each
+- :doc:`Album Support <plugins/album>` — groups media albums and passes them to handlers
+- :doc:`Rate Limiting <plugins/throttling>` — apply global or per-command throttling via decorators or middleware
+- **Database Storages** — optional JSON & SQL support
+- **REPL** — execute async Python in context (``_msg``, ``_user``, ``_raito``)
+- :doc:`Params Parser <plugins/commands>` — extracts and validates command arguments
+- :doc:`Logging Formatter <utils/logging>` — beautiful, readable logs out of the box
+- **Metrics** — inspect memory usage, uptime, and caching stats
+
 
 -------------------
 
-Get started, explore the API, or dive into individual modules:
 
-Getting Started 📚
-~~~~~~~~~~~~~~~~~~~
-.. toctree::
-   :maxdepth: 1
-
-   usage/installation
-   usage/quick-start
-
-Plugins 🔌
+🚀 Quick Start
 ~~~~~~~~~~~
+
+.. code-block:: python
+
+    import asyncio
+
+    from aiogram import Bot, Dispatcher
+    from raito import Raito
+
+    async def main() -> None:
+        bot = Bot(token="TOKEN")
+        dispatcher = Dispatcher()
+        raito = Raito(dispatcher, "src/handlers")
+
+        await raito.setup()
+        await dispatcher.start_polling(bot)
+
+    if __name__ == "__main__":
+        asyncio.run(main())
+
+Contents
+--------
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 1
 
-   raito.plugins.pagination
-   raito.plugins.roles
-
-Core & Internals ⚙️
-~~~~~~~~~~~~~~~~~~~~
-.. toctree::
-   :maxdepth: 1
-
-   raito.core
-   raito.utils
-
-References 🔍
-~~~~~~~~~~~~~~
-.. toctree::
-   :maxdepth: 1
-
-   changelog
-
-Indices & Tables 🗂️
-~~~~~~~~~~~~~~~~~~
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    installation
+    quick_start
+    plugins/index
+    utils/index
