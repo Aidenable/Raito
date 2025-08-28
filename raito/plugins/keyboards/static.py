@@ -120,6 +120,9 @@ def static_keyboard(
     :param builder_kwargs: Extra args passed to `as_markup()`
     :returns: A wrapped function returning KeyboardMarkup
     """
+    if not inline:
+        builder_kwargs.setdefault("resize_keyboard", True)
+
     Builder = InlineKeyboardBuilder if inline else ReplyKeyboardBuilder
 
     def wrapper(fn: Callable[P, LayoutReturn]) -> BuilderFn[P]:

@@ -67,6 +67,9 @@ def dynamic_keyboard(  # type: ignore[misc]
     if not sizes:
         sizes = (1,)
 
+    if not inline:
+        builder_kwargs.setdefault("resize_keyboard", True)
+
     Builder = InlineKeyboardBuilder if inline else ReplyKeyboardBuilder
 
     def wrapper(fn: Callable[Concatenate[BuilderT, P], object]) -> Callable[P, KeyboardMarkupT]:
