@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 router = Router(name="raito.system.stats")
 
 
-def get_process_stats():
+def get_process_stats() -> dict:
     proc = psutil.Process()
 
     with proc.oneshot():
@@ -51,7 +51,7 @@ def strf_seconds(seconds: int) -> str:
 @router.message(RaitoCommand("stats"), DEVELOPER)
 @description("Show process stats")
 @hidden
-async def stats(message: Message):
+async def stats(message: Message) -> None:
     stats = get_process_stats()
 
     text = (

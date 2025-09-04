@@ -26,12 +26,16 @@ class ExecGroup(StatesGroup):
 @description("Execute expression in commandline")
 @hidden
 async def exec(message: Message, state: FSMContext) -> None:
-    await message.answer(text="📦 Enter expression: ", parse_mode="HTML")
+    await message.answer(text="📦 Enter expression:")
     await state.set_state(ExecGroup.expression)
 
 
 @router.message(ExecGroup.expression, F.text, DEVELOPER)
 async def execute_expression(message: Message, state: FSMContext) -> None:
+    if not message.text:
+        await message.answer(text="⚠️ Expression cannot be empty")
+        return
+
     result = os.popen(message.text).read()
     await state.clear()
     await message.answer(text=html.pre(escape(result)), parse_mode="HTML")

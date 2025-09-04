@@ -28,18 +28,26 @@ class EvalGroup(StatesGroup):
 @description("Execute Python script")
 @hidden
 async def exec(message: Message, state: FSMContext) -> None:
-    await message.answer(text="📦 Enter Python expression: ", parse_mode="HTML")
+    await message.answer(text="📦 Enter Python expression: ")
     await state.set_state(EvalGroup.expression)
 
 
 @router.message(EvalGroup.expression, F.text, DEVELOPER)
 async def execute_expression(message: Message, state: FSMContext, raito: Raito) -> None:
+    await state.clear()
+
+    if not message.text:
+        await message.answer(text="⚠️ Expression cannot be empty")
+        return
+
     try:
         result = eval(
-            message.text, {}, {"_msg": message, "_user": message.from_user, "_raito": raito}
+            message.text,
+            {},
+            {"_msg": message, "_user": message.from_user, "_raito": raito},
         )
         result = "no output" if result is None else str(result)
-    except:
+    except Exception:  # noqa: BLE001
         result = traceback.format_exc()
-    await state.clear()
+
     await message.answer(text=html.pre(escape(result)), parse_mode="HTML")
