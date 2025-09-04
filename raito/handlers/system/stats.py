@@ -41,10 +41,11 @@ def strf_seconds(seconds: int) -> str:
     seconds = seconds % 60
 
     return (
-        (f"{days}d " if days else "") 
-        + (f"{hours}h " if hours else "") 
-        + (f"{minutes}m " if minutes else "") 
-        + (f"{seconds}s" if seconds else ""))
+        (f"{days}d " if days else "")
+        + (f"{hours}h " if hours else "")
+        + (f"{minutes}m " if minutes else "")
+        + (f"{seconds}s" if seconds else "")
+    )
 
 
 @router.message(RaitoCommand("stats"), DEVELOPER)
@@ -56,8 +57,13 @@ async def stats(message: Message):
     text = (
         html.bold("Process stats")
         + "\n"
-        + "CPU: " + "{:.2f}".format(stats["cpu_percent"]) + "%\n"
-        + "RAM: " + "{:.2f}".format(stats["memory"]["rss_mb"]) + "Mb\n"
-        + "Uptime: " + strf_seconds(int(stats["uptime_sec"]))
+        + "CPU: "
+        + "{:.2f}".format(stats["cpu_percent"])
+        + "%\n"
+        + "RAM: "
+        + "{:.2f}".format(stats["memory"]["rss_mb"])
+        + "Mb\n"
+        + "Uptime: "
+        + strf_seconds(int(stats["uptime_sec"]))
     )
     await message.answer(text=text, parse_mode="HTML")
