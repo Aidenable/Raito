@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import traceback
+from collections.abc import Awaitable, Callable
 from html import escape
 from typing import TYPE_CHECKING, Any
 
@@ -28,8 +29,21 @@ async def _eval_code(message: Message, code: str, data: dict[str, Any]) -> None:
     data["_msg"] = message
     data["_user"] = message.from_user
 
+    if "\n" not in code:
+        code = f"return {code}"
+
+    func_name = "__eval_func"
+    func_body = f"async def {func_name}():\n"
+    for line in code.splitlines():
+        func_body += f"    {line}\n"
+
+    result: str | None = None
+    exec_locals: dict[str, Any] = {}
     try:
-        result = eval(code, {}, data)
+        exec(func_body, data, exec_locals)
+        func: Callable[[], Awaitable[Any]] = exec_locals.get(func_name, lambda: None)
+
+        result = await func()
         result = "no output" if result is None else str(result)
     except Exception:  # noqa: BLE001
         result = traceback.format_exc()
