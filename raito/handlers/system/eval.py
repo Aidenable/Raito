@@ -4,7 +4,7 @@ import traceback
 from html import escape
 from typing import TYPE_CHECKING
 
-from aiogram import F, Router, html
+from aiogram import Bot, F, Router, html
 from aiogram.fsm.state import State, StatesGroup
 
 from raito.plugins.commands import description, hidden
@@ -27,13 +27,18 @@ class EvalGroup(StatesGroup):
 @router.message(RaitoCommand("eval"), DEVELOPER)
 @description("Execute Python script")
 @hidden
-async def exec(message: Message, state: FSMContext) -> None:
-    await message.answer(text="📦 Enter Python expression: ")
+async def eval_handler(message: Message, state: FSMContext) -> None:
+    await message.answer(text="📦 Enter Python expression:")
     await state.set_state(EvalGroup.expression)
 
 
 @router.message(EvalGroup.expression, F.text, DEVELOPER)
-async def execute_expression(message: Message, state: FSMContext, raito: Raito) -> None:
+async def eval_process(
+    message: Message,
+    state: FSMContext,
+    raito: Raito,
+    bot: Bot,
+) -> None:
     await state.clear()
 
     if not message.text:
@@ -44,7 +49,13 @@ async def execute_expression(message: Message, state: FSMContext, raito: Raito) 
         result = eval(
             message.text,
             {},
-            {"_msg": message, "_user": message.from_user, "_raito": raito},
+            {
+                "_msg": message,
+                "_user": message.from_user,
+                "_state": state,
+                "_raito": raito,
+                "_bot": bot,
+            },
         )
         result = "no output" if result is None else str(result)
     except Exception:  # noqa: BLE001
