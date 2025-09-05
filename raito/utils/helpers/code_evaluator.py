@@ -12,16 +12,30 @@ from typing import Any
 
 @dataclass
 class EvaluationData:
+    """Stores the result of evaluated python code.
+
+    :param stdout: Captured standard output (e.g. from ``print()``)
+    :param result: The final returned result.
+    :param error: Traceback string if an exception occurred.
+    """
+
     stdout: str | None = None
     result: str | None = None
     error: str | None = None
 
 
 class CodeEvaluator:
+    """Async code evaluator with stdout capture and error handling."""
+
     @contextmanager
     def _capture_output(self) -> Generator[StringIO, Any, None]:
+        """Context manager that captures ``stdout`` into a buffer.
+
+        :yield: A ``StringIO`` buffer with captured output.
+        """
         old_stdout = sys.stdout
         buf = StringIO()
+
         try:
             with redirect_stdout(buf):
                 yield buf
@@ -29,6 +43,11 @@ class CodeEvaluator:
             sys.stdout = old_stdout
 
     def _wrap_code(self, code: str) -> ast.Module:
+        """Wraps code into an async function, returning the last expression.
+
+        :param code: python code to wrap.
+        :return: A module with a single async def.
+        """
         module = ast.parse(code, mode="exec")
         body = module.body or [ast.Pass()]
 
@@ -52,6 +71,12 @@ class CodeEvaluator:
         return wrapped_module
 
     async def evaluate(self, code: str, context: dict[str, Any]) -> EvaluationData:
+        """Evaluates the given async python code with the provided context.
+
+        :param code: Python code to execute.
+        :param context: Variables available during execution.
+        :return: Result of the evaluation as ``EvaluationData``
+        """
         try:
             wrapped_module = self._wrap_code(code)
             compiled_code = compile(wrapped_module, "<raito_eval>", "exec")
