@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import traceback
-from collections.abc import Awaitable, Callable
 from html import escape
 from typing import TYPE_CHECKING, Any
 
@@ -12,43 +10,40 @@ from aiogram.fsm.state import State, StatesGroup
 from raito.plugins.commands import description, hidden
 from raito.plugins.roles import DEVELOPER
 from raito.utils.filters import RaitoCommand
+from raito.utils.helpers.code_evaluator import CodeEvaluator
 
 if TYPE_CHECKING:
     from aiogram.fsm.context import FSMContext
     from aiogram.types import Message
 
 router = Router(name="raito.system.eval")
+code_evaluator = CodeEvaluator()
 
 
 class EvalGroup(StatesGroup):
     expression = State()
 
 
-async def _eval_code(message: Message, code: str, data: dict[str, Any]) -> None:
+async def _execute_code(message: Message, code: str, data: dict[str, Any]) -> None:
     data = {"_" + k: v for k, v in data.items()}
     data["_msg"] = message
     data["_user"] = message.from_user
 
-    if "\n" not in code:
-        code = f"return {code}"
+    evaluation_data = await code_evaluator.evaluate(code, data)
+    pre_blocks = []
 
-    func_name = "__eval_func"
-    func_body = f"async def {func_name}():\n"
-    for line in code.splitlines():
-        func_body += f"    {line}\n"
+    if evaluation_data.stdout:
+        pre_blocks.append(evaluation_data.stdout[:1000])
 
-    result: str | None = None
-    exec_locals: dict[str, Any] = {}
-    try:
-        exec(func_body, data, exec_locals)
-        func: Callable[[], Awaitable[Any]] = exec_locals.get(func_name, lambda: None)
+    if evaluation_data.error:
+        pre_blocks.append(evaluation_data.error[:3000])
+    elif evaluation_data.result is not None:
+        text = pre_blocks.append(evaluation_data.result[:3000])
+    else:
+        pre_blocks.append("no output")
 
-        result = await func()
-        result = "no output" if result is None else str(result)
-    except Exception:  # noqa: BLE001
-        result = traceback.format_exc()
-
-    await message.answer(text=html.pre(escape(result)), parse_mode="HTML")
+    text = "\n\n".join([html.pre(escape(i)) for i in pre_blocks])
+    await message.answer(text=text, parse_mode="HTML")
 
 
 @router.message(RaitoCommand("eval"), DEVELOPER)
@@ -68,7 +63,7 @@ async def eval_handler(
     data["message"] = message
     data["state"] = state
     data["command"] = command
-    await _eval_code(message, command.args, data)
+    await _execute_code(message, command.args, data)
 
 
 @router.message(EvalGroup.expression, F.text, DEVELOPER)
@@ -85,4 +80,4 @@ async def eval_process(
 
     data["message"] = message
     data["state"] = state
-    await _eval_code(message, message.text, data)
+    await _execute_code(message, message.text, data)
