@@ -38,7 +38,7 @@ async def _execute_code(message: Message, code: str, data: dict[str, Any]) -> No
     if evaluation_data.error:
         pre_blocks.append(evaluation_data.error[:3000])
     elif evaluation_data.result is not None:
-        text = pre_blocks.append(evaluation_data.result[:3000])
+        pre_blocks.append(evaluation_data.result[:3000])
     else:
         pre_blocks.append("no output")
 

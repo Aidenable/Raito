@@ -64,9 +64,10 @@ class CodeEvaluator:
                 kw_defaults=[],
             ),
             body=body,
+            decorator_list=[],
         )
 
-        wrapped_module = ast.Module(body=[func_def])
+        wrapped_module = ast.Module(body=[func_def], type_ignores=[])
         ast.fix_missing_locations(wrapped_module)
         return wrapped_module
 
