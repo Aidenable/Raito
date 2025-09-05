@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import psutil
@@ -16,7 +17,20 @@ if TYPE_CHECKING:
 router = Router(name="raito.system.stats")
 
 
-def get_process_stats() -> dict:
+@dataclass
+class MemoryInformation:
+    rss_mb: float
+    vms_mb: float
+
+
+@dataclass
+class ProcessStats:
+    uptime_sec: int
+    memory: MemoryInformation
+    cpu_percent: float
+
+
+def get_process_stats() -> ProcessStats:
     proc = psutil.Process()
 
     with proc.oneshot():
@@ -24,14 +38,14 @@ def get_process_stats() -> dict:
         cpu_percent = proc.cpu_percent(interval=0.1)
         create_time = proc.create_time()
 
-    return {
-        "uptime_sec": time.time() - create_time,
-        "memory": {
-            "rss_mb": mem_info.rss / 1024**2,
-            "vms_mb": mem_info.vms / 1024**2,
-        },
-        "cpu_percent": cpu_percent,
-    }
+    return ProcessStats(
+        uptime_sec=int(time.time() - create_time),
+        memory=MemoryInformation(
+            rss_mb=mem_info.rss / 1024**2,
+            vms_mb=mem_info.vms / 1024**2,
+        ),
+        cpu_percent=cpu_percent,
+    )
 
 
 def strf_seconds(seconds: int) -> str:
@@ -54,16 +68,13 @@ def strf_seconds(seconds: int) -> str:
 async def stats(message: Message) -> None:
     stats = get_process_stats()
 
-    text = (
-        html.bold("Process stats")
-        + "\n"
-        + "CPU: "
-        + "{:.2f}".format(stats["cpu_percent"])
-        + "%\n"
-        + "RAM: "
-        + "{:.2f}".format(stats["memory"]["rss_mb"])
-        + "Mb\n"
-        + "Uptime: "
-        + strf_seconds(int(stats["uptime_sec"]))
+    text = "\n".join(
+        [
+            html.bold("Process stats"),
+            "",
+            f"• CPU: {stats.cpu_percent:.2f}%",
+            f"• RAM: {stats.memory.rss_mb:.2f}mb",
+            f"• Uptime: {strf_seconds(stats.uptime_sec)}",
+        ]
     )
     await message.answer(text=text, parse_mode="HTML")
