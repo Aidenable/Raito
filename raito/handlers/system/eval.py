@@ -46,7 +46,7 @@ async def _execute_code(message: Message, code: str, data: dict[str, Any]) -> No
     await message.answer(text=text, parse_mode="HTML")
 
 
-@router.message(RaitoCommand("eval"), DEVELOPER)
+@router.message(RaitoCommand("eval", "py", "py3", "python", "exec"), DEVELOPER)
 @description("Execute Python script")
 @hidden
 async def eval_handler(
