@@ -2,7 +2,7 @@ from aiogram import Router, filters, html
 from aiogram.types import Message
 
 from raito import rt
-from raito.plugins.roles.roles import DEVELOPER
+from raito.plugins.roles import DEVELOPER
 
 router = Router(name="eval")
 

@@ -17,11 +17,7 @@ async def lifespan(raito: Raito, bot: Bot, dispatcher: Dispatcher) -> AsyncGener
 
     yield
 
-    rt.debug("Removing webhook...")
-    await bot.delete_webhook()
-
-    rt.log.debug("Closing dispatcher storages...")
+    rt.log.debug("Closing dispatcher storage...")
     await dispatcher.storage.close()
-    await dispatcher.fsm.storage.close()
 
     rt.log.info("👋 Bye!")

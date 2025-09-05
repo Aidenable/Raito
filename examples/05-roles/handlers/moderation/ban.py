@@ -2,7 +2,7 @@ from aiogram import Bot, Router, filters
 from aiogram.types import Message
 
 from raito import rt
-from raito.plugins.roles.roles import ADMINISTRATOR, DEVELOPER, MODERATOR, OWNER
+from raito.plugins.roles import ADMINISTRATOR, DEVELOPER, MODERATOR, OWNER
 
 router = Router(name="ban")
 

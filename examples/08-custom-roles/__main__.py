@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from roles.manager import CustomRoleManager
 
-from raito.core.raito import Raito
+from raito import Raito
 from raito.plugins.roles.providers.json import JSONRoleProvider
 from raito.utils.configuration import RaitoConfiguration
 from raito.utils.storages.json import JSONStorage
