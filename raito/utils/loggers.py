@@ -1,9 +1,15 @@
+import atexit
 import logging
+import os
 import shutil
+import tempfile
 from datetime import datetime
-from typing import Literal, cast
+from pathlib import Path
+from typing import Any, Literal, cast
 
 from typing_extensions import override
+
+from .const import ROOT_DIR
 
 __all__ = (
     "ColoredFormatter",
@@ -90,6 +96,24 @@ class MuteLoggersFilter(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> bool:
         return record.name not in self.names
+
+
+class TempHandler(logging.FileHandler):
+    def __init__(self, **kwargs: dict[str, Any]) -> None:
+        self.tmpfile = Path(tempfile.mktemp(prefix="temp_", suffix=".log", dir=ROOT_DIR))
+        atexit.register(self._delete_file)
+        super().__init__(filename=self.tmpfile, **kwargs)
+
+    def _delete_file(self) -> None:
+        if os.path.exists(self.tmpfile):
+            self.close()
+            os.remove(self.tmpfile)
+
+    def get_logs(self, n: int) -> list[str]:
+        if n < 0:
+            raise AttributeError("number of lines should be positive")
+        with open(self.tmpfile, encoding="utf-8") as f:
+            return f.readlines()[-n:]
 
 
 core = logging.getLogger("raito.core")

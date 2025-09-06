@@ -215,10 +215,13 @@ class Raito:
             locales=self.locales,
         )
 
-    def init_logging(self, *mute_loggers: str) -> None:
+    def init_logging(self, *mute_loggers: str, temp: bool = True) -> None:
         """Configure global logging with a colored formatter.
 
         :param mute_loggers: List of logger names to suppress from output
+        :type mute_loggers: list[str]
+        :param temp: Enable logging to a temporary file (.rt logs command)
+        :type temp: bool
         """
         logging.captureWarnings(True)
 
@@ -230,4 +233,16 @@ class Raito:
         root_logger = logging.getLogger()
         root_logger.handlers.clear()
         root_logger.addHandler(handler)
+
+        if temp:
+            self._tf_handler = loggers.TempHandler(encoding="utf-8")
+            self._tf_handler.setFormatter(logging.Formatter(
+                fmt="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+                datefmt="%Y-%m-%dT%H:%M:%SZ"
+            ))
+            if mute_loggers:
+                self._tf_handler.addFilter(loggers.MuteLoggersFilter(*mute_loggers))
+
+            root_logger.addHandler(self._tf_handler)
+        
         root_logger.setLevel(logging.DEBUG if not self.production else logging.INFO)
