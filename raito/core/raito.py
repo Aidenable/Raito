@@ -219,6 +219,9 @@ class Raito:
         """Configure global logging with a colored formatter.
 
         :param mute_loggers: List of logger names to suppress from output
+        :type mute_loggers: list[str]
+        :param temp: Enable logging to a temporary file (.rt logs command)
+        :type temp: bool
         """
         logging.captureWarnings(True)
 
