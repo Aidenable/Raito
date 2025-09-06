@@ -236,13 +236,15 @@ class Raito:
 
         if temp:
             self._tf_handler = loggers.TempHandler(encoding="utf-8")
-            self._tf_handler.setFormatter(logging.Formatter(
-                fmt="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-                datefmt="%Y-%m-%dT%H:%M:%SZ"
-            ))
+            self._tf_handler.setFormatter(
+                logging.Formatter(
+                    fmt="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+                    datefmt="%Y-%m-%dT%H:%M:%SZ",
+                )
+            )
             if mute_loggers:
                 self._tf_handler.addFilter(loggers.MuteLoggersFilter(*mute_loggers))
 
             root_logger.addHandler(self._tf_handler)
-        
+
         root_logger.setLevel(logging.DEBUG if not self.production else logging.INFO)
