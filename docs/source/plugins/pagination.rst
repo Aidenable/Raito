@@ -74,8 +74,11 @@ To manually attach navigation:
 
 .. code-block:: python
 
+   builder = InlineKeyboardBuilder()
    navigation = paginator.build_navigation()
+
    builder.attach(builder.from_markup(navigation))
+   builder.button(text="Back", callback_data="menu")
 
 ---------
 
