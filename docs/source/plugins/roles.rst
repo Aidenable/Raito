@@ -49,7 +49,7 @@ Use Telegram commands to manage roles:
 
 To manage roles, you must already have one of the following:
 
-- `developer`
+- `developer` (defined in ``Raito(developers=[...]``)
 - `owner`
 - `administrator`
 
