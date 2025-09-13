@@ -1,5 +1,11 @@
 from .enums import PaginationMode
-from .paginators import BasePaginator, InlinePaginator, PhotoPaginator, TextPaginator
+from .paginators import (
+    BasePaginator,
+    InlinePaginator,
+    ListPaginator,
+    PhotoPaginator,
+    TextPaginator,
+)
 
 __all__ = ("get_paginator",)
 
@@ -19,5 +25,7 @@ def get_paginator(mode: PaginationMode) -> type[BasePaginator]:
         return TextPaginator
     if mode == PaginationMode.PHOTO:
         return PhotoPaginator
+    if mode == PaginationMode.LIST:
+        return ListPaginator
 
     raise ValueError(f"Unsupported pagination mode: {mode}")
