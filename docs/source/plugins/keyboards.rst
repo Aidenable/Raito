@@ -77,21 +77,43 @@ Both decorators accept optional arguments:
 Examples
 ~~~~~~~~~~~~
 
-Static layout:
+Static inline keyboard:
 ^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
    from raito import rt
 
-   @rt.keyboard.static(inline=True)
-   def faq_buttons():
+   @rt.keyboard.static()
+   def info_markup():
        return [
-           ("Terms of Service", "tos"),
-           ("Privacy", "privacy"),
+           [("💬 Support", "support")],
+           [("🔒 Privacy", "privacy"), ("📄 TOS", "terms_of_use")]
        ]
 
-Dynamic layout:
+    @router.message(...)
+    async def handler(message: Message):
+        await message.answer("Buttons:", reply_markup=info_markup())
+
+Static reply keyboard:
+^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    from raito import rt
+
+    @rt.keyboard.static(inline=False)
+    def info_markup():
+        return [
+            ["💬 Support"],
+            [["🔒 Privacy"], ["📄 TOS"]]
+        ]
+
+    @router.message(...)
+    async def handler(message: Message):
+        await message.answer("Buttons:", reply_markup=info_markup())
+
+Dynamic inline keyboard:
 ^^^^^^^^^^^^^^^^
 
 .. code-block:: python
@@ -99,31 +121,59 @@ Dynamic layout:
    from aiogram.utils.keyboard import InlineKeyboardBuilder
    from raito import rt
 
-   from ... import Player
+   @rt.keyboard.dynamic(1, 2)
+   def info_markup(builder: InlineKeyboardBuilder, privacy_url: str, tos_url: str):
+       builder.button(text="💬 Support", callback_data="support")
+       builder.button(text="🔒 Privacy", url=privacy_url)
+       builder.button(text="📄 TOS", url=tos_url)
 
-   @rt.keyboard.dynamic()
-   def leaderboard(builder: InlineKeyboardBuilder, players: list[Player]):
-       for player in players:
-           builder.button(text=f"{player.name}", callback_data=f"player:{player.id}")
+    @router.message(...)
+    async def handler(message: Message):
+        await message.answer("Buttons:", reply_markup=info_markup(
+            privacy_url="https://example.com/privacy",
+            tos_url="https://example.com/tos",
+        ))
 
-       builder.adjust(1, 2, 2)
+Dynamic reply keyboard:
+^^^^^^^^^^^^^^^^
 
-Dynamic pagination-like example:
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. code-block:: python
+
+    from aiogram.utils.keyboard import ReplyKeyboardBuilder
+    from raito import rt
+
+    @rt.keyboard.dynamic(1, 2, inline=False)
+    def info_markup(builder: ReplyKeyboardBuilder):
+        builder.button(text="💬 Support")
+        builder.button(text="🔒 Privacy")
+        builder.button(text="📄 TOS")
+
+    @router.message(...)
+    async def handler(message: Message):
+        await message.answer("Buttons:", reply_markup=info_markup())
+
+Custom adjust:
+^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
    from aiogram.utils.keyboard import InlineKeyboardBuilder
    from raito import rt
 
-   from ... import Player
-
    @rt.keyboard.dynamic(adjust=False)
-   def leaderboard(builder: InlineKeyboardBuilder, players: list[Player]):
-       for i, player in enumerate(players, start=1):
-           builder.button(text=f"#{i} {player.name}", callback_data=f"player:{player.id}")
+   def admin_markup(builder: InlineKeyboardBuilder, show_balance_management: bool = False):
+       adjust = []
 
-       builder.button(text="◀️", callback_data="prev")
-       builder.button(text="▶️", callback_data="next")
+       builder.button(text="👤 Users", callback_data="users")
+       adjust.append(1)
 
-       builder.adjust(3)
+       if show_balance_management:
+           builder.button(text="📤 Withdraw", callback_data="withdraw")
+           builder.button(text="📥 Deposit", callback_data="deposit")
+           adjust.append(2)
+
+       builder.adjust(*adjust)
+
+    @router.message(...)
+    async def handler(message: Message):
+        await message.answer("Buttons:", reply_markup=admin_markup(True))
