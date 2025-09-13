@@ -148,6 +148,46 @@ Access control is enforced on ``assign`` / ``revoke``:
 
 -----
 
+Available Roles
+~~~~~~~~~~~~
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 10 70
+
+   * - Role
+     - Slug
+     - Description
+   * - 🖥️ Developer
+     - developer
+     - Has full access to all internal features, including debug tools and unsafe operations.
+   * - 👑 Owner
+     - owner
+     - Top-level administrator with permissions to manage administrators and global settings.
+   * - 💼 Administrator
+     - administrator
+     - Can manage users, moderate content, and configure most system settings.
+   * - 🛡️ Moderator
+     - moderator
+     - Can moderate user activity, issue warnings, and enforce rules within their scope.
+   * - 📊 Manager
+     - manager
+     - Oversees non-technical operations like campaigns, tasks, or content planning.
+   * - ❤️ Sponsor
+     - sponsor
+     - Supporter of the project. Usually does not have administrative privileges.
+   * - 👤 Guest
+     - guest
+     - Has temporary access to specific internal features (e.g., analytics). Typically invited users.
+   * - 💬 Support
+     - support
+     - Handles user support requests and assists with onboarding or issues.
+   * - 🧪 Tester
+     - tester
+     - Helps test new features and provide feedback. May have access to experimental tools.
+
+------
+
 Custom Roles
 ~~~~~~~~~~~~
 
