@@ -113,6 +113,39 @@ Access control is enforced on ``assign`` / ``revoke``:
 - Only trusted roles can assign
 - You can't assign or revoke your own role
 
+.. code-block:: python
+
+    from aiogram import Router, filters, types
+
+    from raito import Raito, rt
+    from raito.plugins.roles import ADMINISTRATOR, DEVELOPER, OWNER
+
+    router = Router(name="tester")
+
+
+    @router.message(filters.Command("give_tester"), DEVELOPER | OWNER | ADMINISTRATOR)
+    @rt.params(user_id=int)
+    async def give_tester(message: types.Message, raito: Raito, user_id: int) -> None:
+        if not message.from_user or not message.bot:
+            return
+
+        await raito.role_manager.assign_role(message.bot.id, message.from_user.id, user_id, "tester")
+        await message.answer(
+            text=f"User with ID <code>{user_id}</code> is now a tester!",
+            parse_mode="HTML",
+        )
+
+
+    @router.message(filters.Command("testers"), DEVELOPER | OWNER | ADMINISTRATOR)
+    async def testers(message: types.Message, raito: Raito) -> None:
+        if not message.from_user or not message.bot:
+            return
+
+        testers = await raito.role_manager.get_users(message.bot.id, "tester")
+        user_ids = [str(user_id) for user_id in testers]
+        await message.answer(text="🧪 Testers: " + ", ".join(user_ids))
+
+
 -----
 
 Custom Roles
