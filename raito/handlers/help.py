@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from aiogram import Dispatcher, Router, html
 from aiogram.dispatcher.event.handler import HandlerObject
 from aiogram.filters import Command, CommandObject
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, LinkPreviewOptions
 
 from raito import Raito, rt
 from raito.plugins.commands import description, hidden
@@ -93,9 +93,11 @@ async def on_pagination(
     limit: int,
 ) -> None:
     commands = _get_formatted_commands(raito.dispatcher)
+    footer = html.italic(html.link("Powered by Raito", "https://github.com/Aidenable/Raito"))
 
     await paginator.answer(
-        items=commands[offset : offset + limit],
+        items=[*commands[offset : offset + limit], footer],
         separator="\n\n",
         parse_mode="HTML",
+        link_preview_options=LinkPreviewOptions(is_disabled=True),
     )
