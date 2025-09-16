@@ -1,5 +1,6 @@
-from collections.abc import Callable, Sequence
+from collections.abc import Awaitable, Callable, Sequence
 from functools import wraps
+from inspect import iscoroutinefunction
 from typing import Literal, TypeAlias, cast, overload
 
 from aiogram.types import (
@@ -26,6 +27,9 @@ LayoutReturn: TypeAlias = Sequence[ButtonData | LayoutRow]
 
 InlineSyncFn: TypeAlias = Callable[P, InlineKeyboardMarkup]
 ReplySyncFn: TypeAlias = Callable[P, ReplyKeyboardMarkup]
+
+InlineAsyncFn: TypeAlias = Callable[P, Awaitable[InlineKeyboardMarkup]]
+ReplyAsyncFn: TypeAlias = Callable[P, Awaitable[ReplyKeyboardMarkup]]
 
 KeyboardMarkupT: TypeAlias = InlineKeyboardMarkup | ReplyKeyboardMarkup
 BuilderFn: TypeAlias = Callable[P, KeyboardMarkupT]
@@ -95,14 +99,21 @@ def _inject_layout(
 @overload
 def static_keyboard(
     inline: Literal[True] = True, **builder_kwargs: object
-) -> Callable[[Callable[P, LayoutReturn]], InlineSyncFn[P]]: ...
+) -> Callable[
+    [Callable[P, LayoutReturn | Awaitable[LayoutReturn]]], InlineSyncFn[P] | InlineAsyncFn[P]
+]: ...
 @overload
 def static_keyboard(
     inline: Literal[False], **builder_kwargs: object
-) -> Callable[[Callable[P, LayoutReturn]], ReplySyncFn[P]]: ...
+) -> Callable[
+    [Callable[P, LayoutReturn | Awaitable[LayoutReturn]]], ReplySyncFn[P] | ReplyAsyncFn[P]
+]: ...
 def static_keyboard(
     inline: bool = True, **builder_kwargs: object
-) -> Callable[[Callable[P, LayoutReturn]], BuilderFn[P]]:
+) -> Callable[
+    [Callable[P, LayoutReturn | Awaitable[LayoutReturn]]],
+    Callable[P, KeyboardMarkupT] | Callable[P, Awaitable[KeyboardMarkupT]],
+]:
     """Decorator to build inline or reply keyboards via layout style.
 
     Example:
@@ -125,7 +136,15 @@ def static_keyboard(
 
     Builder = InlineKeyboardBuilder if inline else ReplyKeyboardBuilder
 
-    def wrapper(fn: Callable[P, LayoutReturn]) -> BuilderFn[P]:
+    @overload
+    def wrapper(
+        fn: Callable[P, Awaitable[LayoutReturn]],
+    ) -> Callable[P, Awaitable[KeyboardMarkupT]]: ...
+    @overload
+    def wrapper(fn: Callable[P, LayoutReturn]) -> Callable[P, KeyboardMarkupT]: ...
+    def wrapper(
+        fn: Callable[P, LayoutReturn | Awaitable[LayoutReturn]],
+    ) -> Callable[P, KeyboardMarkupT] | Callable[P, Awaitable[KeyboardMarkupT]]:
         @wraps(fn)
         def sync_fn(*args: P.args, **kwargs: P.kwargs) -> KeyboardMarkupT:
             value = fn(*args, **kwargs)
@@ -138,6 +157,21 @@ def static_keyboard(
             _inject_layout(builder, value, inline=inline)
             return builder.as_markup(**builder_kwargs)
 
-        return sync_fn
+        @wraps(fn)
+        async def async_fn(*args: P.args, **kwargs: P.kwargs) -> KeyboardMarkupT:
+            value = await fn(*args, **kwargs)
+
+            if not isinstance(value, list):
+                msg = "Function must return a list"
+                raise ValueError(msg)
+
+            builder = Builder()
+            _inject_layout(builder, value, inline=inline)
+            return builder.as_markup(**builder_kwargs)
+
+        if iscoroutinefunction(fn):
+            return async_fn
+        else:
+            return sync_fn
 
     return wrapper
