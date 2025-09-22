@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -46,7 +47,11 @@ class RouterParser:
             raise ModuleNotFoundError(msg)
 
         module = module_from_spec(spec)
+        module.__name__ = spec.name
+        module.__file__ = str(file_path)
+        sys.modules[spec.name] = module
         spec.loader.exec_module(module)
+
         return module
 
     @classmethod

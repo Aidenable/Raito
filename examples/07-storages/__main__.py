@@ -4,7 +4,7 @@ from pathlib import Path
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 
-from raito.core.raito import Raito
+from raito import Raito
 from raito.utils.storages.json import JSONStorage
 from raito.utils.storages.sql import get_sqlite_storage
 

@@ -80,4 +80,4 @@ class RaitoCommand(Command):
     @override
     def update_handler_flags(self, flags: dict[str, Any]) -> None:
         super().update_handler_flags(flags)
-        flags["raito__hidden"] = True
+        flags["raito__command"] = True

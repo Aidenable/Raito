@@ -4,7 +4,7 @@ from aiogram import Bot, F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from raito.core.raito import Raito
+from raito import Raito
 from raito.plugins.pagination import InlinePaginator
 
 router = Router(name="add")

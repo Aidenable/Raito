@@ -51,3 +51,11 @@ What's happening here?
        await message.answer("Pong! 🏓")
 
 📦 Not installed yet? See :doc:`installation`
+
+-----
+
+Also, Raito has a built-in commands. Send ``.rt help`` to your bot to see the list.
+
+.. image:: /_static/help-command.png
+   :alt: Raito Help Command Example
+   :align: left

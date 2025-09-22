@@ -18,11 +18,11 @@ if TYPE_CHECKING:
         ReplyParameters,
     )
 
-__all__ = ("TextPaginator",)
+__all__ = ("ListPaginator",)
 
 
-class TextPaginator(BasePaginator):
-    """Text paginator."""
+class ListPaginator(BasePaginator):
+    """List paginator."""
 
     def _validate_parameters(
         self,
@@ -43,8 +43,8 @@ class TextPaginator(BasePaginator):
         :type limit: int
         :raises ValueError: if parameters are invalid
         """
-        if limit > 2048:
-            raise ValueError("limit must be less than or equal to 2048")
+        if limit > 1000:
+            raise ValueError("limit must be less than or equal to 1000")
 
         return super()._validate_parameters(
             name=name,
@@ -55,16 +55,17 @@ class TextPaginator(BasePaginator):
 
     @property
     def mode(self) -> PaginationMode:
-        """Get text pagination mode.
+        """Get list pagination mode.
 
         :return: pagination mode
         :rtype: PaginationMode
         """
-        return PaginationMode.TEXT
+        return PaginationMode.LIST
 
     async def answer(
         self,
-        text: str,
+        items: list[str],
+        separator: str = "\n",
         parse_mode: str | Default | None = None,
         entities: list[MessageEntity] | None = None,
         link_preview_options: LinkPreviewOptions | Default | None = None,
@@ -80,8 +81,10 @@ class TextPaginator(BasePaginator):
     ) -> Message:
         """Send or edit paginated message.
 
-        :param text: message text
-        :type text: str
+        :param items: list of items
+        :type items: list[str]
+        :param separator: separator between items
+        :type separator: str
         :param parse_mode: text parse mode
         :type parse_mode: str | Default | None
         :param entities: message entities
@@ -118,6 +121,7 @@ class TextPaginator(BasePaginator):
         protect_content = protect_content or Default("protect_content")
         disable_web_page_preview = disable_web_page_preview or Default("link_preview_is_disabled")
 
+        text = separator.join(items)
         reply_markup = reply_markup or self.build_navigation()
 
         if self.existing_message is None:

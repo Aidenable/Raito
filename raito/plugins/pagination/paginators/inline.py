@@ -196,7 +196,14 @@ class InlinePaginator(BasePaginator):
             )
         elif text != self.existing_message.text:
             with SuppressNotModifiedError():
-                await self.existing_message.edit_text(text=text, reply_markup=reply_markup)
+                await self.existing_message.edit_text(
+                    text=text,
+                    parse_mode=parse_mode,
+                    entities=entities,
+                    link_preview_options=link_preview_options,
+                    reply_markup=reply_markup,
+                    disable_web_page_preview=disable_web_page_preview,
+                )
         else:
             with SuppressNotModifiedError():
                 await self.existing_message.edit_reply_markup(reply_markup=reply_markup)
