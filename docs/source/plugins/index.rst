@@ -12,3 +12,4 @@ Plugins
     throttling
     pagination
     lifespan
+    conversations
