@@ -6,11 +6,19 @@ from asyncio import create_task
 from typing import TYPE_CHECKING
 
 from aiogram.dispatcher.event.event import EventObserver
+from aiogram.dispatcher.event.handler import CallbackType
+from aiogram.fsm.context import FSMContext
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from raito.plugins.album.middleware import AlbumMiddleware
 from raito.plugins.commands.middleware import CommandMiddleware
 from raito.plugins.commands.registration import register_bot_commands
+from raito.plugins.conversations import (
+    ConversationMiddleware,
+    ConversationRegistry,
+    Waiter,
+    wait_for,
+)
 from raito.plugins.pagination import PaginationMode, PaginatorMiddleware, get_paginator
 from raito.plugins.roles import (
     BaseRoleProvider,
@@ -99,6 +107,7 @@ class Raito:
         )
 
         self.command_parameters_error = EventObserver()
+        self.registry = ConversationRegistry()
 
     async def setup(self) -> None:
         """Set up the Raito by loading routers and starting watchdog.
@@ -122,6 +131,7 @@ class Raito:
         self.dispatcher.callback_query.middleware(PaginatorMiddleware("raito__is_pagination"))
         self.dispatcher.message.middleware(CommandMiddleware())
         self.dispatcher.message.middleware(AlbumMiddleware())
+        self.dispatcher.message.outer_middleware(ConversationMiddleware(self.registry))
 
         await self.router_manager.load_routers(self.routers_dir)
         await self.router_manager.load_routers(ROOT_DIR / "handlers")
@@ -231,3 +241,18 @@ class Raito:
         root_logger.handlers.clear()
         root_logger.addHandler(handler)
         root_logger.setLevel(logging.DEBUG if not self.production else logging.INFO)
+
+    async def wait_for(self, context: FSMContext, *filters: CallbackType) -> Waiter:
+        """Wait for the next message from user that matches given filters.
+
+        This function sets special state ``raito__conversation`` in FSM and
+        suspends coroutine execution until user sends a message that passes
+        all provided filters. Result is wrapped into :class:`Waiter`.
+
+        :param context: FSM context for current chat
+        :param filters: Sequence of aiogram filters
+        :return: Conversation result with text, parsed number and original message
+        :raises RuntimeError: If handler object not found during filter execution
+        :raises asyncio.CancelledError: If conversation was cancelled
+        """
+        return await wait_for(self, context, *filters)
