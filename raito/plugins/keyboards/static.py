@@ -20,7 +20,7 @@ __all__ = ("static_keyboard",)
 P = ParamSpec("P")
 R = TypeVar("R")
 
-ButtonData: TypeAlias = str | tuple[str] | tuple[str, str]
+ButtonData: TypeAlias = str | tuple[str] | tuple[str, str] | list[str]
 LayoutRow: TypeAlias = Sequence[ButtonData]
 LayoutReturn: TypeAlias = Sequence[ButtonData | LayoutRow]
 
