@@ -31,6 +31,12 @@ KeyboardMarkupT: TypeAlias = InlineKeyboardMarkup | ReplyKeyboardMarkup
 BuilderFn: TypeAlias = Callable[P, KeyboardMarkupT]
 
 
+@overload
+def _get_button(data: ButtonData, *, inline: Literal[True]) -> InlineKeyboardButton: ...
+@overload
+def _get_button(data: ButtonData, *, inline: Literal[False]) -> KeyboardButton: ...
+@overload
+def _get_button(data: ButtonData, *, inline: bool) -> InlineKeyboardButton | KeyboardButton: ...
 def _get_button(data: ButtonData, *, inline: bool) -> InlineKeyboardButton | KeyboardButton:
     """Convert button data to the appropriate button type.
 
@@ -44,6 +50,21 @@ def _get_button(data: ButtonData, *, inline: bool) -> InlineKeyboardButton | Key
 
     if isinstance(data, str) or len(data) != 2:
         raise ValueError("InlineKeyboardButton must be tuple of (text, callback_data)")
+
+    url = None
+    if data[1].startswith("t.me/"):
+        url = "https://" + data[1]
+    elif data[1].startswith(
+        (
+            "http://",
+            "https://",
+            "tg://",
+        )
+    ):
+        url = data[1]
+    if url:
+        return InlineKeyboardButton(text=data[0], url=url)
+
     return InlineKeyboardButton(text=data[0], callback_data=data[1])
 
 
