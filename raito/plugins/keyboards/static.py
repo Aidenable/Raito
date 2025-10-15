@@ -51,21 +51,23 @@ def _get_button(data: ButtonData, *, inline: bool) -> InlineKeyboardButton | Key
     if isinstance(data, str) or len(data) != 2:
         raise ValueError("InlineKeyboardButton must be tuple of (text, callback_data)")
 
-    url = None
-    if data[1].startswith("t.me/"):
-        url = "https://" + data[1]
-    elif data[1].startswith(
+    name, value = data
+
+    url: str | None = None
+    if value.startswith("t.me/"):
+        url = "https://" + value
+    elif value.startswith(
         (
             "http://",
             "https://",
             "tg://",
         )
     ):
-        url = data[1]
-    if url:
-        return InlineKeyboardButton(text=data[0], url=url)
+        url = value
 
-    return InlineKeyboardButton(text=data[0], callback_data=data[1])
+    if url:
+        return InlineKeyboardButton(text=name, url=url)
+    return InlineKeyboardButton(text=name, callback_data=value)
 
 
 def _is_button(row: LayoutRow) -> bool:
