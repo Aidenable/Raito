@@ -5,6 +5,13 @@ Building multi-step dialogs in Telegram bots is often clunky.
 
 Raito provides a lightweight way to wait for the **next user message** in a clean, linear style.
 
+.. warning::
+
+   Conversations DO NOT work with ``Dispatcher.events_isolation``,
+   since ``SimpleEventIsolation`` operates with a ``asyncio.Lock`` on active handlers,
+   and ``wait_for`` will never receive an update.
+
+
 --------
 
 Example

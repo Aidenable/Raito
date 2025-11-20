@@ -20,7 +20,7 @@ __all__ = ("static_keyboard",)
 P = ParamSpec("P")
 R = TypeVar("R")
 
-ButtonData: TypeAlias = str | tuple[str] | tuple[str, str]
+ButtonData: TypeAlias = str | tuple[str] | tuple[str, str] | list[str]
 LayoutRow: TypeAlias = Sequence[ButtonData]
 LayoutReturn: TypeAlias = Sequence[ButtonData | LayoutRow]
 
@@ -31,6 +31,12 @@ KeyboardMarkupT: TypeAlias = InlineKeyboardMarkup | ReplyKeyboardMarkup
 BuilderFn: TypeAlias = Callable[P, KeyboardMarkupT]
 
 
+@overload
+def _get_button(data: ButtonData, *, inline: Literal[True]) -> InlineKeyboardButton: ...
+@overload
+def _get_button(data: ButtonData, *, inline: Literal[False]) -> KeyboardButton: ...
+@overload
+def _get_button(data: ButtonData, *, inline: bool) -> InlineKeyboardButton | KeyboardButton: ...
 def _get_button(data: ButtonData, *, inline: bool) -> InlineKeyboardButton | KeyboardButton:
     """Convert button data to the appropriate button type.
 
@@ -44,7 +50,24 @@ def _get_button(data: ButtonData, *, inline: bool) -> InlineKeyboardButton | Key
 
     if isinstance(data, str) or len(data) != 2:
         raise ValueError("InlineKeyboardButton must be tuple of (text, callback_data)")
-    return InlineKeyboardButton(text=data[0], callback_data=data[1])
+
+    name, value = data
+
+    url: str | None = None
+    if value.startswith("t.me/"):
+        url = "https://" + value
+    elif value.startswith(
+        (
+            "http://",
+            "https://",
+            "tg://",
+        )
+    ):
+        url = value
+
+    if url:
+        return InlineKeyboardButton(text=name, url=url)
+    return InlineKeyboardButton(text=name, callback_data=value)
 
 
 def _is_button(row: LayoutRow) -> bool:
