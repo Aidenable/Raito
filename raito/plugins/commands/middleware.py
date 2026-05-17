@@ -8,6 +8,7 @@ from aiogram.filters.command import CommandObject
 from aiogram.types import Message, TelegramObject
 from typing_extensions import override
 
+from raito.core.routers.router import Router as RaitoRouter
 from raito.utils.helpers.command_help import get_command_help
 
 if TYPE_CHECKING:
@@ -68,10 +69,24 @@ class CommandMiddleware(BaseMiddleware):
         description = handler_object.flags.get("raito__description")
         raito: Raito | None = data.get("raito")
 
-        if raito is not None and raito.command_parameters_error.handlers:
+        was_sent: bool = False
+        if raito is not None and raito._command_parameters_error.handlers:
+            # Deprecated:
             target = {"handler": handler_object, "command": command}
-            await raito.command_parameters_error.trigger(event, target=target)
-        else:
+            await raito._command_parameters_error.trigger(event, target=target)
+            was_sent = False
+
+        if RaitoRouter._command_signature_error.handlers:
+            await RaitoRouter._command_signature_error.trigger(
+                event,
+                handler=handler_object,
+                command=command,
+                params=params,
+                description=description,
+            )
+            was_sent = False
+
+        if not was_sent:
             await event.reply(
                 get_command_help(command, params, description=description),
                 parse_mode="HTML",

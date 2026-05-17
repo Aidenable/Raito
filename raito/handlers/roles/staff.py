@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from aiogram import Router, html
+from aiogram import html
 
+from raito import rt
 from raito.plugins.commands import description, hidden
 from raito.plugins.roles.roles import ADMINISTRATOR, DEVELOPER, OWNER
 from raito.utils.ascii import AsciiTree, TreeNode
@@ -15,7 +16,7 @@ if TYPE_CHECKING:
 
     from raito.core.raito import Raito
 
-router = Router(name="raito.roles.staff")
+router = rt.Router(name="raito.roles.staff", priority=1)
 
 
 @router.message(RaitoCommand("staff"), DEVELOPER | OWNER | ADMINISTRATOR)

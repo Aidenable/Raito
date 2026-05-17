@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 from .base_router import BaseRouter
 from .parser import RouterParser
+from .router import Router as RaitoRouter
 
 if TYPE_CHECKING:
     from aiogram import Dispatcher, Router
@@ -34,8 +35,8 @@ class RouterLoader(BaseRouter, RouterParser):
         :type path: StrOrPath
         :param dispatcher: Aiogram dispatcher
         :type dispatcher: Dispatcher
-        :param router: Router instance, defaults to None
-        :type router: Router | None, optional
+        :param router: Router (aiogram or Raito) instance, defaults to None
+        :type router: aiogram.Router | raito.Router | None, optional
         """
         super().__init__(router)
 
@@ -45,11 +46,33 @@ class RouterLoader(BaseRouter, RouterParser):
         self._dispatcher = dispatcher
 
         self._router: Router | None = router
-        self._parent_router: Router | None = None
-        self._sub_routers: list[Router] = []
+        self._parent_router: Router | None = router.parent_router if router else None
+        self._sub_routers: list[Router] = router.sub_routers if router else []
 
         self._is_restarting: bool = False
         self._is_loaded: bool = False
+
+    @property
+    def priority(self) -> int:
+        """Get router loading priority
+
+        :return: Integer from -inf to +inf
+        :rtype: int
+        """
+        if isinstance(self._router, RaitoRouter):
+            return self._router.priority
+        return 0
+
+    @property
+    def autoload(self) -> bool:
+        """Should router autoload
+
+        :return: True if autload is turned on, otherwise False
+        :rtype: bool
+        """
+        if isinstance(self._router, RaitoRouter):
+            return self._router.autoload
+        return True
 
     @property
     def is_loaded(self) -> bool:
@@ -74,7 +97,7 @@ class RouterLoader(BaseRouter, RouterParser):
         """Get or load the router instance.
 
         :return: The router instance
-        :rtype: Router
+        :rtype: aiogram.Router | raito.Router
         """
         if self._router is None:
             self._router = self.extract_router(self.path)

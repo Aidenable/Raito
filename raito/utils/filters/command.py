@@ -66,7 +66,8 @@ class RaitoCommand(Command):
         self._regex = re.compile(pattern)
 
     @override
-    def extract_command(self, text: str) -> CommandObject:
+    @classmethod
+    def extract_command(cls, text: str) -> CommandObject:
         # First step: separate command with arguments
         # ".rt command arg1 arg2" -> ".rt", "command", ["arg1 arg2"]
         try:
