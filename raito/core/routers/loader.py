@@ -51,6 +51,7 @@ class RouterLoader(BaseRouter, RouterParser):
 
         self._is_restarting: bool = False
         self._is_loaded: bool = False
+        self._saved_index: int | None = None
 
     @property
     def priority(self) -> int:
@@ -110,14 +111,29 @@ class RouterLoader(BaseRouter, RouterParser):
         if router := self.router:
             if self._parent_router:
                 self._link_to_parent(self._parent_router)
-            self._dispatcher.include_router(router)
+
+            if self._saved_index is not None:
+                self._dispatcher.sub_routers.insert(self._saved_index, router)
+                self._saved_index = None
+            else:
+                self._dispatcher.include_router(router)
+
         self._is_loaded = True
 
     def unload(self) -> None:
         """Unload and unregister the router."""
         if self.router:
+            try:
+                self._saved_index = self._dispatcher.sub_routers.index(self.router)
+            except ValueError:
+                self._saved_index = None
+
+            if self.router in self._dispatcher.sub_routers:
+                self._dispatcher.sub_routers.remove(self.router)
+
             self._unlink_from_parent()
             self._router = None
+
         self._is_loaded = False
 
     async def reload(self, timeout: float | None = None) -> None:
