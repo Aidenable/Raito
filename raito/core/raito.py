@@ -56,9 +56,6 @@ if TYPE_CHECKING:
 
 __all__ = ("Raito",)
 
-DEPRECATED_ATTRIBUTES = [""]
-
-
 class Raito:
     """Main class for managing the Raito utilities.
 
