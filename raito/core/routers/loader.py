@@ -110,13 +110,12 @@ class RouterLoader(BaseRouter, RouterParser):
             if self._parent_router:
                 self._link_to_parent(self._parent_router)
 
+            self._dispatcher.include_router(router)
+
             if self._saved_index is not None:
-                self._dispatcher.include_router(router)
                 self._dispatcher.sub_routers.remove(router)
                 self._dispatcher.sub_routers.insert(self._saved_index, router)
                 self._saved_index = None
-            else:
-                self._dispatcher.include_router(router)
 
         self._is_loaded = True
 
