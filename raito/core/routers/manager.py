@@ -173,4 +173,3 @@ class RouterManager:
                 elif event_type == Change.deleted:
                     loggers.routers.debug("File removed: %s. Unloading...", relative_path)
                     current_loader.unload()
-                break
