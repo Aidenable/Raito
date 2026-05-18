@@ -61,7 +61,7 @@ class RaitoCommand(Command):
 
         self.prefix = PREFIX
         pattern = (
-            rf"^{re.escape(self.prefix)} (?:{'|'.join(map(re.escape, self.commands))})(?: .+)?$"
+            rf"^{re.escape(self.prefix)}(?:{'|'.join(map(re.escape, self.commands))})(?: .+)?$"
         )
         self._regex = re.compile(pattern)
 
