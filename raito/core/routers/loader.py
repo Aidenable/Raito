@@ -47,7 +47,6 @@ class RouterLoader(BaseRouter, RouterParser):
 
         self._router: Router | None = router
         self._parent_router: Router | None = router.parent_router if router else None
-        self._sub_routers: list[Router] = router.sub_routers if router else []
 
         self._is_restarting: bool = False
         self._is_loaded: bool = False
@@ -102,8 +101,7 @@ class RouterLoader(BaseRouter, RouterParser):
         """
         if self._router is None:
             self._router = self.extract_router(self.path)
-            if not hasattr(self._router, "name"):
-                self._router.name = self.name
+            self._router.name = self.name
         return self._router
 
     def load(self) -> None:
@@ -113,6 +111,8 @@ class RouterLoader(BaseRouter, RouterParser):
                 self._link_to_parent(self._parent_router)
 
             if self._saved_index is not None:
+                self._dispatcher.include_router(router)
+                self._dispatcher.sub_routers.remove(router)
                 self._dispatcher.sub_routers.insert(self._saved_index, router)
                 self._saved_index = None
             else:
@@ -122,14 +122,12 @@ class RouterLoader(BaseRouter, RouterParser):
 
     def unload(self) -> None:
         """Unload and unregister the router."""
-        if self.router:
-            try:
-                self._saved_index = self._dispatcher.sub_routers.index(self.router)
-            except ValueError:
+        if self._router is not None:
+            if self._router in self._dispatcher.sub_routers:
+                self._saved_index = self._dispatcher.sub_routers.index(self._router)
+                self._dispatcher.sub_routers.remove(self._router)
+            else:
                 self._saved_index = None
-
-            if self.router in self._dispatcher.sub_routers:
-                self._dispatcher.sub_routers.remove(self.router)
 
             self._unlink_from_parent()
             self._router = None
@@ -144,10 +142,12 @@ class RouterLoader(BaseRouter, RouterParser):
         """
         if not self._is_restarting:
             self._is_restarting = True
-            self.unload()
+            try:
+                self.unload()
 
-            if timeout:
-                await sleep(timeout)
+                if timeout:
+                    await sleep(timeout)
 
-            self.load()
-            self._is_restarting = False
+                self.load()
+            finally:
+                self._is_restarting = False
