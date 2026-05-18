@@ -46,7 +46,7 @@ class RouterManager:
         """
         dir_path = Path(directory)
 
-        for item in dir_path.iterdir():
+        for item in sorted(dir_path.iterdir()):
             if item.name.startswith("_"):  # ignore files with prefix _
                 continue
 
@@ -103,7 +103,7 @@ class RouterManager:
             prioritized_loaders.append((loader.priority, unique_name))
             self.loaders[unique_name] = loader
 
-        prioritized_loaders.sort(key=lambda i: i[0])
+        prioritized_loaders.sort(key=lambda i: i[0], reverse=True)
         for priority, unique_name in prioritized_loaders:
             loader = self.loaders[unique_name]
 
