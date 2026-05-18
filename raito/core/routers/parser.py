@@ -40,7 +40,7 @@ class RouterParser:
         :rtype: object
         :raises ModuleNotFoundError: If module cannot be loaded from the file path
         """
-        module_name = f"_raito_router_{Path(file_path).stem}"
+        module_name = f"_raito_router_{Path(file_path).stem}_{abs(hash(str(file_path)))}"
         spec = spec_from_file_location(module_name, file_path)
 
         if spec is None or spec.loader is None:
