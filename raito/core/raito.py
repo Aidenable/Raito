@@ -56,6 +56,7 @@ if TYPE_CHECKING:
 
 __all__ = ("Raito",)
 
+
 class Raito:
     """Main class for managing the Raito utilities.
 

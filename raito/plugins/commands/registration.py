@@ -63,7 +63,7 @@ def _extract_command_metadata(handler: HandlerObject) -> _CommandMeta | None:
     roles: list[RoleData] | None = handler.flags.get("raito__roles")
 
     return _CommandMeta(
-        command=commands[0].commands[0],
+        command=str(commands[0].commands[0]),
         description=str(description).strip(),
         roles=roles or [],
     )
