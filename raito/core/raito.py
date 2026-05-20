@@ -120,7 +120,7 @@ class Raito:
         """
         warnings.warn(
             "Raito.command_parameters_error is deprecated since 1.3.7 "
-            "and will be removed in 1.5.0; "
+            "and will be removed in 1.7.0; "
             "use raito.Router.on_command_signature_error instead.",
             DeprecationWarning,
             stacklevel=2,
