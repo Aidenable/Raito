@@ -4,10 +4,11 @@ import os
 from html import escape
 from typing import TYPE_CHECKING
 
-from aiogram import F, Router, html
+from aiogram import F, html
 from aiogram.filters import CommandObject
 from aiogram.fsm.state import State, StatesGroup
 
+from raito import rt
 from raito.plugins.commands import description, hidden
 from raito.plugins.roles.roles import DEVELOPER
 from raito.utils.filters import RaitoCommand
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
     from aiogram.fsm.context import FSMContext
     from aiogram.types import Message
 
-router = Router(name="raito.system.bash")
+router = rt.Router(name="raito.system.bash", priority=8, autoload=False)
 
 
 class BashGroup(StatesGroup):

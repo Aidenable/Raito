@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import sys
+import warnings
 from asyncio import create_task
 from typing import TYPE_CHECKING
 
@@ -106,8 +107,25 @@ class Raito:
             self._role_provider, developers=self.developers
         )
 
-        self.command_parameters_error = EventObserver()
+        self._command_parameters_error = EventObserver()
         self.registry = ConversationRegistry()
+
+    @property
+    def command_parameters_error(self) -> EventObserver:
+        """
+        Observer for command signature errors.
+
+        .. version-deprecated:: 1.3.7
+           Use :py:deco:`raito.Router.on_command_signature_error` instead.
+        """
+        warnings.warn(
+            "Raito.command_parameters_error is deprecated since 1.3.7 "
+            "and will be removed in 1.7.0; "
+            "use raito.Router.on_command_signature_error instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self._command_parameters_error
 
     async def setup(self) -> None:
         """Set up the Raito by loading routers and starting watchdog.
@@ -122,7 +140,7 @@ class Raito:
 
         provider = self.role_manager.provider
         if self.production and isinstance(provider, (MemoryRoleProvider | JSONRoleProvider)):
-            loggers.roles.warn(
+            loggers.roles.warning(
                 "Using %s. It's not recommended for production use.",
                 provider.__class__.__name__,
             )
@@ -133,8 +151,8 @@ class Raito:
         self.dispatcher.message.middleware(AlbumMiddleware())
         self.dispatcher.message.outer_middleware(ConversationMiddleware(self.registry))
 
-        await self.router_manager.load_routers(self.routers_dir)
         await self.router_manager.load_routers(ROOT_DIR / "handlers")
+        await self.router_manager.load_routers(self.routers_dir)
 
         if not self.production:
             create_task(self.router_manager.start_watchdog(self.routers_dir))  # noqa: RUF006

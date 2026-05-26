@@ -34,7 +34,8 @@ class BaseRouter:
             return
 
         parent = self._router.parent_router
-        parent.sub_routers = [r for r in parent.sub_routers if r.name != self._router.name]
+        if self._router in parent.sub_routers:
+            parent.sub_routers.remove(self._router)
 
     def _link_to_parent(self, parent: Router) -> None:
         """Link router to a parent router.

@@ -1,4 +1,5 @@
 from .core.raito import Raito
+from .core.routers import Router
 from .plugins import keyboards as keyboard
 from .plugins.commands.flags import description, hidden, params
 from .plugins.lifespan.decorator import lifespan
@@ -32,6 +33,7 @@ __all__ = (
     "SUPPORT",
     "TESTER",
     "Raito",
+    "Router",
     "SuppressNotModifiedError",
     "debug",
     "description",

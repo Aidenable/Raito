@@ -60,13 +60,12 @@ class RaitoCommand(Command):
         )
 
         self.prefix = PREFIX
-        pattern = (
-            rf"^{re.escape(self.prefix)} (?:{'|'.join(map(re.escape, self.commands))})(?: .+)?$"
-        )
+        pattern = rf"^{re.escape(self.prefix)}(?:{'|'.join(re.escape(str(c)) for c in self.commands)})(?: .+)?$"
         self._regex = re.compile(pattern)
 
     @override
-    def extract_command(self, text: str) -> CommandObject:
+    @classmethod
+    def extract_command(cls, text: str) -> CommandObject:
         # First step: separate command with arguments
         # ".rt command arg1 arg2" -> ".rt", "command", ["arg1 arg2"]
         try:

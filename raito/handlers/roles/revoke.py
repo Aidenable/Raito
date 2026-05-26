@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from aiogram import Bot, F, Router, html
+from aiogram import Bot, F, html
 from aiogram.fsm.state import State, StatesGroup
 
+from raito import rt
 from raito.plugins.commands import description, hidden
 from raito.plugins.commands.registration import register_bot_commands
 from raito.plugins.roles.roles import ADMINISTRATOR, DEVELOPER, OWNER
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
 
     from raito.core.raito import Raito
 
-router = Router(name="raito.roles.revoke")
+router = rt.Router(name="raito.roles.revoke", priority=3)
 
 
 class RevokeRoleGroup(StatesGroup):

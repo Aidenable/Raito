@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from aiogram import Bot, F, Router, html
+from aiogram import Bot, F, html
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from raito import rt
 from raito.plugins.commands import description
 from raito.plugins.commands.flags import hidden
 from raito.plugins.commands.registration import register_bot_commands
@@ -22,7 +23,7 @@ if TYPE_CHECKING:
 
     from raito.core.raito import Raito
 
-router = Router(name="raito.roles.assign")
+router = rt.Router(name="raito.roles.assign", priority=2)
 
 
 class AssignRoleCallback(CallbackData, prefix="rt_assign_role"):  # type: ignore[call-arg]

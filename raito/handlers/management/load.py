@@ -3,8 +3,9 @@ from __future__ import annotations
 from asyncio import sleep
 from typing import TYPE_CHECKING
 
-from aiogram import Router, html
+from aiogram import html
 
+from raito import rt
 from raito.plugins.commands import description, hidden, params
 from raito.plugins.roles.roles import DEVELOPER
 from raito.utils.filters import RaitoCommand
@@ -14,7 +15,7 @@ if TYPE_CHECKING:
 
     from raito.core.raito import Raito
 
-router = Router(name="raito.management.load")
+router = rt.Router(name="raito.management.load", priority=5)
 
 
 @router.message(RaitoCommand("load"), DEVELOPER)

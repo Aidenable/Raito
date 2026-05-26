@@ -5,8 +5,9 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import psutil
-from aiogram import Router, html
+from aiogram import html
 
+from raito import rt
 from raito.plugins.commands import description, hidden
 from raito.plugins.roles.roles import DEVELOPER
 from raito.utils.filters import RaitoCommand
@@ -14,7 +15,7 @@ from raito.utils.filters import RaitoCommand
 if TYPE_CHECKING:
     from aiogram.types import Message
 
-router = Router(name="raito.system.stats")
+router = rt.Router(name="raito.system.stats", priority=10)
 
 
 @dataclass

@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 from .base_router import BaseRouter
 from .parser import RouterParser
+from .router import Router as RaitoRouter
 
 if TYPE_CHECKING:
     from aiogram import Dispatcher, Router
@@ -34,8 +35,8 @@ class RouterLoader(BaseRouter, RouterParser):
         :type path: StrOrPath
         :param dispatcher: Aiogram dispatcher
         :type dispatcher: Dispatcher
-        :param router: Router instance, defaults to None
-        :type router: Router | None, optional
+        :param router: Router (aiogram or Raito) instance, defaults to None
+        :type router: aiogram.Router | raito.Router | None, optional
         """
         super().__init__(router)
 
@@ -45,11 +46,33 @@ class RouterLoader(BaseRouter, RouterParser):
         self._dispatcher = dispatcher
 
         self._router: Router | None = router
-        self._parent_router: Router | None = None
-        self._sub_routers: list[Router] = []
+        self._parent_router: Router | None = router.parent_router if router else None
 
         self._is_restarting: bool = False
         self._is_loaded: bool = False
+        self._saved_index: int | None = None
+
+    @property
+    def priority(self) -> int:
+        """Get router loading priority
+
+        :return: Integer from -inf to +inf
+        :rtype: int
+        """
+        if isinstance(self._router, RaitoRouter):
+            return self._router.priority
+        return 0
+
+    @property
+    def autoload(self) -> bool:
+        """Should router autoload
+
+        :return: True if autload is turned on, otherwise False
+        :rtype: bool
+        """
+        if isinstance(self._router, RaitoRouter):
+            return self._router.autoload
+        return True
 
     @property
     def is_loaded(self) -> bool:
@@ -74,12 +97,11 @@ class RouterLoader(BaseRouter, RouterParser):
         """Get or load the router instance.
 
         :return: The router instance
-        :rtype: Router
+        :rtype: aiogram.Router | raito.Router
         """
         if self._router is None:
             self._router = self.extract_router(self.path)
-            if not hasattr(self._router, "name"):
-                self._router.name = self.name
+            self._router.name = self.name
         return self._router
 
     def load(self) -> None:
@@ -87,14 +109,28 @@ class RouterLoader(BaseRouter, RouterParser):
         if router := self.router:
             if self._parent_router:
                 self._link_to_parent(self._parent_router)
+
             self._dispatcher.include_router(router)
+
+            if self._saved_index is not None:
+                self._dispatcher.sub_routers.remove(router)
+                self._dispatcher.sub_routers.insert(self._saved_index, router)
+                self._saved_index = None
+
         self._is_loaded = True
 
     def unload(self) -> None:
         """Unload and unregister the router."""
-        if self.router:
+        if self._router is not None:
+            if self._router in self._dispatcher.sub_routers:
+                self._saved_index = self._dispatcher.sub_routers.index(self._router)
+                self._dispatcher.sub_routers.remove(self._router)
+            else:
+                self._saved_index = None
+
             self._unlink_from_parent()
             self._router = None
+
         self._is_loaded = False
 
     async def reload(self, timeout: float | None = None) -> None:
@@ -105,10 +141,12 @@ class RouterLoader(BaseRouter, RouterParser):
         """
         if not self._is_restarting:
             self._is_restarting = True
-            self.unload()
+            try:
+                self.unload()
 
-            if timeout:
-                await sleep(timeout)
+                if timeout:
+                    await sleep(timeout)
 
-            self.load()
-            self._is_restarting = False
+                self.load()
+            finally:
+                self._is_restarting = False

@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Generator
 from typing import TYPE_CHECKING
 
-from aiogram import Dispatcher, Router, html
+from aiogram import Dispatcher, html
 from aiogram.dispatcher.event.handler import HandlerObject
 from aiogram.filters import Command, CommandObject
 from aiogram.types import CallbackQuery, LinkPreviewOptions
@@ -19,7 +19,7 @@ from raito.utils.helpers.truncate import truncate
 if TYPE_CHECKING:
     from aiogram.types import Message
 
-router = Router(name="raito.help")
+router = rt.Router(name="raito.help", priority=-1)
 
 
 def _iter_raito_commands(

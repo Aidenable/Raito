@@ -5,6 +5,7 @@ Plugins
     :maxdepth: 2
 
     hot_reload
+    routers
     keyboards
     commands
     roles

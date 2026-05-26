@@ -46,7 +46,7 @@ class RouterManager:
         """
         dir_path = Path(directory)
 
-        for item in dir_path.iterdir():
+        for item in sorted(dir_path.iterdir()):
             if item.name.startswith("_"):  # ignore files with prefix _
                 continue
 
@@ -67,6 +67,7 @@ class RouterManager:
         :raises AttributeError: If a router doesn't have a name attribute
         """
         dir_path = Path(directory)
+        prioritized_loaders: list[tuple[int, str]] = []
 
         for file_path in self.resolve_paths(dir_path):
             try:
@@ -99,9 +100,25 @@ class RouterManager:
                 self.dispatcher,
                 router=router,
             )
-            loader.load()
+            prioritized_loaders.append((loader.priority, unique_name))
             self.loaders[unique_name] = loader
-            loggers.routers.debug("Router loaded: %s", unique_name)
+
+        prioritized_loaders.sort(key=lambda i: i[0], reverse=True)
+        for priority, unique_name in prioritized_loaders:
+            loader = self.loaders[unique_name]
+
+            if not loader.autoload:
+                loggers.routers.debug("Router skipped (autoload=False): %s", unique_name)
+                continue
+
+            if loader.is_loaded:
+                continue
+
+            loader.load()
+            if priority != 0:
+                loggers.routers.debug("[%s] Router loaded: %s", priority, unique_name)
+            else:
+                loggers.routers.debug("Router loaded: %s", unique_name)
 
     async def start_watchdog(self, directory: StrOrPath) -> None:
         """Start file watching service.
@@ -134,6 +151,12 @@ class RouterManager:
                     loggers.routers.debug("File changed: %s. No routers found.", relative_path)
                     continue
 
+                if not current_loader.autoload:
+                    loggers.routers.debug(
+                        "File changed: %s. Autoload is disabled...", relative_path
+                    )
+                    continue
+
                 if event_type in (Change.modified, Change.added):
                     loggers.routers.debug("File changed: %s. Reloading...", relative_path)
 
@@ -150,4 +173,3 @@ class RouterManager:
                 elif event_type == Change.deleted:
                     loggers.routers.debug("File removed: %s. Unloading...", relative_path)
                     current_loader.unload()
-                break

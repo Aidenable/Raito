@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, NamedTuple
 
-from aiogram import Router, html
+from aiogram import html
 
+from raito import rt
 from raito.plugins.commands import description, hidden
 from raito.plugins.roles import DEVELOPER
 from raito.utils.ascii import AsciiTree, TreeNode
@@ -17,7 +18,7 @@ if TYPE_CHECKING:
     from raito.core.raito import Raito
     from raito.core.routers.loader import RouterLoader
 
-router = Router(name="raito.management.list")
+router = rt.Router(name="raito.management.list", priority=4)
 
 
 class Emojis(NamedTuple):
