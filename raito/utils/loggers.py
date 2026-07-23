@@ -13,6 +13,7 @@ __all__ = (
     "middlewares",
     "plugins",
     "roles",
+    "scenes",
 )
 
 LEVEL = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -99,6 +100,7 @@ commands = logging.getLogger("raito.core.commands")
 middlewares = logging.getLogger("raito.middlewares")
 plugins = logging.getLogger("raito.plugins")
 roles = logging.getLogger("raito.plugins.roles")
+scenes = logging.getLogger("raito.plugins.scenes")
 
 utils = logging.getLogger("raito.utils")
 storages = logging.getLogger("raito.utils.storages")
