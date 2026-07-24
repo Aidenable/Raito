@@ -174,7 +174,7 @@ async def register_bot_commands(
 
     for locale in locales:
         for role_slug, users in role_users.items():
-            commands = role_commands.get(role_slug, [])
+            commands = role_commands.get(None, []) + role_commands.get(role_slug, [])
             for user_id in users:
                 await _apply_bot_commands(
                     bot=bot,
