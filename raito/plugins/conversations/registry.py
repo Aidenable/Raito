@@ -43,6 +43,10 @@ class ConversationRegistry:
         :param filters: Optional filters to apply when the message arrives
         :return: Future that will resolve with the Message when received
         """
+        existing = self._conversations.get(key)
+        if existing and not existing.future.done():
+            existing.future.cancel()
+
         future = asyncio.get_running_loop().create_future()
         self._conversations[key] = ConversationData(future, filters)
         return future
