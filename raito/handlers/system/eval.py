@@ -17,8 +17,15 @@ if TYPE_CHECKING:
     from aiogram.fsm.context import FSMContext
     from aiogram.types import Message
 
+    from raito.core.raito import Raito
+
 router = rt.Router(name="raito.system.eval", priority=9, autoload=False)
 code_evaluator = CodeEvaluator()
+
+DISABLED_MESSAGE = (
+    "🚫 Dangerous commands are disabled.\n"
+    "Set <code>Raito(enable_dangerous_commands=True)</code> to enable them."
+)
 
 
 class EvalGroup(StatesGroup):
@@ -54,8 +61,13 @@ async def eval_handler(
     message: Message,
     state: FSMContext,
     command: CommandObject,
+    raito: Raito,
     **data: Any,  # noqa: ANN401
 ) -> None:
+    if not raito.enable_dangerous_commands:
+        await message.answer(text=DISABLED_MESSAGE, parse_mode="HTML")
+        return
+
     if not command.args:
         await message.answer(text="📦 Enter Python expression:")
         await state.set_state(EvalGroup.expression)
@@ -64,6 +76,7 @@ async def eval_handler(
     data["message"] = message
     data["state"] = state
     data["command"] = command
+    data["raito"] = raito
     await _execute_code(message, command.args, data)
 
 
@@ -71,9 +84,14 @@ async def eval_handler(
 async def eval_process(
     message: Message,
     state: FSMContext,
+    raito: Raito,
     **data: Any,  # noqa: ANN401
 ) -> None:
     await state.clear()
+
+    if not raito.enable_dangerous_commands:
+        await message.answer(text=DISABLED_MESSAGE, parse_mode="HTML")
+        return
 
     if not message.text:
         await message.answer(text="⚠️ Expression cannot be empty")
@@ -81,4 +99,5 @@ async def eval_process(
 
     data["message"] = message
     data["state"] = state
+    data["raito"] = raito
     await _execute_code(message, message.text, data)

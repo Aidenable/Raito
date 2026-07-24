@@ -71,6 +71,7 @@ class Raito:
         developers: list[int] | None = None,
         locales: list[str] | None = None,
         production: bool = True,
+        enable_dangerous_commands: bool = False,
         configuration: RaitoConfiguration | None = None,
         storage: BaseStorage | None = None,
     ) -> None:
@@ -86,6 +87,9 @@ class Raito:
         :type locales: list[str]
         :param production: Whether running in production mode, defaults to True
         :type production: bool, optional
+        :param enable_dangerous_commands: Whether to allow code/shell execution
+            commands (``.rt eval`` and ``.rt bash``).
+        :type enable_dangerous_commands: bool, optional
         :param configuration: Configuration instance, defaults to Configuration()
         :type configuration: Configuration | None, optional
         :param storage: Aiogram storage instance for storing data, default None
@@ -96,6 +100,7 @@ class Raito:
         self.developers = developers or []
         self.locales = locales or []
         self.production = production
+        self.enable_dangerous_commands = enable_dangerous_commands
         self.configuration = configuration or RaitoConfiguration()
         self.storage = storage or MemoryStorage()
 
