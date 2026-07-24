@@ -170,10 +170,11 @@ class SceneManager(Generic[TSceneData]):
     ) -> CallbackType:
         """Wrap a user callback into a scene handler.
 
-        The wrapper hydrates the draft, builds the :class:`Scene` handle, and injects
-        both the event (under ``event_name``) and ``scene`` into the callback. The
-        current step is resolved from ``raw_state`` at call time rather than fixed at
-        registration, so the same wrapper serves a specific step or :meth:`SceneRegistry.any`.
+        The wrapper hydrates a :class:`Scene` handle — a fresh draft for an entry handler,
+        the stored one for a step handler — and injects both the event (under
+        ``event_name``) and ``scene`` into the callback. The step is resolved from
+        ``raw_state`` at call time, so one wrapper serves a specific step or
+        :meth:`SceneRegistry.any`.
 
         :param callback: user handler
         :param event_name: name the event is passed under (``message``, ``callback_query``, ...)
@@ -189,11 +190,13 @@ class SceneManager(Generic[TSceneData]):
             **data: object,
         ) -> object:
             if entry:
-                draft: TSceneData = self._data_type()
-                base: dict[str, Any] | None = None
-                step = None
+                scene = Scene(self, state, data=self._data_type(), step=None, base=None)
+            elif raw_state is None:
+                msg = "a step handler runs only after its StateFilter matched a state"
+                raise RuntimeError(msg)
             else:
                 base = await state.get_data()
+
                 try:
                     draft = self._load(base)
                 except ValidationError as error:
@@ -201,12 +204,9 @@ class SceneManager(Generic[TSceneData]):
                     msg = f"Scene {self.id!r}: stored draft no longer matches {self._data_type.__name__}."
                     raise RuntimeError(msg) from error
 
-                assert raw_state is not None, (
-                    "a step handler's own StateFilter already matched raw_state"
-                )
                 step = self.steps.step_for(raw_state)
+                scene = Scene(self, state, data=draft, step=step, base=base)
 
-            scene: Scene[TSceneData] = Scene(self, state, data=draft, step=step, base=base)
             return await user.call(**{**data, event_name: event, "state": state, "scene": scene})
 
         return handler
