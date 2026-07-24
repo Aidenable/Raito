@@ -84,7 +84,7 @@ class CodeEvaluator:
 
             exec_locals: dict[str, Any] = {}
             with self._capture_output() as output:
-                exec(compiled_code, context, exec_locals)  # noqa: S102
+                exec(compiled_code, context, exec_locals)
                 eval_func: Callable[[], Awaitable[Any]] = exec_locals["__eval_func"]
                 result = await eval_func()
 

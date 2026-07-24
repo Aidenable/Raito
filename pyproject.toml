@@ -108,6 +108,7 @@ max-args = 10
 "tests/*" = ["ALL"]
 "examples/*" = ["ALL"]
 "*/handlers/*.py" = ["INP001"]
+"raito/utils/helpers/code_evaluator.py" = ["S102"]
 
 [tool.ruff.format]
 quote-style = "double"
