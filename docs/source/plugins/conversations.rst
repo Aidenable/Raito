@@ -11,6 +11,10 @@ Raito provides a lightweight way to wait for the **next user message** in a clea
    since ``SimpleEventIsolation`` operates with a ``asyncio.Lock`` on active handlers,
    and ``wait_for`` will never receive an update.
 
+   ``wait_for`` also keeps the handler and its middleware scope alive until the
+   next message arrives. Do not use it with request-scoped resources such as a
+   SQLAlchemy session or transaction. Use :doc:`scenes` for those dialogs.
+
 
 --------
 

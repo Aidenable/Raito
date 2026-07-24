@@ -13,4 +13,5 @@ Plugins
     throttling
     pagination
     lifespan
+    scenes
     conversations
