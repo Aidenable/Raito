@@ -176,7 +176,7 @@ async def register_bot_commands(
                 if meta not in user_commands[user_id]:
                     user_commands[user_id].append(meta)
 
-    for locale in locales:
+    for locale in locales or (None,):
         for user_id, commands in user_commands.items():
             await _apply_bot_commands(
                 bot=bot,
