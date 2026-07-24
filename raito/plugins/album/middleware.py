@@ -24,7 +24,7 @@ class AlbumMiddleware(BaseMiddleware):
 
     def __init__(
         self,
-        delay: float | int = 0.6,
+        delay: float = 0.6,
         max_size: int = 10_000,
     ) -> None:
         """Initialize AlbumMiddleware.

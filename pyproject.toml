@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "raito"
-version = "1.4.0"
+version = "1.5.0"
 description = "REPL, hot-reload, keyboards, pagination, and internal dev tools — all in one. That's Raito."
 authors = [{ name = "Aiden", email = "aidenthedev@gmail.com" }]
 license = "MIT"
@@ -53,7 +53,7 @@ keywords = [
 
 [project.optional-dependencies]
 dev = [
-    "ruff",
+    "ruff>=0.16.0,<0.17.0",
     "mypy",
     "pytest",
     "ipdb",

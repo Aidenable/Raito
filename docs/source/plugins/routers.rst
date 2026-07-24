@@ -102,3 +102,4 @@ Additional methods
 - ``router.on_pagination(name, *filters)`` — register a pagination callback handler
 - ``router.on_command_signature_error()`` — handle incorrect command usage
 - ``router.lifespan()`` — define startup/shutdown logic (see :doc:`lifespan`)
+- ``router.scene(states, ...)`` — define a per-update dialog flow (see :doc:`scenes`)

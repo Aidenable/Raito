@@ -1,6 +1,6 @@
 import logging
 import shutil
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Literal, cast
 
 from typing_extensions import override
@@ -13,6 +13,7 @@ __all__ = (
     "middlewares",
     "plugins",
     "roles",
+    "scenes",
 )
 
 LEVEL = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -58,7 +59,7 @@ class ColoredFormatter(logging.Formatter):
         return f"{meta} {message}"
 
     def get_meta(self, record: logging.LogRecord) -> str:
-        dt = datetime.fromtimestamp(record.created)
+        dt = datetime.fromtimestamp(record.created, tz=timezone.utc).astimezone()
         date = dt.strftime("%d.%m.%Y")
         time = dt.strftime("%H:%M:%S")
         now = date + " " + time
@@ -99,6 +100,7 @@ commands = logging.getLogger("raito.core.commands")
 middlewares = logging.getLogger("raito.middlewares")
 plugins = logging.getLogger("raito.plugins")
 roles = logging.getLogger("raito.plugins.roles")
+scenes = logging.getLogger("raito.plugins.scenes")
 
 utils = logging.getLogger("raito.utils")
 storages = logging.getLogger("raito.utils.storages")

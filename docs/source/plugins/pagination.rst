@@ -3,14 +3,14 @@
 
 Need to paginate a long list of items?
 
-Raito provides a built-in system for inline, text, and photo pagination — simple and fully customized.
+Raito provides a built-in system for inline, text, photo, list, and rich-message pagination — simple and fully customized.
 
 --------
 
 Features
 --------
 
-- Predefined paginator types (inline, text, photo)
+- Predefined paginator types (inline, text, photo, list, rich)
 - Auto-generated navigation
 - Loop navigation (wrap around first/last)
 - Declarative handler with ``@rt.on_pagination(...)``
@@ -56,6 +56,35 @@ To respond to page changes, use the ``@rt.on_pagination(...)`` decorator:
    ):
        buttons = [InlineKeyboardButton(text=str(i), callback_data=f"button_{i}") for i in range(offset, offset + limit)]
        await paginator.answer("Button list:", buttons=buttons)
+
+---------
+
+Paginator Types
+----------------
+
+Pick the paginator with ``mode=`` (defaults to ``PaginationMode.INLINE``):
+
+- ``PaginationMode.INLINE`` — :class:`InlinePaginator`, text plus a row of content buttons above the navigation.
+- ``PaginationMode.TEXT`` — :class:`TextPaginator`, plain text.
+- ``PaginationMode.PHOTO`` — :class:`PhotoPaginator`, a photo with a caption.
+- ``PaginationMode.LIST`` — :class:`ListPaginator`, a list of strings joined by a separator.
+- ``PaginationMode.RICH`` — :class:`RichPaginator`, structured `Rich Messages <https://core.telegram.org/bots/api#richmessage>`_ — headings, lists, tables, code blocks, and more. Requires ``aiogram>=3.30.0``.
+
+.. code-block:: python
+
+    await raito.paginate(
+        "rich_docs",
+        chat_id=message.chat.id,
+        bot=bot,
+        from_user=message.from_user,
+        mode=PaginationMode.RICH,
+        total_pages=3,
+    )
+
+
+    @rt.on_pagination(router, "rich_docs")
+    async def on_rich_pagination(query: CallbackQuery, paginator: RichPaginator, page: int) -> None:
+        await paginator.answer(rich_message=InputRichMessage(blocks=PAGES[page]))
 
 ---------
 

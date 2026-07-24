@@ -3,6 +3,7 @@ from .inline import InlinePaginator
 from .list import ListPaginator
 from .photo import PhotoPaginator
 from .protocol import IPaginator
+from .rich import RichPaginator
 from .text import TextPaginator
 
 __all__ = (
@@ -11,5 +12,6 @@ __all__ = (
     "InlinePaginator",
     "ListPaginator",
     "PhotoPaginator",
+    "RichPaginator",
     "TextPaginator",
 )

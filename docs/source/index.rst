@@ -9,7 +9,7 @@ Features
 - :doc:`Hot Reload <plugins/hot_reload>` — automatic router loading and file watching for instant development cycles
 - :doc:`Role System <plugins/roles>` — pre-configured roles (owner, support, tester, etc) and selector UI
 - :doc:`Pagination <plugins/pagination>` — easy pagination over text and media using inline buttons
-- **FSM Toolkit** — interactive confirmations, questionnaires, and mockable message flow
+- :doc:`Scenes <plugins/scenes>` — multi-step dialogs without retaining request-scoped dependencies
 - **CLI Generator** — ``$ raito init`` creates a ready-to-use bot template in seconds
 - :doc:`Keyboard Factory <plugins/keyboards>` — static and dynamic generation
 - :doc:`Command Registration <plugins/commands>` — automatic setup of bot commands with descriptions for each

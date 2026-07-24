@@ -100,11 +100,12 @@ def _inject_layout(
     :param builder: The builder instance
     :param layout: List of button data or rows
     :param inline: Whether inline buttons are expected
+    :raises TypeError: if the builder doesn't match the requested keyboard kind
     """
     expected_type = InlineKeyboardBuilder if inline else ReplyKeyboardBuilder
     if not isinstance(builder, expected_type):
         kind = "Inline" if inline else "Reply"
-        raise ValueError(f"{kind} buttons are not supported for {type(builder).__name__}")
+        raise TypeError(f"{kind} buttons are not supported for {type(builder).__name__}")
 
     for row in layout:
         if _is_button(row):
@@ -155,7 +156,7 @@ def static_keyboard(
 
             if not isinstance(value, list):
                 msg = "Function must return a list"
-                raise ValueError(msg)
+                raise TypeError(msg)
 
             builder = Builder()
             _inject_layout(builder, value, inline=inline)

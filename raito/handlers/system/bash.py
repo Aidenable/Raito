@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import os
+import asyncio
 from html import escape
 from typing import TYPE_CHECKING
 
@@ -25,8 +25,9 @@ class BashGroup(StatesGroup):
 
 
 async def _execute_expression(message: Message, text: str) -> None:
-    result = os.popen(text).read()
-    await message.answer(text=html.pre(escape(result)), parse_mode="HTML")
+    process = await asyncio.create_subprocess_shell(text, stdout=asyncio.subprocess.PIPE)
+    stdout, _ = await process.communicate()
+    await message.answer(text=html.pre(escape(stdout.decode())), parse_mode="HTML")
 
 
 @router.message(RaitoCommand("bash", "sh"), DEVELOPER)

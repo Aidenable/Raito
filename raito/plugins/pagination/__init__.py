@@ -7,6 +7,7 @@ from .paginators import (
     InlinePaginator,
     ListPaginator,
     PhotoPaginator,
+    RichPaginator,
     TextPaginator,
 )
 from .util import get_paginator
@@ -19,6 +20,7 @@ __all__ = (
     "PaginationMode",
     "PaginatorMiddleware",
     "PhotoPaginator",
+    "RichPaginator",
     "TextPaginator",
     "get_paginator",
     "on_pagination",

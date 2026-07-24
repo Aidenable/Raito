@@ -23,7 +23,7 @@
 - 🔥 **Hot Reload** — automatic router loading and file watching for instant development cycles
 - 🎭 **Role System** — pre-configured roles (owner, support, tester, etc) and selector UI
 - 📚 **Pagination** — easy pagination over text and media using inline buttons
-- 💬 **FSM Toolkit** — interactive confirmations, questionnaires, and mockable message flow
+- 🎬 **Scenes** — multi-step dialogs that release request-scoped dependencies after each message
 - 🚀 **CLI Generator** — `$ raito init` creates a ready-to-use bot template in seconds
 - ⌨️ **Keyboard Factory** — static and dynamic generation
 - 🛠️ **Command Registration** — automatic setup of bot commands with descriptions for each
@@ -137,14 +137,54 @@ async def pagination(message: Message, raito: Raito, bot: Bot):
 
 # mock data
 BUTTONS = [
-    InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}")
-    for i in range(10000)
+    InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}") for i in range(10000)
 ]
+
 
 @rt.on_pagination(router, "button_list")
 async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, offset: int, limit: int):
     content = BUTTONS[offset : offset + limit]
     await paginator.answer(text="Here is your buttons:", buttons=content)
+```
+
+---
+
+#### 🎬 Scenes
+
+Multi-step dialogs where every step is an ordinary handler. Request-scoped dependencies — like an SQLAlchemy `AsyncSession` — are released between messages instead of held while the user thinks. \
+Steps are native aiogram states carrying a typed draft in FSM storage. Register them under the router's own event names, drive the flow with `scene.next()` / `scene.finish()`, and get inline buttons (`@mute.on_callback_query`) for free.
+
+```python
+class MuteData(SceneData):
+    username: str | None = None
+
+
+class MuteStates(StatesGroup):
+    username = State()
+    duration = State()
+
+
+mute = router.scene(MuteStates, data=MuteData)
+
+
+@mute.on_message.enter(filters.Command("mute"))
+async def start(message: Message, scene: Scene[MuteData]):
+    await message.answer("Enter username:")
+    await scene.next()
+
+
+@mute.on_message(MuteStates.username, F.text)
+async def username(message: Message, scene: Scene[MuteData]):
+    scene.data.username = message.text
+    await message.answer("Enter duration in minutes:")
+    await scene.next()
+
+
+@mute.on_message(MuteStates.duration, F.text)
+async def duration(message: Message, scene: Scene[MuteData], session: AsyncSession):
+    await mute_user(session, scene.data.username, int(message.text or 0))
+    await message.answer("✅ User muted")
+    await scene.finish()
 ```
 
 ---
