@@ -137,9 +137,9 @@ async def pagination(message: Message, raito: Raito, bot: Bot):
 
 # mock data
 BUTTONS = [
-    InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}")
-    for i in range(10000)
+    InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}") for i in range(10000)
 ]
+
 
 @rt.on_pagination(router, "button_list")
 async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, offset: int, limit: int):

@@ -72,13 +72,14 @@ class PaginatorMiddleware(BaseMiddleware):
         :type event_update: Update
         :return: callback data string
         :rtype: str
-        :raises ValueError: if callback query is invalid
+        :raises ValueError: if callback query data is missing
+        :raises TypeError: if message is not accessible
         """
         if not event_update.callback_query or not event_update.callback_query.data:
             raise ValueError("Callback query data not found")
 
         if not isinstance(query.message, Message):
-            raise ValueError("Message not accessible")
+            raise TypeError("Message not accessible")
 
         return event_update.callback_query.data
 
@@ -98,7 +99,7 @@ class PaginatorMiddleware(BaseMiddleware):
             raise ValueError("Callback query data not found")
 
         if not isinstance(query.message, Message):
-            raise ValueError("Message not accessible")
+            raise TypeError("Message not accessible")
 
         callback_data = PaginationCallbackData.unpack(event_update.callback_query.data)
         Paginator = get_paginator(PaginationMode(callback_data.mode))

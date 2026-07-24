@@ -1,8 +1,5 @@
-from typing import TypeVar
-
 from aiogram.exceptions import TelegramBadRequest
-
-T = TypeVar("T")
+from typing_extensions import Self
 
 
 class SuppressNotModifiedError:
@@ -37,7 +34,7 @@ class SuppressNotModifiedError:
         """
         self.ignore_message = ignore_message
 
-    def __enter__(self: T) -> T:
+    def __enter__(self) -> Self:
         """Enter the runtime context related to this object.
 
         :return: The context manager instance itself.
@@ -48,7 +45,7 @@ class SuppressNotModifiedError:
         self,
         exc_type: type[BaseException] | None,
         exc_val: BaseException | None,
-        _: object | None,
+        _: object,
     ) -> bool:
         """Exit the runtime context and suppress the exception if it matches.
 

@@ -34,7 +34,7 @@ def hidden(func: Callable) -> Callable[..., Any]:
     return FlagDecorator(Flag("raito__hidden", value=True))(func)
 
 
-def params(**kwargs: type[str] | type[int] | type[bool] | type[float]) -> FlagDecorator:
+def params(**kwargs: type[str | int | bool | float]) -> FlagDecorator:
     """Define expected parameters and their types for command parsing.
 
     This acts as a lightweight argument extractor and validator for commands.

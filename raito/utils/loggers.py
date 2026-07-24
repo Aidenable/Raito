@@ -1,6 +1,6 @@
 import logging
 import shutil
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Literal, cast
 
 from typing_extensions import override
@@ -59,7 +59,7 @@ class ColoredFormatter(logging.Formatter):
         return f"{meta} {message}"
 
     def get_meta(self, record: logging.LogRecord) -> str:
-        dt = datetime.fromtimestamp(record.created)
+        dt = datetime.fromtimestamp(record.created, tz=timezone.utc).astimezone()
         date = dt.strftime("%d.%m.%Y")
         time = dt.strftime("%H:%M:%S")
         now = date + " " + time

@@ -83,11 +83,11 @@ class RoleFilter(Filter):
         :param event: Telegram update object (e.g., Message, CallbackQuery)
         :param raito: Raito context object
         :return: Whether the user has the specified role
-        :raises RuntimeError: If user could not be resolved from the event
+        :raises TypeError: If user could not be resolved from the event
         """
         user = getattr(event, "from_user", None)
         if not isinstance(user, User):
             msg = "Cannot resolve user from TelegramObject"
-            raise RuntimeError(msg)
+            raise TypeError(msg)
 
         return await raito.role_manager.has_role(bot.id, user.id, self.data.slug)
