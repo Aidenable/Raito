@@ -11,7 +11,7 @@ class PaginationMode(IntEnum):
     :cvar TEXT: text-based pagination
     :cvar PHOTO: photo pagination
     :cvar LIST: list pagination
-    :cvar RICH: rich message pagination
+    :cvar RICH: rich message pagination (requires aiogram>=3.30.0)
     """
 
     INLINE = 0
