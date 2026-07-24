@@ -74,7 +74,7 @@ class CommandMiddleware(BaseMiddleware):
             # Deprecated:
             target = {"handler": handler_object, "command": command}
             await raito._command_parameters_error.trigger(event, target=target)
-            was_sent = False
+            was_sent = True
 
         if RaitoRouter._command_signature_error.handlers:
             await RaitoRouter._command_signature_error.trigger(
@@ -84,7 +84,7 @@ class CommandMiddleware(BaseMiddleware):
                 params=params,
                 description=description,
             )
-            was_sent = False
+            was_sent = True
 
         if not was_sent:
             await event.reply(
