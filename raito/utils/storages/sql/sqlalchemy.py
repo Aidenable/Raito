@@ -37,12 +37,12 @@ storage_table = Table(
     Column("key", String(255), nullable=False, unique=True, index=True),
     Column("state", String(255), nullable=True),
     Column("data", JSON, nullable=False, default={}),
-    Column("created_at", DateTime, default=datetime.now(timezone.utc), nullable=False),
+    Column("created_at", DateTime, default=lambda: datetime.now(timezone.utc), nullable=False),
     Column(
         "updated_at",
         DateTime,
-        default=datetime.now(timezone.utc),
-        onupdate=datetime.now(timezone.utc),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
         nullable=False,
     ),
 )
