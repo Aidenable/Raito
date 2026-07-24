@@ -4,6 +4,7 @@ from .paginators import (
     InlinePaginator,
     ListPaginator,
     PhotoPaginator,
+    RichPaginator,
     TextPaginator,
 )
 
@@ -27,5 +28,7 @@ def get_paginator(mode: PaginationMode) -> type[BasePaginator]:
         return PhotoPaginator
     if mode == PaginationMode.LIST:
         return ListPaginator
+    if mode == PaginationMode.RICH:
+        return RichPaginator
 
     raise ValueError(f"Unsupported pagination mode: {mode}")
