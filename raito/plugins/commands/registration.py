@@ -152,7 +152,6 @@ async def register_bot_commands(
     :type locales: list[str]
     """
     role_commands: dict[str | None, list[_CommandMeta]] = defaultdict(list)
-
     for handler in handlers:
         meta = _extract_command_metadata(handler)
         if not meta:
@@ -164,24 +163,27 @@ async def register_bot_commands(
         for role in meta.roles:
             role_commands[role.slug].append(meta)
 
-    role_users: dict[str, set[int]] = defaultdict(set)
-    for role_slug in role_commands:  # type: ignore
+    public_commands = role_commands.get(None, [])
+    user_commands: dict[int, list[_CommandMeta]] = defaultdict(list)
+    for role_slug in role_commands:
         if role_slug is None:
             continue
 
         users = await role_manager.get_users(bot.id, role_slug)
-        role_users[role_slug].update(users)
+        commands = public_commands + role_commands.get(role_slug, [])
+        for user_id in users:
+            for meta in commands:
+                if meta not in user_commands[user_id]:
+                    user_commands[user_id].append(meta)
 
     for locale in locales:
-        for role_slug, users in role_users.items():
-            commands = role_commands.get(None, []) + role_commands.get(role_slug, [])
-            for user_id in users:
-                await _apply_bot_commands(
-                    bot=bot,
-                    meta_entries=commands,
-                    scope=BotCommandScopeChat(chat_id=user_id),
-                    locale=locale,
-                )
+        for user_id, commands in user_commands.items():
+            await _apply_bot_commands(
+                bot=bot,
+                meta_entries=commands,
+                scope=BotCommandScopeChat(chat_id=user_id),
+                locale=locale,
+            )
 
         await _apply_bot_commands(
             bot=bot,
