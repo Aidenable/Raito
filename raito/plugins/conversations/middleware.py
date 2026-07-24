@@ -64,5 +64,6 @@ class ConversationMiddleware(BaseMiddleware):
                 return await handler(event, data)
 
             self.registry.resolve(context.key, event)
+            return
 
         return await handler(event, data)
