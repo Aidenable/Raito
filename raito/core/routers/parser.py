@@ -57,17 +57,33 @@ class RouterParser:
 
     @classmethod
     def _validate_router(cls, module: object) -> Router:
-        """Validate and return router from module.
+        """Validate and return a router from the module.
+
+        Prefers a module-level variable named ``router``. Otherwise, looks the
+        module up by type for a single :class:`aiogram.Router` (or
+        :class:`raito.Router`) instance regardless of its variable name.
 
         :param module: Module object to extract router from
         :type module: object
         :return: Validated router instance
         :rtype: Router
-        :raises TypeError: If the module doesn't contain a valid Router instance
+        :raises TypeError: If the module contains no router, or more than one
+            and none of them is named ``router``
         """
         router = getattr(module, "router", None)
-        if not isinstance(router, Router):
-            msg = f"Expected Router, got {type(router).__name__}"
+        if isinstance(router, Router):
+            return router
+
+        routers = {name: value for name, value in vars(module).items() if isinstance(value, Router)}
+        unique = {id(value): value for value in routers.values()}
+
+        if len(unique) == 1:
+            return next(iter(unique.values()))
+
+        if not unique:
+            msg = "Expected a Router instance (named `router` or found by type), but got none"
             raise TypeError(msg)
 
-        return router
+        names = ", ".join(sorted(routers))
+        msg = f"Found multiple routers ({names}); name one of them `router` to avoid conflicts"
+        raise TypeError(msg)
