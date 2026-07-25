@@ -56,6 +56,7 @@ dev = [
     "ruff>=0.16.0,<0.17.0",
     "mypy",
     "pytest",
+    "pytest-asyncio",
     "ipdb",
     "pre-commit",
     "types-cachetools>=6.0.0.20250525",
@@ -120,8 +121,10 @@ ignore_missing_imports = true
 exclude = ["tests", "examples"]
 
 [tool.pytest.ini_options]
-addopts = "-ra"
-python_files = "tests/test_*.py"
+addopts = "-ra --import-mode=importlib"
+testpaths = ["tests"]
+python_files = "test_*.py"
+asyncio_mode = "auto"
 
 [dependency-groups]
 dev = ["types-cachetools>=6.0.0.20250525"]
