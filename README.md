@@ -84,6 +84,14 @@ For commands like `/ban 1234`, use `@rt.params` to extract and validate the argu
 Limit command usage with `@rt.limiter` and control the rate by mode.
 
 ```python
+from aiogram import Bot, Router, filters, types
+
+from raito import rt
+from raito.plugins.roles import ADMINISTRATOR, MODERATOR, OWNER
+
+router = Router(name="ban")
+
+
 @router.message(filters.Command("ban"), OWNER | ADMINISTRATOR | MODERATOR)
 @rt.description("Ban a user")
 @rt.limiter(300, mode="chat")
@@ -121,8 +129,16 @@ The simplest, most native and most effective pagination. Unlike many other libra
 It is very user-friendly and fully customizable.
 
 ```python
+from aiogram import Bot, filters, types
+
+from raito import Raito, Router, rt
+from raito.plugins.pagination import InlinePaginator
+
+router = Router(name="pagination")
+
+
 @router.message(filters.Command("pagination"))
-async def pagination(message: Message, raito: Raito, bot: Bot):
+async def pagination(message: types.Message, raito: Raito, bot: Bot):
     if not message.from_user:
         return
 
@@ -137,12 +153,18 @@ async def pagination(message: Message, raito: Raito, bot: Bot):
 
 # mock data
 BUTTONS = [
-    InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}") for i in range(10000)
+    types.InlineKeyboardButton(text=f"Button #{i}", callback_data=f"button:{i}")
+    for i in range(10000)
 ]
 
 
-@rt.on_pagination(router, "button_list")
-async def on_pagination(query: CallbackQuery, paginator: InlinePaginator, offset: int, limit: int):
+@router.on_pagination("button_list")
+async def on_pagination(
+    query: types.CallbackQuery,
+    paginator: InlinePaginator,
+    offset: int,
+    limit: int,
+):
     content = BUTTONS[offset : offset + limit]
     await paginator.answer(text="Here is your buttons:", buttons=content)
 ```
@@ -155,6 +177,16 @@ Multi-step dialogs where every step is an ordinary handler. Request-scoped depen
 Steps are native aiogram states carrying a typed draft in FSM storage. Register them under the router's own event names, drive the flow with `scene.next()` / `scene.finish()`, and get inline buttons (`@mute.on_callback_query`) for free.
 
 ```python
+from aiogram import F, filters, types
+from aiogram.fsm.state import State, StatesGroup
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from raito import Router
+from raito.plugins.scenes import Scene, SceneData
+
+router = Router(name="scene", priority=100)
+
+
 class MuteData(SceneData):
     username: str | None = None
 
@@ -168,20 +200,20 @@ mute = router.scene(MuteStates, data=MuteData)
 
 
 @mute.on_message.enter(filters.Command("mute"))
-async def start(message: Message, scene: Scene[MuteData]):
+async def start(message: types.Message, scene: Scene[MuteData]):
     await message.answer("Enter username:")
     await scene.next()
 
 
 @mute.on_message(MuteStates.username, F.text)
-async def username(message: Message, scene: Scene[MuteData]):
+async def username(message: types.Message, scene: Scene[MuteData]):
     scene.data.username = message.text
     await message.answer("Enter duration in minutes:")
     await scene.next()
 
 
 @mute.on_message(MuteStates.duration, F.text)
-async def duration(message: Message, scene: Scene[MuteData], session: AsyncSession):
+async def duration(message: types.Message, scene: Scene[MuteData], session: AsyncSession):
     await mute_user(session, scene.data.username, int(message.text or 0))
     await message.answer("✅ User muted")
     await scene.finish()
@@ -195,21 +227,49 @@ Sometimes you want quick layouts. Sometimes — full control. You get both.
 
 ##### Static (layout-based)
 ```python
+from aiogram import Router, filters, types
+
+from raito import rt
+
+router = Router(name="info")
+
+
 @rt.keyboard.static(inline=True)
-def information():
+def information_markup():
     return [
         ("📄 Terms of Service", "tos"),
         [("ℹ️ About", "about"), ("⚙️ Website", "web")],
     ]
+
+
+@router.message(filters.Command("info"))
+async def info(message: types.Message):
+    await message.answer(text="Information:", reply_markup=information_markup())
 ```
 
 ##### Dynamic (builder-based)
 ```python
+from aiogram import Router, filters, types
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
+
+from raito import rt
+
+router = Router(name="start")
+
+
 @rt.keyboard.dynamic(1, 2, adjust=True, inline=False)
-def start_menu(builder: ReplyKeyboardBuilder, app_url: str):
-    builder.button(text="📱 Open App", web_app=WebAppInfo(url=app_url))
+def start_menu_markup(builder: ReplyKeyboardBuilder, app_url: str):
+    builder.button(text="📱 Open App", web_app=types.WebAppInfo(url=app_url))
     builder.button(text="💬 Support")
     builder.button(text="📢 Channel")
+
+
+@router.message(filters.CommandStart())
+async def start(message: types.Message):
+    await message.answer(
+        text="Welcome!",
+        reply_markup=start_menu_markup(app_url="https://example.com"),
+    )
 ```
 
 ---
@@ -219,7 +279,14 @@ def start_menu(builder: ReplyKeyboardBuilder, app_url: str):
 Define startup and shutdown logic in one place.
 
 ```python
-@rt.lifespan(router)
+from aiogram import Bot
+
+from raito import Router, rt
+
+router = Router(name="lifespan")
+
+
+@router.lifespan()
 async def lifespan(bot: Bot):
     user = await bot.get_me()
     rt.debug("🚀 Bot [%s] is starting...", user.full_name)
