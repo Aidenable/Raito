@@ -24,7 +24,7 @@
 - 🎭 **Role System** — pre-configured roles (owner, support, tester, etc) and selector UI
 - 📚 **Pagination** — easy pagination over text and media using inline buttons
 - 🎬 **Scenes** — multi-step dialogs that release request-scoped dependencies after each message
-- 🚀 **CLI Generator** — `$ raito init` creates a ready-to-use bot template in seconds
+- ~~🚀 **CLI Generator** — `$ raito init` creates a ready-to-use bot template in seconds~~
 - ⌨️ **Keyboard Factory** — static and dynamic generation
 - 🛠️ **Command Registration** — automatic setup of bot commands with descriptions for each
 - 🖼️ **Album Support** — groups media albums and passes them to handlers
