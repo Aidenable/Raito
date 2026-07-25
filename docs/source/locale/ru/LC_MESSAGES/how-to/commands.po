@@ -1,0 +1,157 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/commands.rst:2
+msgid "⚙️ Commands"
+msgstr "⚙️ Команды"
+
+#: ../../source/how-to/commands.rst:4
+msgid ""
+"Raito adds power features to command handlers via flags, middleware, and "
+"auto-registration."
+msgstr ""
+"Raito добавляет к хендлерам команд удобные возможности через флаги, "
+"middleware и автоматическую регистрацию."
+
+#: ../../source/how-to/commands.rst:6
+msgid ""
+"``@rt.description(...)`` — adds descriptions for Telegram slash-command "
+"list"
+msgstr ""
+"``@rt.description(...)`` добавляет описания для списка слэш-команд "
+"Telegram"
+
+#: ../../source/how-to/commands.rst:7
+msgid "``@rt.hidden`` — hides handlers from the command list"
+msgstr "``@rt.hidden`` скрывает хендлеры из списка команд"
+
+#: ../../source/how-to/commands.rst:8
+msgid "``@rt.params(...)`` — extracts and validates command parameters"
+msgstr "``@rt.params(...)`` извлекает и проверяет параметры команды"
+
+#: ../../source/how-to/commands.rst:9
+msgid "Automatic middleware for parameter parsing"
+msgstr "автоматический middleware для разбора параметров"
+
+#: ../../source/how-to/commands.rst:10
+msgid "Auto-registration via ``raito.register_commands(...)``"
+msgstr "автоматическая регистрация через ``raito.register_commands(...)``"
+
+#: ../../source/how-to/commands.rst:15
+msgid "Descriptions"
+msgstr "Описания"
+
+#: ../../source/how-to/commands.rst:17
+msgid ""
+"Use ``@rt.description()`` to attach a localized (or plain) description to"
+" a command."
+msgstr ""
+"Используйте ``@rt.description()``, чтобы прикрепить к команде "
+"локализованное (или обычное) описание."
+
+#: ../../source/how-to/commands.rst:33
+msgid "This will be used during command registration."
+msgstr "Оно будет использовано при регистрации команд."
+
+#: ../../source/how-to/commands.rst:38
+msgid "Hidden commands"
+msgstr "Скрытые команды"
+
+#: ../../source/how-to/commands.rst:40
+msgid "Use ``@rt.hidden`` to exclude a handler from the command list."
+msgstr "Используйте ``@rt.hidden``, чтобы убрать хендлер из списка команд."
+
+#: ../../source/how-to/commands.rst:52
+msgid "Parameter Parsing"
+msgstr "Разбор параметров"
+
+#: ../../source/how-to/commands.rst:54
+msgid ""
+"Use ``@rt.params(...)`` to automatically parse parameters from ``/command"
+" arg1 arg2``."
+msgstr ""
+"Используйте ``@rt.params(...)``, чтобы автоматически разбирать параметры "
+"из ``/command arg1 arg2``."
+
+#: ../../source/how-to/commands.rst:63
+msgid "Supported types: ``str``, ``int``, ``bool``, ``float``"
+msgstr "Поддерживаемые типы: ``str``, ``int``, ``bool``, ``float``"
+
+#: ../../source/how-to/commands.rst:65
+msgid ""
+"If a param is missing or invalid, Raito will: - Show an auto-generated "
+"help message (with ``description``) - Or trigger a custom error event via"
+" ``raito.command_parameters_error``"
+msgstr ""
+"Если параметр отсутствует или некорректен, Raito либо покажет "
+"автоматически собранную подсказку (с ``description``), либо вызовет "
+"пользовательское событие ошибки через ``raito.command_parameters_error``."
+
+#: ../../source/how-to/commands.rst:72
+msgid "Auto-Registration"
+msgstr "Автоматическая регистрация"
+
+#: ../../source/how-to/commands.rst:74
+msgid "Once you use the flags, just call:"
+msgstr "Как только вы используете флаги, просто вызовите:"
+
+#: ../../source/how-to/commands.rst:80
+msgid "It will:"
+msgstr "Это:"
+
+#: ../../source/how-to/commands.rst:82
+msgid "Collect all handlers"
+msgstr "соберёт все хендлеры"
+
+#: ../../source/how-to/commands.rst:83
+msgid "Use their flags (description, roles, hidden, etc.)"
+msgstr "использует их флаги (описание, роли, скрытость и т.д.)"
+
+#: ../../source/how-to/commands.rst:84
+msgid "Register scoped commands for different roles and locales"
+msgstr "зарегистрирует команды с учётом ролей и локалей"
+
+#: ../../source/how-to/commands.rst:86
+msgid ""
+"Raito will also: - Group commands by role - Assign different command "
+"lists to different users - Add role emojis to descriptions (e.g., ``[👑] "
+"Ban a user``)"
+msgstr ""
+"Ещё Raito сгруппирует команды по ролям, назначит разным пользователям "
+"разные наборы команд и добавит к описаниям эмодзи ролей (например, ``[👑] "
+"Ban a user``)."
+
+#: ../../source/how-to/commands.rst:94
+msgid "Localization"
+msgstr "Локализация"
+
+#: ../../source/how-to/commands.rst:96
+msgid ""
+"Descriptions support ``LazyProxy`` from ``aiogram.utils.i18n``. If you "
+"use i18n context:"
+msgstr ""
+"Описания поддерживают ``LazyProxy`` из ``aiogram.utils.i18n``. Если вы "
+"используете контекст i18n:"
+
+#: ../../source/how-to/commands.rst:103
+msgid "Raito will localize this during command registration for each locale."
+msgstr "Raito локализует это при регистрации команд для каждой локали."

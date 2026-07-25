@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "raito"
-version = "1.5.0"
-description = "REPL, hot-reload, keyboards, pagination, and internal dev tools — all in one. That's Raito."
+version = "1.5.1"
+description = "The missing toolkit for aiogram. Hot-reload, roles, pagination, scenes and dev tools, all included."
 authors = [{ name = "Aiden", email = "aidenthedev@gmail.com" }]
 license = "MIT"
 readme = "README.md"
@@ -61,14 +61,14 @@ dev = [
     "types-cachetools>=6.0.0.20250525",
     "python-dotenv",
 ]
-docs = ["sphinx", "furo", "sphinx-autodoc-typehints", "watchdog>=6.0.0"]
+docs = ["sphinx", "furo", "sphinx-intl", "watchdog>=6.0.0"]
 redis = ["redis>=6.2.0"]
 postgresql = ["sqlalchemy[asyncio]>=2.0.0", "asyncpg>=0.29.0"]
 sqlite = ["sqlalchemy[asyncio]>=2.0.0", "aiosqlite>=0.20.0"]
 
 [project.urls]
 Repository = "https://github.com/Aidenable/raito"
-Documentation = "https://aidenable.github.io/raito"
+Documentation = "https://raito.readthedocs.io"
 
 [tool.hatch.build]
 packages = ["raito"]
@@ -108,6 +108,7 @@ max-args = 10
 "tests/*" = ["ALL"]
 "examples/*" = ["ALL"]
 "*/handlers/*.py" = ["INP001"]
+"raito/utils/helpers/code_evaluator.py" = ["S102"]
 
 [tool.ruff.format]
 quote-style = "double"

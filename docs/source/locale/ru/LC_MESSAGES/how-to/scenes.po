@@ -1,0 +1,387 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/scenes.rst:2
+msgid "🎬 Scenes"
+msgstr "🎬 Сцены"
+
+#: ../../source/how-to/scenes.rst:4
+msgid ""
+"A ``Scene`` is a multi-step dialog where every user message is handled by"
+" a new, ordinary aiogram handler. It is the preferred choice for dialogs "
+"that use request-scoped dependencies such as an SQLAlchemy "
+"``AsyncSession``."
+msgstr ""
+"``Scene`` это многошаговый диалог, где каждое сообщение пользователя "
+"обрабатывает новый, обычный хендлер aiogram. Это предпочтительный вариант"
+" для диалогов с request-scoped зависимостями, например с ``AsyncSession``"
+" из SQLAlchemy."
+
+#: ../../source/how-to/scenes.rst:8
+msgid ""
+"Unlike :doc:`conversations`, a scene does not suspend the handler that "
+"started the dialog. It stores a small typed draft in FSM storage, returns"
+" from the update, and resumes on the next matching update. Your usual "
+"middleware therefore closes a database session, transaction, or other "
+"scoped resource after every step — nothing is held while the user is "
+"away."
+msgstr ""
+"В отличие от :doc:`conversations`, сцена не приостанавливает хендлер, "
+"начавший диалог. Она хранит небольшой типизированный черновик в "
+"FSM-хранилище, завершает обработку апдейта и возобновляется на следующем "
+"подходящем апдейте. Поэтому ваш обычный middleware закрывает сессию БД, "
+"транзакцию или другой scoped-ресурс после каждого шага, и пока "
+"пользователь думает, ничего не удерживается."
+
+#: ../../source/how-to/scenes.rst:14
+msgid ""
+"Scenes are built on aiogram's native ``StatesGroup``: each step is a real"
+" FSM state, so ``StateFilter`` and any FSM tooling see it like any other "
+"state."
+msgstr ""
+"Сцены построены на штатном ``StatesGroup`` из aiogram: каждый шаг это "
+"настоящий FSM-стейт, поэтому ``StateFilter`` и любой FSM-инструмент видят"
+" его как обычный стейт."
+
+#: ../../source/how-to/scenes.rst:20
+msgid "Example"
+msgstr "Пример"
+
+#: ../../source/how-to/scenes.rst:80
+msgid ""
+"``session`` above is injected by the application's usual aiogram "
+"middleware. It is fresh for the ``minutes`` update and is closed when "
+"that handler returns. A scene never stores the session, a message, an ORM"
+" object, or a future."
+msgstr ""
+"``session`` выше передаётся обычным middleware вашего приложения. Она "
+"свежая для апдейта на шаге ``minutes`` и закрывается, когда хендлер "
+"завершается. Сцена никогда не хранит ни сессию, ни сообщение, ни "
+"ORM-объект, ни future."
+
+#: ../../source/how-to/scenes.rst:87
+msgid "The ``scene`` handle"
+msgstr "Хендл ``scene``"
+
+#: ../../source/how-to/scenes.rst:89
+msgid ""
+"Every handler may receive a ``scene: Scene[MuteData]`` parameter — a live"
+" handle to the current update. It carries two things:"
+msgstr ""
+"Любой хендлер может принять параметр ``scene: Scene[MuteData]`` это живой"
+" хендл текущего апдейта. Он несёт две вещи:"
+
+#: ../../source/how-to/scenes.rst:92
+msgid ""
+"``scene.data`` — the typed, **mutable** draft. Assign to it directly "
+"(``scene.data.username = ...``); the change is validated immediately and "
+"snapshotted into FSM storage on the next navigation."
+msgstr ""
+"``scene.data`` это типизированный, **изменяемый** черновик. Присваивайте "
+"ему напрямую (``scene.data.username = ...``); изменение сразу проверяется"
+" и на следующей навигации сохраняется в FSM-хранилище."
+
+#: ../../source/how-to/scenes.rst:95
+msgid "navigation verbs that persist the draft and switch the FSM state:"
+msgstr "глаголы навигации, которые сохраняют черновик и переключают FSM-стейт:"
+
+#: ../../source/how-to/scenes.rst:97
+msgid ""
+"``await scene.next()`` — move to the next step in declaration order (or "
+"the first step, when called from an entry handler)."
+msgstr ""
+"``await scene.next()`` переходит к следующему шагу в порядке объявления "
+"(или к первому шагу, если вызван из входного хендлера)."
+
+#: ../../source/how-to/scenes.rst:99
+msgid "``await scene.back()`` — move to the previous step."
+msgstr "``await scene.back()`` переходит к предыдущему шагу."
+
+#: ../../source/how-to/scenes.rst:100
+msgid "``await scene.goto(state)`` — jump to a specific step (branching)."
+msgstr "``await scene.goto(state)`` прыгает на конкретный шаг (ветвление)."
+
+#: ../../source/how-to/scenes.rst:101
+msgid "``await scene.retry()`` — stay on the current step; saves the draft."
+msgstr "``await scene.retry()`` остаётся на текущем шаге; сохраняет черновик."
+
+#: ../../source/how-to/scenes.rst:102
+msgid "``await scene.restart()`` — discard the draft and start this scene over."
+msgstr "``await scene.restart()`` сбрасывает черновик и начинает эту сцену заново."
+
+#: ../../source/how-to/scenes.rst:103
+msgid ""
+"``await scene.finish()`` / ``await scene.cancel()`` — end the scene, "
+"clearing only its own FSM payload."
+msgstr ""
+"``await scene.finish()`` / ``await scene.cancel()`` завершают сцену, "
+"очищая только её собственные данные в FSM."
+
+#: ../../source/how-to/scenes.rst:105
+msgid ""
+"``await scene.escape()`` — cancel the scene *and* let the update reach "
+"the next matching handler, instead of swallowing it. See :ref:`scenes-"
+"escaping`."
+msgstr ""
+"``await scene.escape()`` отменяет сцену *и* пропускает апдейт к "
+"следующему подходящему хендлеру, вместо того чтобы поглотить его. См. "
+":ref:`scenes-escaping`."
+
+#: ../../source/how-to/scenes.rst:107
+msgid ""
+"``await scene.start(other, at=OtherStates.reason, **data)`` — hand the "
+"dialog off to another scene, seeding its draft from ``data`` (validated "
+"against its ``SceneData``). Opens at ``other``'s first step, or ``at`` if"
+" given."
+msgstr ""
+"``await scene.start(other, at=OtherStates.reason, **data)`` передаёт "
+"диалог другой сцене, засевая её черновик из ``data`` (с проверкой по её "
+"``SceneData``). Открывает первый шаг ``other`` или шаг ``at``, если он "
+"задан."
+
+#: ../../source/how-to/scenes.rst:111
+msgid ""
+"Navigation never sends anything. Reply with the message you already have "
+"— ``await message.answer(...)`` — which exposes every Telegram option "
+"natively (``reply_markup``, ``parse_mode``, media, and so on). A typical "
+"step answers, then navigates:"
+msgstr ""
+"Навигация сама ничего не отправляет. Отвечайте тем сообщением, что у вас "
+"уже есть (``await message.answer(...)``), где нативно доступны все опции "
+"Telegram (``reply_markup``, ``parse_mode``, медиа и прочее). Типичный шаг"
+" сначала отвечает, потом навигирует:"
+
+#: ../../source/how-to/scenes.rst:121
+msgid ""
+"``scene.data`` is a Pydantic ``SceneData`` model used only as a typed, "
+"JSON-serialisable draft. Give every field a default because a scene "
+"starts from an empty draft. Build and validate a final domain command in "
+"the last step rather than putting dependency-aware validators on "
+"``SceneData``."
+msgstr ""
+"``scene.data`` это pydantic-модель ``SceneData``, которая служит только "
+"типизированным JSON-сериализуемым черновиком. Задайте каждому полю "
+"значение по умолчанию, ведь сцена стартует с пустого черновика. Собирайте"
+" и проверяйте итоговую доменную команду на последнем шаге, а не "
+"навешивайте на ``SceneData`` валидаторы, зависящие от внешних ресурсов."
+
+#: ../../source/how-to/scenes.rst:126
+msgid ""
+"If a step does not touch the draft, ``scene: Scene`` (without "
+"``[MuteData]``) is enough. A handler may also declare ``state: "
+"FSMContext`` alongside ``scene`` for raw FSM access — the handle does not"
+" get in the way."
+msgstr ""
+"Если шаг не трогает черновик, достаточно ``scene: Scene`` (без "
+"``[MuteData]``). Хендлер может рядом со ``scene`` объявить ``state: "
+"FSMContext`` для прямого доступа к FSM: хендл этому не мешает."
+
+#: ../../source/how-to/scenes.rst:133
+msgid "Events"
+msgstr "События"
+
+#: ../../source/how-to/scenes.rst:135
+msgid ""
+"Handlers are registered through the per-event decorators "
+"``scene.on_message``, ``scene.on_callback_query``, and "
+"``scene.on_edited_message`` — the ``on_`` prefix mirrors Raito's "
+"``router.on_pagination``. Each one is called with a step's state to "
+"handle that step, and has an ``.enter`` to start the scene. So a scene "
+"can begin on a command *or* a button, and any step can expect text *or* "
+"an inline button:"
+msgstr ""
+"Хендлеры регистрируются через декораторы по типам событий: "
+"``scene.on_message``, ``scene.on_callback_query`` и "
+"``scene.on_edited_message``. Префикс ``on_`` повторяет "
+"``router.on_pagination`` из Raito. Каждый вызывается со стейтом шага, "
+"чтобы обработать этот шаг, и имеет ``.enter`` для старта сцены. Поэтому "
+"сцена может начинаться с команды *или* с кнопки, а любой шаг может ждать "
+"текст *или* inline-кнопку:"
+
+#: ../../source/how-to/scenes.rst:169
+msgid ""
+"Each handler receives the same ``scene`` handle plus its event under the "
+"observer's name — ``message``, ``callback_query``, or ``edited_message``,"
+" matching the parameter name exactly, the same rule a plain "
+"``@router.callback_query()`` handler already follows. Its middleware runs"
+" on every supported observer, so a stale scene is cleared whether the "
+"next step expects text or a tap. ``scene.on_message``, "
+"``scene.on_callback_query``, and ``scene.on_edited_message`` cover the "
+"events that carry a per-user FSM state."
+msgstr ""
+"Каждый хендлер получает тот же хендл ``scene`` плюс своё событие под "
+"именем наблюдателя: ``message``, ``callback_query`` или "
+"``edited_message``, ровно совпадающим с именем параметра, по тому же "
+"правилу, что и обычный хендлер ``@router.callback_query()``. Его "
+"middleware работает на всех поддерживаемых наблюдателях, поэтому "
+"устаревшая сцена сбрасывается независимо от того, ждёт следующий шаг "
+"текст или нажатие. ``scene.on_message``, ``scene.on_callback_query`` и "
+"``scene.on_edited_message`` покрывают события, несущие FSM-стейт на "
+"пользователя."
+
+#: ../../source/how-to/scenes.rst:177
+msgid ""
+"Besides a specific step, each registrar also has ``.any(*filters)``, "
+"which matches *any* active step of the scene — for something that should "
+"work no matter where the user is, such as a persistent \"Cancel\" button "
+"or a ``/cancel`` command:"
+msgstr ""
+"Кроме конкретного шага, у каждого регистратора есть ``.any(*filters)``, "
+"который срабатывает на *любом* активном шаге сцены. Это для того, что "
+"должно работать независимо от того, где пользователь: например, "
+"постоянная кнопка «Отмена» или команда ``/cancel``:"
+
+#: ../../source/how-to/scenes.rst:187
+msgid ""
+"Like every scene handler, ``.any()`` still competes on **declaration "
+"order**: a broad step filter (``F.text``) registered *before* it will "
+"match first and the ``.any()`` handler never runs. Declare scene-wide "
+"``.any()`` handlers before the steps they are meant to intercept."
+msgstr ""
+"Как и любой хендлер сцены, ``.any()`` тоже конкурирует по **порядку "
+"объявления**: широкий фильтр шага (``F.text``), объявленный *раньше*, "
+"сработает первым, и ``.any()`` не выполнится. Объявляйте общесценовые "
+"``.any()`` раньше шагов, которые они должны перехватывать."
+
+#: ../../source/how-to/scenes.rst:197
+msgid "Handling an unrelated command"
+msgstr "Обработка постороннего сообщения"
+
+#: ../../source/how-to/scenes.rst:199
+msgid ""
+"A scene's steps are ordinary handlers filtered by state, not by what the "
+"message *looks like*. A step registered with a broad filter like "
+"``F.text`` matches literally any text — including ``/start`` or any other"
+" command the user sends mid-dialog. FSM does not fix this by itself: "
+"without an explicit escape route, the message is validated as if it were "
+"an answer to the current step (and, since scenes have no built-in "
+"timeout, the user has no other way out until the dialog finishes)."
+msgstr ""
+"Шаги сцены это обычные хендлеры, отфильтрованные по стейту, а не по тому,"
+" как *выглядит* сообщение. Шаг с широким фильтром вроде ``F.text`` "
+"совпадёт буквально с любым текстом, включая ``/start`` или любую другую "
+"команду, которую пользователь пришлёт посреди диалога. Сам FSM это не "
+"решает: без явного пути выхода сообщение проверяется, будто это ответ на "
+"текущий шаг (а так как у сцен нет встроенного таймаута, у пользователя "
+"нет другого выхода до конца диалога)."
+
+#: ../../source/how-to/scenes.rst:207
+msgid ""
+"Give a scene an escape route with :meth:`SceneRegistry.any` and "
+":meth:`Scene.escape`:"
+msgstr ""
+"Дайте сцене путь выхода через :meth:`SceneRegistry.any` и "
+":meth:`Scene.escape`:"
+
+#: ../../source/how-to/scenes.rst:216
+msgid ""
+"``scene.cancel()`` alone would still swallow the update — nothing else "
+"gets a turn at it. ``scene.escape()`` clears the scene and then re-raises"
+" so aiogram keeps looking for a match, exactly as if this handler had "
+"never matched. A real ``/start`` handler registered after this one still "
+"runs for the very same update, so escaping a scene and getting the "
+"command's usual result is one step, not two."
+msgstr ""
+"Один ``scene.cancel()`` всё равно поглотил бы апдейт: больше никто до "
+"него не доберётся. ``scene.escape()`` очищает сцену и затем пробрасывает "
+"апдейт дальше, чтобы aiogram продолжил искать совпадение, будто этот "
+"хендлер не сработал. Настоящий хендлер ``/start``, объявленный после "
+"этого, отработает на том же апдейте, поэтому выйти из сцены и получить "
+"обычный результат команды это один шаг, а не два."
+
+#: ../../source/how-to/scenes.rst:225
+msgid "Storage and routing"
+msgstr "Хранилище и роутинг"
+
+#: ../../source/how-to/scenes.rst:227
+msgid ""
+"Scenes use the injected ``FSMContext`` and therefore the storage "
+"configured on ``Dispatcher(storage=...)``. ``Raito.storage`` is separate "
+"and is not the scene store."
+msgstr ""
+"Сцены используют внедрённый ``FSMContext`` и, значит, хранилище, заданное"
+" в ``Dispatcher(storage=...)``. ``Raito.storage`` это отдельное "
+"хранилище, и сцены не в нём."
+
+#: ../../source/how-to/scenes.rst:230
+msgid ""
+"Scene steps are ordinary message handlers, matched in **declaration "
+"order** like any aiogram handler. Declare a scene's handlers before a "
+"broad ``@router.message()`` catch-all on the same router, or — as in the "
+"example — keep the scene on its own router. Across routers, control "
+"priority with include order or Raito's ``Router(priority=...)``."
+msgstr ""
+"Шаги сцены это обычные message-хендлеры, сопоставляемые по **порядку "
+"объявления**, как любые хендлеры aiogram. Объявляйте хендлеры сцены "
+"раньше широкого ``@router.message()`` на том же роутере или, как в "
+"примере, держите сцену на отдельном роутере. Между роутерами порядком "
+"управляют через порядок подключения или через ``Router(priority=...)`` из"
+" Raito."
+
+#: ../../source/how-to/scenes.rst:235
+msgid ""
+"Hot reload is otherwise transparent: aiogram identifies a step by name "
+"(``\"MuteStates:username\"``), not by the Python class object, so "
+"reloading a handler's *body* never disturbs a user mid-scene. Only "
+"removing or renaming a ``State`` does — the next message for that user "
+"clears the stale scene and continues through normal routing, logged at "
+"``DEBUG`` on ``raito.plugins.scenes``."
+msgstr ""
+"В остальном hot-reload прозрачен: aiogram опознаёт шаг по имени "
+"(``\"MuteStates:username\"``), а не по объекту Python-класса, поэтому "
+"перезагрузка *тела* хендлера не мешает пользователю посреди сцены. Мешает"
+" только удаление или переименование ``State``: следующее сообщение такого"
+" пользователя сбросит устаревшую сцену и пойдёт по обычному роутингу, с "
+"логом уровня ``DEBUG`` в ``raito.plugins.scenes``."
+
+#: ../../source/how-to/scenes.rst:241
+msgid ""
+"Each scene owns the FSM state for its chat/user while active. Do not mix "
+"it with unrelated aiogram FSM states or ``raito.wait_for`` for the same "
+"key. A router rejects two scenes over the same ``StatesGroup``."
+msgstr ""
+"Пока сцена активна, она владеет FSM-стейтом своего чата/пользователя. Не "
+"смешивайте его с посторонними FSM-стейтами aiogram или с "
+"``raito.wait_for`` по тому же ключу. Роутер не примет две сцены на одном "
+"``StatesGroup``."
+
+#: ../../source/how-to/scenes.rst:244
+msgid ""
+"``finish`` and ``cancel`` remove only the scene's own FSM payload. Other "
+"data stored under the same ``FSMContext`` key is preserved."
+msgstr ""
+"``finish`` и ``cancel`` удаляют только собственные данные сцены в FSM. "
+"Прочие данные под тем же ключом ``FSMContext`` сохраняются."
+
+#: ../../source/how-to/scenes.rst:246
+msgid ""
+"There is only one FSM state per chat/user, so starting *any* scene — "
+"including re-entering the same one — replaces whatever was active before,"
+" silently and without warning. This is not a scenes quirk; the same is "
+"true of plain aiogram FSM. If accidentally abandoning one flow while "
+"starting another would be costly, guard the entry handler yourself:"
+msgstr ""
+"FSM-стейт на чат/пользователя всего один, поэтому запуск *любой* сцены (в"
+" том числе повторный вход в ту же самую) молча, без предупреждения "
+"заменяет то, что было активно. Это не особенность сцен: то же верно и для"
+" обычного FSM aiogram. Если случайно бросить один сценарий, начав другой,"
+" дорого, защитите входной хендлер сами:"

@@ -1,0 +1,241 @@
+# Raito
+
+> Raito is a batteries-included layer on top of aiogram 3.x for building Telegram
+> bots. Handlers live in files and Raito auto-loads them (with hot-reload in
+> development); features — roles, pagination, multi-step scenes, keyboards,
+> throttling, command registration, in-chat dev tools — are opt-in decorators
+> and filters. Requires Python 3.10+ and aiogram >= 3.20. Install: `pip install raito`.
+
+This file follows the https://llmstxt.org convention. Full docs: https://raito.readthedocs.io
+
+## Mental model
+
+- You create `Raito(dispatcher, routers_dir)` and call `await raito.setup()`. Raito
+  scans `routers_dir`, imports each `.py` file, and registers the `router` it finds.
+  You never call `dispatcher.include_router` yourself.
+- Each handler file exposes a module-level `router` (a `raito.Router` or plain
+  `aiogram.Router`). Files and folders starting with `_` are ignored.
+- `production=False` starts a file watcher: edits to handler files hot-reload live.
+- Everything else is added per-handler via `rt` decorators (metadata flags) and
+  aiogram filters. Handlers stay ordinary aiogram handlers.
+
+## Minimal bot
+
+```python
+# __main__.py
+import asyncio
+from aiogram import Bot, Dispatcher
+from raito import Raito
+
+async def main() -> None:
+    bot = Bot(token="TOKEN")
+    dispatcher = Dispatcher()
+    raito = Raito(dispatcher, "src/handlers", production=False)
+    await raito.setup()
+    await dispatcher.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+```python
+# src/handlers/start.py
+from aiogram import Router, filters, types
+
+router = Router(name="start")
+
+@router.message(filters.CommandStart())
+async def start(message: types.Message) -> None:
+    await message.answer("Hello!")
+```
+
+`Raito(...)` keyword args: `developers=[int]`, `locales=["en", "ru"]`,
+`production=True`, `enable_dangerous_commands=False`, `storage=<aiogram FSM storage>`,
+`configuration=RaitoConfiguration(...)`.
+
+## Routers
+
+`raito.Router` extends `aiogram.Router`:
+
+```python
+from raito import Router
+
+router = Router(name="auth", priority=100)     # higher priority loads first
+debug = Router(name="debug", autoload=False)    # loaded on demand via `.rt load debug`
+```
+
+## Commands (rt decorators)
+
+```python
+from raito import rt
+
+@router.message(filters.Command("add"))
+@rt.description("Add two numbers")        # shows in the Telegram slash menu
+@rt.params(a=int, b=int)                   # parses positional args, injects by name
+async def add(message: types.Message, a: int, b: int) -> None:
+    await message.answer(str(a + b))
+
+@router.message(filters.Command("debug"))
+@rt.hidden                                 # kept out of the slash menu (no parentheses)
+async def debug(message: types.Message) -> None: ...
+```
+
+- `rt.params` types: `int`, `float`, `str`, `bool`. Args are positional, split on
+  whitespace, in declaration order. Missing/invalid -> Raito replies with usage help.
+- Publish the slash menu once at startup: `await raito.register_commands(bot)`.
+- Positional args suit dev/test commands; for real user input collect it with a
+  scene or a conversation (see below), not `rt.params`.
+
+## Roles
+
+Nine built-in roles: `OWNER`, `DEVELOPER`, `ADMINISTRATOR`, `MODERATOR`, `MANAGER`,
+`SPONSOR`, `GUEST`, `SUPPORT`, `TESTER`. They are aiogram filters.
+
+```python
+from raito.rt import OWNER, ADMINISTRATOR, MODERATOR
+
+@router.message(filters.Command("ban"), OWNER | ADMINISTRATOR | MODERATOR)
+async def ban(message: types.Message) -> None: ...
+```
+
+- Model is flat: one role per user, no hierarchy. Combine with `|` (OR) only —
+  `OWNER` does not imply `ADMINISTRATOR`, list every role that should pass.
+- `Raito(..., developers=[123456789])` grants those user IDs the `developer` role.
+- The role backend is derived from the FSM `storage` you pass (memory/JSON/Redis/SQL).
+- Manage at runtime from chat: `.rt roles`, `.rt revoke`, `.rt staff`.
+  From code: `raito.role_manager.assign_role(bot_id, initiator_id, target_id, slug)`.
+
+## Keyboards
+
+```python
+from raito import rt
+
+@rt.keyboard.static(inline=True)          # declarative: return rows
+def menu():
+    return [
+        ("Terms", "tos"),                  # (text, callback_data) — URL-looking value -> URL button
+        [("About", "about"), ("Site", "https://example.com")],  # a row of two buttons
+    ]
+
+@rt.keyboard.dynamic(1, 2, inline=True)   # imperative: fill the builder
+def links(builder, support_url: str):
+    builder.button(text="Support", url=support_url)
+    builder.button(text="A", callback_data="a")
+    builder.button(text="B", callback_data="b")
+```
+
+For reply keyboards use `inline=False`; a button is a `str`, a row is a `list`
+of strings: `return ["Yes", "No"]` is one row of two buttons.
+
+## Pagination (stateless — no server storage)
+
+```python
+await raito.paginate(
+    "items", chat_id=message.chat.id, bot=bot, from_user=message.from_user, limit=5,
+)
+
+@rt.on_pagination(router, "items")
+async def on_items(query, paginator, offset: int, limit: int):
+    page = ALL_ITEMS[offset : offset + limit]
+    await paginator.answer(text="Items:", buttons=page)   # buttons for INLINE mode
+```
+
+State lives entirely in each button's `callback_data`. Re-slice your own data with
+`offset`/`limit` on every callback. Modes via `mode=PaginationMode.INLINE|TEXT|LIST|PHOTO|RICH`.
+
+## Scenes vs conversations
+
+Both run multi-step dialogs; they differ in whether the handler coroutine is held.
+
+- **Scene** (preferred for request-scoped deps like a DB session): each step is a
+  separate handler, state is a typed draft in FSM storage, deps are released between steps.
+
+```python
+from aiogram import F, filters
+from aiogram.fsm.state import State, StatesGroup
+from raito import Router
+from raito.plugins.scenes import Scene, SceneData
+
+class MuteData(SceneData):
+    username: str | None = None      # every field needs a default
+
+class MuteStates(StatesGroup):
+    username = State()
+
+mute = router.scene(MuteStates, data=MuteData)
+
+@mute.on_message.enter(filters.Command("mute"))
+async def start(message, scene: Scene[MuteData]):
+    await message.answer("Username?")
+    await scene.next()
+
+@mute.on_message(MuteStates.username, F.text)
+async def got_username(message, scene: Scene[MuteData]):
+    scene.data.username = message.text
+    await message.answer("Done")
+    await scene.finish()
+```
+
+  Navigation: `scene.next()`, `back()`, `goto(state)`, `retry()`, `finish()`,
+  `cancel()`, `escape()` (cancel + let the update fall through). Navigation never
+  sends messages — you reply with `message.answer(...)` yourself.
+
+- **Conversation** (`wait_for`): suspends the handler until the next message.
+  Simpler, but keeps that update's dependencies alive — do not use with request-scoped
+  resources. Requires `Dispatcher(events_isolation=DisabledEventIsolation())`.
+
+```python
+waiter = await raito.wait_for(state, F.text)
+username = waiter.text
+```
+
+## Other features
+
+```python
+# Lifespan (FastAPI-style startup/shutdown)
+@rt.lifespan(router)
+async def lifespan(bot: Bot):
+    await raito.register_commands(bot)
+    yield
+    # cleanup after yield
+
+# Throttling
+raito.add_throttling(1.0, mode="chat")     # global
+@rt.limiter(5.0, mode="user")               # per-handler (overrides global)
+
+# Albums: a grouped media upload arrives as one list
+async def on_photos(message: types.Message, album: list[types.Message] | None = None): ...
+
+# Retry a Telegram call on flood/network errors — pass the FUNCTION and its args,
+# NOT an already-created coroutine:
+await rt.retry(bot.send_message, chat_id, "hi")
+
+# Optional persistent storage (choose the role/FSM backend)
+from raito.utils.storages import get_sqlite_storage
+storage = get_sqlite_storage()("sqlite+aiosqlite:///bot.db")
+raito = Raito(dispatcher, "src/handlers", storage=storage)
+```
+
+## In-chat developer commands
+
+Prefixed with `.rt ` (dot, `rt`, space), gated by the `developer` role, hidden from
+the menu: `.rt help`, `.rt routers`, `.rt load/unload/reload <name>`, `.rt roles`,
+`.rt revoke`, `.rt staff`, `.rt stats`. `.rt eval` and `.rt bash` run arbitrary
+code/shell and do nothing unless the bot was started with
+`Raito(..., enable_dangerous_commands=True)`.
+
+## Rules an assistant must follow
+
+- Put each handler in a file under `routers_dir` with a module-level `router`.
+  Do not call `dispatcher.include_router`.
+- `rt.params` arguments are positional and typed; use scenes/conversations for
+  real user-facing data entry.
+- Roles combine with `|` only (one role per user, no hierarchy). Import from `raito.rt`.
+- `rt.retry(func, *args, **kwargs)` — never pass `func(...)` (a coroutine).
+- Pagination stores nothing server-side; re-slice data from `offset`/`limit` each call.
+- Use a scene (not a conversation) when a step touches a DB session or transaction.
+
+## Docs
+
+- Tutorial, how-to guides, API reference, explanations: https://raito.readthedocs.io
+- Source: https://github.com/Aidenable/raito

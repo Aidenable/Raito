@@ -1,0 +1,143 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/tutorial/your-first-bot.rst:2
+msgid "Your first bot"
+msgstr "Ваш первый бот"
+
+#: ../../source/tutorial/your-first-bot.rst:4
+msgid "Let's build a minimal bot and understand what Raito does for you."
+msgstr "Соберём минимального бота и посмотрим, что Raito берёт на себя."
+
+#: ../../source/tutorial/your-first-bot.rst:7
+msgid "Project layout"
+msgstr "Структура проекта"
+
+#: ../../source/tutorial/your-first-bot.rst:9
+msgid "Create a folder for your handlers next to your entry point:"
+msgstr "Создайте папку для хендлеров рядом с точкой входа:"
+
+#: ../../source/tutorial/your-first-bot.rst:19
+msgid "The entry point"
+msgstr "Точка входа"
+
+#: ../../source/tutorial/your-first-bot.rst:21
+msgid ""
+"``__main__.py`` wires aiogram together and hands the ``handlers`` "
+"directory to Raito:"
+msgstr ""
+"``__main__.py`` связывает части aiogram и передаёт папку ``handlers`` в "
+"Raito:"
+
+#: ../../source/tutorial/your-first-bot.rst:46
+msgid "Two calls do the work:"
+msgstr "Всю работу делают два вызова:"
+
+#: ../../source/tutorial/your-first-bot.rst:48
+msgid ""
+":meth:`raito.Raito.setup` scans ``my_bot/handlers`` and registers every "
+"router it finds — you never call ``dispatcher.include_router`` yourself."
+msgstr ""
+":meth:`raito.Raito.setup` просматривает ``my_bot/handlers`` и "
+"регистрирует каждый найденный роутер. Вызывать "
+"``dispatcher.include_router`` вручную не нужно."
+
+#: ../../source/tutorial/your-first-bot.rst:50
+msgid ""
+"``production=False`` turns on the **watchdog**: edit a handler file and "
+"Raito reloads it without restarting the bot."
+msgstr ""
+"``production=False`` включает **watchdog**: сохраните файл хендлера, и "
+"Raito перезагрузит его без перезапуска бота."
+
+#: ../../source/tutorial/your-first-bot.rst:53
+msgid ""
+":meth:`raito.Raito.init_logging` is optional — it installs a colored, "
+"readable log formatter."
+msgstr ""
+":meth:`raito.Raito.init_logging` необязателен: он ставит цветной и "
+"удобочитаемый форматтер логов."
+
+#: ../../source/tutorial/your-first-bot.rst:57
+msgid "A handler"
+msgstr "Хендлер"
+
+#: ../../source/tutorial/your-first-bot.rst:59
+msgid ""
+"Each file in ``handlers/`` exposes a ``router`` object. Raito also "
+"accepts a router under any variable name, or the single router defined in"
+" the file — but ``router`` is the convention."
+msgstr ""
+"Каждый файл в ``handlers/`` содержит объект ``router``. Raito также "
+"подхватит роутер под любым именем переменной или единственный роутер в "
+"файле, но имя ``router`` считается стандартным."
+
+#: ../../source/tutorial/your-first-bot.rst:75
+msgid "Run it:"
+msgstr "Запустите:"
+
+#: ../../source/tutorial/your-first-bot.rst:81
+msgid ""
+"Send ``/start`` to your bot and you'll get a reply. Now edit the text in "
+"``start.py`` and save — the change is live on the next message, no "
+"restart."
+msgstr ""
+"Отправьте боту ``/start`` и получите ответ. Теперь измените текст в "
+"``start.py`` и сохраните: правка применится со следующего сообщения, "
+"перезапуск не нужен."
+
+#: ../../source/tutorial/your-first-bot.rst:86
+msgid ""
+"Files and folders whose names start with ``_`` are ignored by the loader,"
+" so ``handlers/_utils.py`` won't be treated as a router."
+msgstr ""
+"Файлы и папки, чьи имена начинаются с ``_``, загрузчик пропускает, "
+"поэтому ``handlers/_utils.py`` роутером считаться не будет."
+
+#: ../../source/tutorial/your-first-bot.rst:90
+msgid "What just happened"
+msgstr "Что произошло"
+
+#: ../../source/tutorial/your-first-bot.rst:92
+msgid ""
+"Raito walked ``handlers/`` recursively, imported each module and picked "
+"up its router."
+msgstr ""
+"Raito рекурсивно обошёл ``handlers/``, импортировал каждый модуль и "
+"забрал его роутер."
+
+#: ../../source/tutorial/your-first-bot.rst:94
+msgid "It registered them with the dispatcher in a deterministic order."
+msgstr "Затем зарегистрировал их в диспетчере в предсказуемом порядке."
+
+#: ../../source/tutorial/your-first-bot.rst:95
+msgid "In development mode it started watching the folder for changes."
+msgstr "А в режиме разработки начал следить за изменениями в папке."
+
+#: ../../source/tutorial/your-first-bot.rst:97
+msgid ""
+"Curious how the reload works? See :doc:`../explanation/architecture`. "
+"Ready to add real commands? Continue to :doc:`commands`."
+msgstr ""
+"Хотите понять, как устроена перезагрузка? Смотрите "
+":doc:`../explanation/architecture`. Готовы к настоящим командам? "
+"Переходите к :doc:`commands`."

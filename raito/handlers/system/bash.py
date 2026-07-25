@@ -17,7 +17,14 @@ if TYPE_CHECKING:
     from aiogram.fsm.context import FSMContext
     from aiogram.types import Message
 
+    from raito.core.raito import Raito
+
 router = rt.Router(name="raito.system.bash", priority=8, autoload=False)
+
+DISABLED_MESSAGE = (
+    "🚫 Dangerous commands are disabled.\n"
+    "Set <code>Raito(enable_dangerous_commands=True)</code> to enable them."
+)
 
 
 class BashGroup(StatesGroup):
@@ -33,7 +40,16 @@ async def _execute_expression(message: Message, text: str) -> None:
 @router.message(RaitoCommand("bash", "sh"), DEVELOPER)
 @description("Execute expression in commandline")
 @hidden
-async def bash_handler(message: Message, state: FSMContext, command: CommandObject) -> None:
+async def bash_handler(
+    message: Message,
+    state: FSMContext,
+    command: CommandObject,
+    raito: Raito,
+) -> None:
+    if not raito.enable_dangerous_commands:
+        await message.answer(text=DISABLED_MESSAGE, parse_mode="HTML")
+        return
+
     if not command.args:
         await message.answer(text="📦 Enter expression:")
         await state.set_state(BashGroup.expression)
@@ -43,8 +59,12 @@ async def bash_handler(message: Message, state: FSMContext, command: CommandObje
 
 
 @router.message(BashGroup.expression, F.text, DEVELOPER)
-async def execute_expression(message: Message, state: FSMContext) -> None:
+async def execute_expression(message: Message, state: FSMContext, raito: Raito) -> None:
     await state.clear()
+
+    if not raito.enable_dangerous_commands:
+        await message.answer(text=DISABLED_MESSAGE, parse_mode="HTML")
+        return
 
     if not message.text:
         await message.answer(text="⚠️ Expression cannot be empty")

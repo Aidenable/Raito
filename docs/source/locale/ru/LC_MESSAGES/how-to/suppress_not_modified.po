@@ -1,0 +1,80 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/suppress_not_modified.rst:2
+msgid "✏️ SuppressNotModifiedError"
+msgstr "✏️ SuppressNotModifiedError"
+
+#: ../../source/how-to/suppress_not_modified.rst:4
+msgid ""
+"Editing a message to content it already has makes Telegram raise "
+"``TelegramBadRequest: message is not modified``. That is usually harmless"
+" — you re-rendered a screen that happened not to change — but it crashes "
+"the handler."
+msgstr ""
+"Редактирование сообщения в тот же контент, что уже есть, заставляет "
+"Telegram поднять ``TelegramBadRequest: message is not modified``. Обычно "
+"это безобидно (вы перерисовали экран, который не изменился), но роняет "
+"хендлер."
+
+#: ../../source/how-to/suppress_not_modified.rst:8
+msgid "Wrap the edit in the context manager to swallow exactly that error:"
+msgstr ""
+"Оберните редактирование в контекстный менеджер, чтобы проглотить ровно "
+"эту ошибку:"
+
+#: ../../source/how-to/suppress_not_modified.rst:17
+msgid ""
+"Only the \"message is not modified\" ``TelegramBadRequest`` is "
+"suppressed; every other error — including other ``TelegramBadRequest`` "
+"variants — propagates normally."
+msgstr ""
+"Подавляется только ``TelegramBadRequest`` с «message is not modified»; "
+"любая другая ошибка, включая прочие варианты ``TelegramBadRequest``, "
+"пробрасывается как обычно."
+
+#: ../../source/how-to/suppress_not_modified.rst:22
+msgid "When to use it"
+msgstr "Когда применять"
+
+#: ../../source/how-to/suppress_not_modified.rst:24
+msgid ""
+"Any place that re-renders on every interaction and might redraw an "
+"identical screen: refreshing an inline menu, a live-updating status "
+"message, or paginating back to the current page. Raito's own paginators "
+"use it internally, so you rarely need it there — reach for it in your own"
+" edit-in-place UIs."
+msgstr ""
+"Везде, где интерфейс перерисовывается на каждое действие и может "
+"нарисовать тот же экран: обновление inline-меню, живое статус-сообщение "
+"или возврат пагинацией на текущую страницу. Собственные пагинаторы Raito "
+"используют его внутри, поэтому там он вам почти не нужен. Берите его в "
+"своих интерфейсах с редактированием на месте."
+
+#: ../../source/how-to/suppress_not_modified.rst:31
+msgid ""
+"It is also exposed on ``rt``, so ``from raito import rt`` then ``with "
+"rt.SuppressNotModifiedError(): ...`` works without a deeper import."
+msgstr ""
+"Он также доступен в ``rt``, поэтому ``from raito import rt`` и затем "
+"``with rt.SuppressNotModifiedError(): ...`` работает без более глубокого "
+"импорта."

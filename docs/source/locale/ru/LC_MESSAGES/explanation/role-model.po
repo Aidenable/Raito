@@ -1,0 +1,178 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/explanation/role-model.rst:2
+msgid "The role model"
+msgstr "Модель ролей"
+
+#: ../../source/explanation/role-model.rst:4
+msgid ""
+"Raito's roles are deliberately simple. Understanding the model prevents "
+"surprises — especially around who can grant what."
+msgstr ""
+"Роли в Raito намеренно простые. Понимание модели избавляет от сюрпризов, "
+"особенно вокруг того, кто что может выдать."
+
+#: ../../source/explanation/role-model.rst:8
+msgid "One role per user, no hierarchy"
+msgstr "Одна роль на пользователя, без иерархии"
+
+#: ../../source/explanation/role-model.rst:10
+msgid ""
+"Every user has **exactly one** stored role (or none). Roles are **flat**:"
+" there is no ordering in which ``owner`` \"contains\" ``administrator``. "
+"A role used as a filter passes only if the user's stored role equals it. "
+"That is why you write ``OWNER | ADMINISTRATOR | MODERATOR`` — you list "
+"every role that should pass, because none implies another."
+msgstr ""
+"У каждого пользователя **ровно одна** сохранённая роль (или ни одной). "
+"Роли **плоские**: нет порядка, в котором ``owner`` «включает» "
+"``administrator``. Роль-фильтр проходит, только если сохранённая роль "
+"пользователя совпадает с ней. Поэтому вы пишете ``OWNER | ADMINISTRATOR |"
+" MODERATOR`` и перечисляете каждую роль, которая должна проходить, ведь "
+"ни одна не подразумевает другую."
+
+#: ../../source/explanation/role-model.rst:16
+msgid ""
+"The ``|`` combinator is therefore an OR over roles, and it is the only "
+"combinator you need: with one role per user, AND would never match."
+msgstr ""
+"Значит, ``|`` это ИЛИ по ролям, и это единственный нужный комбинатор: при"
+" одной роли на пользователя И (AND) никогда бы не совпало."
+
+#: ../../source/explanation/role-model.rst:20
+msgid "Roles as filters"
+msgstr "Роли как фильтры"
+
+#: ../../source/explanation/role-model.rst:22
+msgid ""
+"A built-in role like ``OWNER`` is a filter object. When aiogram evaluates"
+" it, it asks the role manager whether the current user holds that role "
+"slug, using the bot id and user id. Because Raito registers itself in the"
+" dispatcher context, that lookup is available to every handler and filter"
+" through dependency injection."
+msgstr ""
+"Встроенная роль вроде ``OWNER`` это объект-фильтр. Когда aiogram её "
+"вычисляет, она спрашивает у менеджера ролей, есть ли у текущего "
+"пользователя этот slug роли, используя id бота и id пользователя. Так как"
+" Raito регистрирует себя в контексте диспетчера, эта проверка доступна "
+"каждому хендлеру и фильтру через внедрение зависимостей."
+
+#: ../../source/explanation/role-model.rst:28
+msgid ""
+"The same filters also carry metadata (the role's emoji and label) as "
+"flags, which :meth:`~raito.Raito.register_commands` reads to scope the "
+"slash menu per user."
+msgstr ""
+"Те же фильтры несут и метаданные (эмодзи и подпись роли) во флагах, "
+"которые читает :meth:`~raito.Raito.register_commands`, чтобы настроить "
+"меню команд под каждого пользователя."
+
+#: ../../source/explanation/role-model.rst:32
+msgid "Where roles are stored"
+msgstr "Где хранятся роли"
+
+#: ../../source/explanation/role-model.rst:34
+msgid ""
+"You never construct a provider directly. Raito picks one from the FSM "
+"``storage`` you passed:"
+msgstr ""
+"Провайдер вы никогда не создаёте напрямую. Raito выбирает его по "
+"переданному FSM-хранилищу ``storage``:"
+
+#: ../../source/explanation/role-model.rst:37
+msgid "``MemoryStorage`` → in-memory (lost on restart);"
+msgstr "``MemoryStorage`` → в памяти (теряется при перезапуске);"
+
+#: ../../source/explanation/role-model.rst:38
+msgid "``JSONStorage`` → a JSON file;"
+msgstr "``JSONStorage`` → файл JSON;"
+
+#: ../../source/explanation/role-model.rst:39
+msgid "Redis storage → Redis;"
+msgstr "хранилище Redis → Redis;"
+
+#: ../../source/explanation/role-model.rst:40
+msgid "SQLite / PostgreSQL storage → a SQL table."
+msgstr "хранилище SQLite / PostgreSQL → таблица SQL."
+
+#: ../../source/explanation/role-model.rst:42
+msgid ""
+"All providers implement the same ``IRoleProvider`` interface, so the rest"
+" of the system is backend-agnostic. Memory and JSON are for development; "
+"Raito warns if you run them with ``production=True``."
+msgstr ""
+"Все провайдеры реализуют один интерфейс ``IRoleProvider``, поэтому "
+"остальная система не зависит от бэкенда. Память и JSON для разработки; "
+"при ``production=True`` Raito предупредит об их использовании."
+
+#: ../../source/explanation/role-model.rst:47
+msgid "Developers are special"
+msgstr "Разработчики особенные"
+
+#: ../../source/explanation/role-model.rst:49
+msgid ""
+"User IDs passed as ``developers`` implicitly hold the ``developer`` role "
+"without any backend entry. This is how you bootstrap access to yourself "
+"before any role has been assigned."
+msgstr ""
+"ID пользователей, переданные в ``developers``, неявно держат роль "
+"``developer`` без всякой записи в бэкенде. Так вы даёте доступ себе, пока"
+" никакая роль ещё не назначена."
+
+#: ../../source/explanation/role-model.rst:54
+msgid "The escalation caveat"
+msgstr "Оговорка про эскалацию"
+
+#: ../../source/explanation/role-model.rst:56
+msgid ""
+"Assignment is flat, and this has a security consequence worth stating "
+"plainly: any user who can manage roles (``developer``, ``owner`` or "
+"``administrator``) can grant **any** role to anyone else, including "
+"``owner`` and ``developer``. The only built-in guardrails are that you "
+"can't change your own role and that a non-manager can't assign at all — "
+"but two administrators can promote each other."
+msgstr ""
+"Назначение плоское, и у этого есть последствие для безопасности, которое "
+"стоит проговорить прямо: любой, кто может управлять ролями "
+"(``developer``, ``owner`` или ``administrator``), может выдать **любую** "
+"роль кому угодно, включая ``owner`` и ``developer``. Единственные "
+"встроенные ограничители: нельзя менять свою роль и не-управляющий не "
+"может назначать вовсе, но два администратора могут повысить друг друга."
+
+#: ../../source/explanation/role-model.rst:62
+msgid ""
+"Because ``developer`` can enable the ``.rt eval`` / ``.rt bash`` code-"
+"execution tools (when the bot opts in with "
+"``enable_dangerous_commands=True``), treat the managing roles as trusted-"
+"operator level. If you need a stricter policy — a real hierarchy, or "
+"\"only owner may grant owner\" — subclass "
+":class:`~raito.plugins.roles.RoleManager` and enforce it in "
+"``assign_role``."
+msgstr ""
+"Так как ``developer`` может включить инструменты выполнения кода ``.rt "
+"eval`` / ``.rt bash`` (когда бот это разрешил через "
+"``enable_dangerous_commands=True``), относитесь к управляющим ролям как к"
+" уровню доверенного оператора. Если нужна более строгая политика "
+"(настоящая иерархия или «только owner выдаёт owner»), унаследуйтесь от "
+":class:`~raito.plugins.roles.RoleManager` и проверяйте это в "
+"``assign_role``."

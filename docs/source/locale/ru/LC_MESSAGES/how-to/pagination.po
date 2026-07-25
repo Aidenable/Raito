@@ -1,0 +1,178 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/pagination.rst:2
+msgid "📖 Pagination"
+msgstr "📖 Пагинация"
+
+#: ../../source/how-to/pagination.rst:4
+msgid "Need to paginate a long list of items?"
+msgstr "Нужно пролистать длинный список элементов?"
+
+#: ../../source/how-to/pagination.rst:6
+msgid ""
+"Raito provides a built-in system for inline, text, photo, list, and rich-"
+"message pagination — simple and fully customized."
+msgstr ""
+"В Raito есть встроенная пагинация для inline, текста, фото, списков и "
+"rich-сообщений: простая и полностью настраиваемая."
+
+#: ../../source/how-to/pagination.rst:11
+msgid "Features"
+msgstr "Возможности"
+
+#: ../../source/how-to/pagination.rst:13
+msgid "Predefined paginator types (inline, text, photo, list, rich)"
+msgstr "готовые типы пагинаторов (inline, text, photo, list, rich)"
+
+#: ../../source/how-to/pagination.rst:14
+msgid "Auto-generated navigation"
+msgstr "автоматическая навигация"
+
+#: ../../source/how-to/pagination.rst:15
+msgid "Loop navigation (wrap around first/last)"
+msgstr "зацикленная навигация (переход с последней страницы на первую и обратно)"
+
+#: ../../source/how-to/pagination.rst:16
+msgid "Declarative handler with ``@rt.on_pagination(...)``"
+msgstr "декларативный хендлер через ``@rt.on_pagination(...)``"
+
+#: ../../source/how-to/pagination.rst:17
+msgid "Flexible API and pluggable paginator types"
+msgstr "гибкий API и подключаемые типы пагинаторов"
+
+#: ../../source/how-to/pagination.rst:22
+msgid "Quick Start"
+msgstr "Быстрый старт"
+
+#: ../../source/how-to/pagination.rst:25
+msgid "1. Invoking Pagination"
+msgstr "1. Запуск пагинации"
+
+#: ../../source/how-to/pagination.rst:44
+msgid "2. Handling Pagination Events"
+msgstr "2. Обработка событий пагинации"
+
+#: ../../source/how-to/pagination.rst:46
+msgid "To respond to page changes, use the ``@rt.on_pagination(...)`` decorator:"
+msgstr ""
+"Чтобы реагировать на смену страниц, используйте декоратор "
+"``@rt.on_pagination(...)``:"
+
+#: ../../source/how-to/pagination.rst:63
+msgid "Paginator Types"
+msgstr "Типы пагинаторов"
+
+#: ../../source/how-to/pagination.rst:65
+msgid "Pick the paginator with ``mode=`` (defaults to ``PaginationMode.INLINE``):"
+msgstr ""
+"Выберите пагинатор через ``mode=`` (по умолчанию "
+"``PaginationMode.INLINE``):"
+
+#: ../../source/how-to/pagination.rst:67
+msgid ""
+"``PaginationMode.INLINE`` — :class:`InlinePaginator`, text plus a row of "
+"content buttons above the navigation."
+msgstr ""
+"``PaginationMode.INLINE``: :class:`InlinePaginator`, текст плюс ряд "
+"кнопок с контентом над навигацией."
+
+#: ../../source/how-to/pagination.rst:68
+msgid "``PaginationMode.TEXT`` — :class:`TextPaginator`, plain text."
+msgstr "``PaginationMode.TEXT``: :class:`TextPaginator`, простой текст."
+
+#: ../../source/how-to/pagination.rst:69
+msgid ""
+"``PaginationMode.PHOTO`` — :class:`PhotoPaginator`, a photo with a "
+"caption."
+msgstr "``PaginationMode.PHOTO``: :class:`PhotoPaginator`, фото с подписью."
+
+#: ../../source/how-to/pagination.rst:70
+msgid ""
+"``PaginationMode.LIST`` — :class:`ListPaginator`, a list of strings "
+"joined by a separator."
+msgstr ""
+"``PaginationMode.LIST``: :class:`ListPaginator`, список строк, "
+"соединённых разделителем."
+
+#: ../../source/how-to/pagination.rst:71
+msgid ""
+"``PaginationMode.RICH`` — :class:`RichPaginator`, structured `Rich "
+"Messages <https://core.telegram.org/bots/api#richmessage>`_ — headings, "
+"lists, tables, code blocks, and more. Requires ``aiogram>=3.30.0``."
+msgstr ""
+"``PaginationMode.RICH``: :class:`RichPaginator`, структурированные "
+"`rich-сообщения <https://core.telegram.org/bots/api#richmessage>`_: "
+"заголовки, списки, таблицы, блоки кода и не только. Требует "
+"``aiogram>=3.30.0``."
+
+#: ../../source/how-to/pagination.rst:92
+msgid "Navigation"
+msgstr "Навигация"
+
+#: ../../source/how-to/pagination.rst:94
+msgid "Each paginator generates a default navigation row."
+msgstr "Каждый пагинатор генерирует ряд навигации по умолчанию."
+
+#: ../../source/how-to/pagination.rst:96
+msgid "Raito merges this with your custom buttons automatically:"
+msgstr "Raito автоматически объединяет его с вашими кнопками:"
+
+#: ../../source/how-to/pagination.rst:98
+msgid "If ``buttons`` only — adds default navigation"
+msgstr "если переданы только ``buttons``, добавляется навигация по умолчанию"
+
+#: ../../source/how-to/pagination.rst:99
+msgid "If ``buttons`` + ``reply_markup`` — combines both"
+msgstr "если ``buttons`` и ``reply_markup``, объединяются оба"
+
+#: ../../source/how-to/pagination.rst:100
+msgid "If ``reply_markup`` only — uses it directly"
+msgstr "если только ``reply_markup``, используется он напрямую"
+
+#: ../../source/how-to/pagination.rst:102
+msgid "To manually attach navigation:"
+msgstr "Чтобы прикрепить навигацию вручную:"
+
+#: ../../source/how-to/pagination.rst:115
+msgid "Under the Hood"
+msgstr "Как это устроено"
+
+#: ../../source/how-to/pagination.rst:117
+msgid "All callbacks use this format: ``rt_p:mode:name:page:total:limit``"
+msgstr "Все колбэки используют формат ``rt_p:mode:name:page:total:limit``"
+
+#: ../../source/how-to/pagination.rst:118
+msgid "`PaginatorMiddleware` parses data and injects:"
+msgstr "`PaginatorMiddleware` разбирает данные и передаёт:"
+
+#: ../../source/how-to/pagination.rst:119
+msgid "``paginator``, ``offset``, ``limit``, ``page``"
+msgstr "``paginator``, ``offset``, ``limit``, ``page``"
+
+#: ../../source/how-to/pagination.rst:120
+msgid "Everything is type-safe and based on ``IPaginator`` protocol"
+msgstr "Всё типобезопасно и построено на протоколе ``IPaginator``"
+
+#: ../../source/how-to/pagination.rst:121
+msgid "You can build custom paginators and plug them in"
+msgstr "Можно написать свои пагинаторы и подключить их"

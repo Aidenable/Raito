@@ -1,0 +1,163 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:2
+msgid "Scenes vs. conversations"
+msgstr "Сцены и диалоги"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:4
+msgid ""
+"Raito has two ways to run a multi-step dialog. They look similar but make"
+" opposite trade-offs around **request-scoped dependencies**. Choosing "
+"correctly is mostly about how your app provides things like database "
+"sessions."
+msgstr ""
+"В Raito два способа вести многошаговый диалог. Они похожи, но по-разному "
+"подходят к **request-scoped зависимостям**. Выбор в основном зависит от "
+"того, как ваше приложение выдаёт такие вещи, как сессии БД."
+
+#: ../../source/explanation/scenes-vs-conversations.rst:9
+msgid "The core difference"
+msgstr "Ключевое различие"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:11
+msgid ""
+"A **scene** never suspends the handler that started it. Each step is a "
+"separate, fully-returning handler. Between steps the dialog's state lives"
+" in FSM storage, and the coroutine is gone — so any per-update dependency"
+" your middleware provides (a session, a transaction, an open file) is set"
+" up and **torn down around every step**, exactly as for a normal message."
+msgstr ""
+"**Сцена** никогда не приостанавливает хендлер, который её начал. Каждый "
+"шаг это отдельный, полностью завершающийся хендлер. Между шагами "
+"состояние диалога живёт в FSM-хранилище, а корутины уже нет, поэтому "
+"любая зависимость на апдейт, которую даёт ваш middleware (сессия, "
+"транзакция, открытый файл), поднимается и **закрывается вокруг каждого "
+"шага**, ровно как для обычного сообщения."
+
+#: ../../source/explanation/scenes-vs-conversations.rst:17
+msgid ""
+"A **conversation** (``wait_for``) does the opposite: it *suspends* the "
+"current handler coroutine until the next matching message arrives. The "
+"handler stays alive the whole time the user is thinking, which means "
+"anything it holds — the session it was given for this update, objects "
+"bound to it — stays alive too."
+msgstr ""
+"**Диалог** (``wait_for``) делает наоборот: он *приостанавливает* текущую "
+"корутину хендлера до прихода следующего подходящего сообщения. Хендлер "
+"остаётся живым всё время, пока пользователь думает, а значит всё, что он "
+"держит (сессия, выданная на этот апдейт, привязанные к ней объекты), тоже"
+" остаётся живым."
+
+#: ../../source/explanation/scenes-vs-conversations.rst:31
+msgid "Why it matters"
+msgstr "Почему это важно"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:33
+msgid ""
+"If a step needs a database session and you use a per-update session "
+"middleware (the common SQLAlchemy pattern), a scene gives each step a "
+"**fresh** session and returns it to the pool while the user types. A "
+"conversation would keep one session checked out for the entire dialog — "
+"fine for a quick two-message exchange, wasteful (and a pool-exhaustion "
+"risk) for anything longer."
+msgstr ""
+"Если шагу нужна сессия БД и вы используете middleware, выдающий сессию на"
+" апдейт (частый паттерн SQLAlchemy), сцена даёт каждому шагу **свежую** "
+"сессию и возвращает её в пул, пока пользователь печатает. Диалог же "
+"держал бы одну сессию занятой весь диалог: нормально для быстрого обмена "
+"в два сообщения, расточительно (и рискованно для пула) для чего-то более "
+"длинного."
+
+#: ../../source/explanation/scenes-vs-conversations.rst:40
+msgid "How each is built"
+msgstr "Как устроен каждый"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:42
+msgid ""
+"**Scenes** are built on aiogram's ``StatesGroup``: each step is a real "
+"FSM state, and a small typed :class:`~raito.plugins.scenes.SceneData` "
+"draft is stored under the FSM key. Navigation (``scene.next()`` / "
+"``finish()`` / …) just persists the draft and switches the state string; "
+"nothing is held in memory."
+msgstr ""
+"**Сцены** построены на ``StatesGroup`` из aiogram: каждый шаг это "
+"настоящий FSM-стейт, а небольшой типизированный черновик "
+":class:`~raito.plugins.scenes.SceneData` хранится под FSM-ключом. "
+"Навигация (``scene.next()`` / ``finish()`` / …) просто сохраняет черновик"
+" и переключает строку стейта; в памяти ничего не удерживается."
+
+#: ../../source/explanation/scenes-vs-conversations.rst:47
+msgid ""
+"**Conversations** use an ``asyncio.Future``: ``wait_for`` registers a "
+"future, sets a marker FSM state, and awaits it. A middleware resolves the"
+" future when the next message passes your filters, resuming the suspended"
+" coroutine."
+msgstr ""
+"**Диалоги** используют ``asyncio.Future``: ``wait_for`` регистрирует "
+"future, ставит маркерный FSM-стейт и ждёт его. Middleware завершает "
+"future, когда следующее сообщение проходит ваши фильтры, возобновляя "
+"приостановленную корутину."
+
+#: ../../source/explanation/scenes-vs-conversations.rst:52
+msgid "When to reach for which"
+msgstr "Что когда выбирать"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:54
+msgid "Prefer a **scene** when:"
+msgstr "Выбирайте **сцену**, когда:"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:56
+msgid "a step touches request-scoped resources (DB sessions, transactions);"
+msgstr "шаг обращается к request-scoped ресурсам (сессии БД, транзакции);"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:57
+msgid "the dialog has more than a couple of steps, branches, or a cancel path;"
+msgstr "в диалоге больше пары шагов, есть ветвления или путь отмены;"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:58
+msgid "you want each step to be an ordinary, testable handler."
+msgstr "вы хотите, чтобы каждый шаг был обычным, тестируемым хендлером."
+
+#: ../../source/explanation/scenes-vs-conversations.rst:60
+msgid "A **conversation** is fine when:"
+msgstr "**Диалог** подойдёт, когда:"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:62
+msgid "the wait is short and the handler holds nothing expensive;"
+msgstr "ожидание короткое и хендлер не держит ничего дорогого;"
+
+#: ../../source/explanation/scenes-vs-conversations.rst:63
+msgid ""
+"you want the simplest possible \"ask one question and continue\" inline "
+"in a handler."
+msgstr ""
+"вам нужен максимально простой «спросить одно и продолжить» прямо в "
+"хендлере."
+
+#: ../../source/explanation/scenes-vs-conversations.rst:66
+msgid ""
+"See the :doc:`scenes <../how-to/scenes>` and :doc:`conversations <../how-"
+"to/conversations>` how-to guides for the APIs."
+msgstr ""
+"API смотрите в руководствах :doc:`scenes <../how-to/scenes>` и "
+":doc:`conversations <../how-to/conversations>`."

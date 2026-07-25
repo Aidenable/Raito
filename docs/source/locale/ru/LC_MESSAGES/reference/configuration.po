@@ -1,0 +1,125 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/reference/configuration.rst:2
+msgid "Configuration"
+msgstr "Конфигурация"
+
+#: ../../source/reference/configuration.rst:5
+msgid "``Raito`` constructor"
+msgstr "Конструктор ``Raito``"
+
+#: ../../source/reference/configuration.rst:22
+msgid "Parameter"
+msgstr "Параметр"
+
+#: ../../source/reference/configuration.rst:22
+msgid "Meaning"
+msgstr "Значение"
+
+#: ../../source/reference/configuration.rst:24
+msgid "``dispatcher``"
+msgstr ""
+
+#: ../../source/reference/configuration.rst:24
+msgid "The aiogram ``Dispatcher`` to drive."
+msgstr "Диспетчер ``Dispatcher`` из aiogram, которым управляет Raito."
+
+#: ../../source/reference/configuration.rst:25
+msgid "``routers_dir``"
+msgstr ""
+
+#: ../../source/reference/configuration.rst:25
+msgid "Directory scanned for handler files."
+msgstr "Папка, которую сканируют на файлы хендлеров."
+
+#: ../../source/reference/configuration.rst:26
+msgid "``developers``"
+msgstr ""
+
+#: ../../source/reference/configuration.rst:26
+msgid "User IDs that implicitly hold the ``developer`` role."
+msgstr "ID пользователей, которые неявно держат роль ``developer``."
+
+#: ../../source/reference/configuration.rst:27
+msgid "``locales``"
+msgstr ""
+
+#: ../../source/reference/configuration.rst:27
+msgid "Locales for command registration (e.g. ``[\"en\", \"ru\"]``)."
+msgstr "Локали для регистрации команд (например, ``[\"en\", \"ru\"]``)."
+
+#: ../../source/reference/configuration.rst:28
+msgid "``production``"
+msgstr ""
+
+#: ../../source/reference/configuration.rst:28
+msgid "``True`` disables the hot-reload watchdog."
+msgstr "``True`` отключает watchdog горячей перезагрузки."
+
+#: ../../source/reference/configuration.rst:29
+msgid "``enable_dangerous_commands``"
+msgstr ""
+
+#: ../../source/reference/configuration.rst:29
+msgid "Allow ``.rt eval`` / ``.rt bash`` (arbitrary code). Off by default."
+msgstr ""
+"Разрешить ``.rt eval`` / ``.rt bash`` (произвольный код). По умолчанию "
+"выключено."
+
+#: ../../source/reference/configuration.rst:30
+msgid "``configuration``"
+msgstr ""
+
+#: ../../source/reference/configuration.rst:30
+msgid "A :class:`~raito.utils.configuration.RaitoConfiguration` instance."
+msgstr "Экземпляр :class:`~raito.utils.configuration.RaitoConfiguration`."
+
+#: ../../source/reference/configuration.rst:31
+msgid "``storage``"
+msgstr ""
+
+#: ../../source/reference/configuration.rst:31
+msgid "aiogram FSM storage; also selects the role backend."
+msgstr "FSM-хранилище aiogram; заодно выбирает бэкенд ролей."
+
+#: ../../source/reference/configuration.rst:35
+msgid "``RaitoConfiguration``"
+msgstr ""
+
+#: ../../source/reference/configuration.rst:37
+msgid ""
+"Pass a configuration object to customise pagination styling and the "
+"router list appearance, or to plug in a custom role manager."
+msgstr ""
+"Передайте объект конфигурации, чтобы настроить оформление пагинации и вид"
+" списка роутеров или подключить свой менеджер ролей."
+
+#: ../../source/reference/configuration.rst
+msgid "Parameters"
+msgstr ""
+
+#: of raito.utils.configuration.RaitoConfiguration.model_config:1
+msgid ""
+"Configuration for the model, should be a dictionary conforming to "
+"[`ConfigDict`][pydantic.config.ConfigDict]."
+msgstr ""

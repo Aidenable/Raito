@@ -54,9 +54,22 @@ class ColoredFormatter(logging.Formatter):
         meta = self.get_meta(record)
         message = self.get_message(record, levelname)
 
-        if not meta:
-            return message
-        return f"{meta} {message}"
+        text = message if not meta else f"{meta} {message}"
+
+        if record.exc_info and not record.exc_text:
+            record.exc_text = self.formatException(record.exc_info)
+
+        if record.exc_text:
+            if not text.endswith("\n"):
+                text += "\n"
+            text += record.exc_text
+
+        if record.stack_info:
+            if not text.endswith("\n"):
+                text += "\n"
+            text += self.formatStack(record.stack_info)
+
+        return text
 
     def get_meta(self, record: logging.LogRecord) -> str:
         dt = datetime.fromtimestamp(record.created, tz=timezone.utc).astimezone()

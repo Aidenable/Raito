@@ -1,0 +1,392 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/roles.rst:2
+msgid "🎭 Roles"
+msgstr "🎭 Роли"
+
+#: ../../source/how-to/roles.rst:4
+msgid "Raito ships a role-based access control system:"
+msgstr "В Raito встроена система доступа на основе ролей:"
+
+#: ../../source/how-to/roles.rst:6
+msgid "named roles (each with a slug, label, emoji and description);"
+msgstr "именованные роли (у каждой есть slug, подпись, эмодзи и описание);"
+
+#: ../../source/how-to/roles.rst:7
+msgid "roles double as aiogram filters, composable with ``|``;"
+msgstr "роли одновременно работают как фильтры aiogram и объединяются через ``|``;"
+
+#: ../../source/how-to/roles.rst:8
+msgid "in-chat management via ``.rt`` commands;"
+msgstr "управление прямо в чате через команды ``.rt``;"
+
+#: ../../source/how-to/roles.rst:9
+msgid "slash commands auto-scoped per user by role;"
+msgstr "слэш-команды, автоматически подстроенные под роль пользователя;"
+
+#: ../../source/how-to/roles.rst:10
+msgid "pluggable backends (memory, JSON, Redis, SQL)."
+msgstr "подключаемые бэкенды (в памяти, JSON, Redis, SQL)."
+
+#: ../../source/how-to/roles.rst:13
+msgid "Gate a handler by role"
+msgstr "Ограничить хендлер ролью"
+
+#: ../../source/how-to/roles.rst:15
+msgid ""
+"Import the built-in roles from ``rt`` (or ``raito.plugins.roles``) and "
+"use them as filters. A role passes only if the user currently holds it:"
+msgstr ""
+"Импортируйте встроенные роли из ``rt`` (или ``raito.plugins.roles``) и "
+"применяйте их как фильтры. Роль срабатывает, только если пользователь ею "
+"сейчас обладает:"
+
+#: ../../source/how-to/roles.rst:30
+msgid ""
+"``A | B`` means \"any of these roles\". This is the only combinator — a "
+"user holds exactly one role, so ``|`` (OR) is what you need. There is no "
+"role hierarchy: ``OWNER`` does not implicitly satisfy an "
+"``ADMINISTRATOR`` filter, so list every role that should pass."
+msgstr ""
+"``A | B`` означает «любая из этих ролей». Это единственный комбинатор: у "
+"пользователя ровно одна роль, поэтому вам нужен именно ``|`` (ИЛИ). "
+"Иерархии ролей нет: ``OWNER`` сам по себе не проходит фильтр "
+"``ADMINISTRATOR``, поэтому перечисляйте все роли, которые должны "
+"проходить."
+
+#: ../../source/how-to/roles.rst:36
+msgid "Grant yourself access"
+msgstr "Дать доступ себе"
+
+#: ../../source/how-to/roles.rst:38
+msgid ""
+"Pass trusted user IDs as ``developers``. They implicitly hold the "
+"``developer`` role without touching the backend:"
+msgstr ""
+"Передайте доверенные ID пользователей в ``developers``. Они неявно "
+"получают роль ``developer`` без обращения к бэкенду:"
+
+#: ../../source/how-to/roles.rst:46
+msgid "Choose a backend"
+msgstr "Выбрать бэкенд"
+
+#: ../../source/how-to/roles.rst:48
+msgid ""
+"The role backend is derived from the FSM ``storage`` you give Raito — you"
+" do not wire a provider by hand:"
+msgstr ""
+"Бэкенд ролей определяется по FSM-хранилищу ``storage``, которое вы "
+"передаёте в Raito. Подключать провайдер вручную не нужно:"
+
+#: ../../source/how-to/roles.rst:52
+msgid "``storage=``"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:52
+msgid "Role backend"
+msgstr "Бэкенд ролей"
+
+#: ../../source/how-to/roles.rst:54
+msgid "``MemoryStorage`` (default)"
+msgstr "``MemoryStorage`` (по умолчанию)"
+
+#: ../../source/how-to/roles.rst:54
+msgid "in-memory (lost on restart)"
+msgstr "в памяти (теряется при перезапуске)"
+
+#: ../../source/how-to/roles.rst:55
+msgid ":class:`~raito.utils.storages.json.JSONStorage`"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:55
+msgid "JSON file"
+msgstr "файл JSON"
+
+#: ../../source/how-to/roles.rst:56
+msgid "``RedisStorage``"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:56
+msgid "Redis"
+msgstr "Redis"
+
+#: ../../source/how-to/roles.rst:57
+msgid "SQLite / PostgreSQL storage"
+msgstr "Хранилище SQLite / PostgreSQL"
+
+#: ../../source/how-to/roles.rst:57
+msgid "SQL table"
+msgstr "таблица SQL"
+
+#: ../../source/how-to/roles.rst:70
+msgid ""
+"Memory and JSON are fine for development; Raito warns at startup if you "
+"use them with ``production=True``. Use Redis or SQL in production."
+msgstr ""
+"Хранилища в памяти и в JSON подходят для разработки; при "
+"``production=True`` Raito предупредит об их использовании на старте. В "
+"продакшене используйте Redis или SQL."
+
+#: ../../source/how-to/roles.rst:74
+msgid "Manage roles from the chat"
+msgstr "Управление ролями из чата"
+
+#: ../../source/how-to/roles.rst:76
+msgid ""
+"A user who already holds a managing role can assign roles to others "
+"without leaving Telegram:"
+msgstr ""
+"Пользователь, у которого уже есть управляющая роль, может выдавать роли "
+"другим, не выходя из Telegram:"
+
+#: ../../source/how-to/roles.rst:85
+msgid "Managing roles requires ``developer``, ``owner`` or ``administrator``."
+msgstr ""
+"Для управления ролями нужна роль ``developer``, ``owner`` или "
+"``administrator``."
+
+#: ../../source/how-to/roles.rst:89
+msgid ""
+"Role assignment is **flat**: any managing role can grant *any* role, "
+"including ``owner`` and ``developer``. An ``administrator`` can therefore"
+" escalate another user (and, via a second admin, themselves) to "
+"``developer``. Grant the managing roles only to people you trust with "
+"that."
+msgstr ""
+"Назначение ролей **плоское**: любая управляющая роль может выдать *любую*"
+" роль, включая ``owner`` и ``developer``. Поэтому ``administrator`` может"
+" повысить другого пользователя (а через второго администратора и себя) до"
+" ``developer``. Выдавайте управляющие роли только тем, кому доверяете "
+"это."
+
+#: ../../source/how-to/roles.rst:95
+msgid "Manage roles from code"
+msgstr "Управление ролями из кода"
+
+#: ../../source/how-to/roles.rst:97
+msgid "``raito.role_manager`` exposes the same operations:"
+msgstr "``raito.role_manager`` предоставляет те же операции:"
+
+#: ../../source/how-to/roles.rst:116
+msgid ""
+"Key methods: ``assign_role(bot_id, initiator_id, target_id, slug)``, "
+"``revoke_role(bot_id, initiator_id, target_id)``, ``get_role(bot_id, "
+"user_id)``, ``has_role(...)``, ``has_any_roles(...)``, "
+"``get_users(bot_id, slug)``. ``assign`` and ``revoke`` enforce that the "
+"initiator can manage roles and is not changing their own — a "
+":class:`PermissionError` is raised otherwise."
+msgstr ""
+"Основные методы: ``assign_role(bot_id, initiator_id, target_id, slug)``, "
+"``revoke_role(bot_id, initiator_id, target_id)``, ``get_role(bot_id, "
+"user_id)``, ``has_role(...)``, ``has_any_roles(...)``, "
+"``get_users(bot_id, slug)``. ``assign`` и ``revoke`` проверяют, что "
+"инициатор вправе управлять ролями и не меняет свою собственную, иначе "
+"поднимается :class:`PermissionError`."
+
+#: ../../source/how-to/roles.rst:123
+msgid "Auto-scoped slash commands"
+msgstr "Слэш-команды по ролям"
+
+#: ../../source/how-to/roles.rst:125
+msgid ""
+"Call :meth:`~raito.Raito.register_commands` (usually from a "
+":doc:`lifespan <lifespan>` handler) to publish the slash menu. Raito "
+"reads each handler's role filter and its :func:`~raito.rt.description`, "
+"then sets the menu per user so everyone sees only the commands they may "
+"run:"
+msgstr ""
+"Вызовите :meth:`~raito.Raito.register_commands` (обычно из хендлера "
+":doc:`lifespan <lifespan>`), чтобы опубликовать меню команд. Raito читает"
+" у каждого хендлера роль-фильтр и :func:`~raito.rt.description`, затем "
+"настраивает меню под каждого пользователя, чтобы он видел только "
+"доступные ему команды:"
+
+#: ../../source/how-to/roles.rst:135
+msgid "Built-in roles"
+msgstr "Встроенные роли"
+
+#: ../../source/how-to/roles.rst:141
+msgid "Role"
+msgstr "Роль"
+
+#: ../../source/how-to/roles.rst:142
+msgid "Slug"
+msgstr "Slug"
+
+#: ../../source/how-to/roles.rst:143
+msgid "Description"
+msgstr "Описание"
+
+#: ../../source/how-to/roles.rst:144
+msgid "🖥️ Developer"
+msgstr "🖥️ Разработчик"
+
+#: ../../source/how-to/roles.rst:145
+msgid "developer"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:146
+msgid "Full access, including debug tools and unsafe operations."
+msgstr "Полный доступ, включая отладочные инструменты и небезопасные операции."
+
+#: ../../source/how-to/roles.rst:147
+msgid "👑 Owner"
+msgstr "👑 Владелец"
+
+#: ../../source/how-to/roles.rst:148
+msgid "owner"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:149
+msgid "Top-level administrator; manages administrators and global settings."
+msgstr ""
+"Администратор верхнего уровня; управляет администраторами и глобальными "
+"настройками."
+
+#: ../../source/how-to/roles.rst:150
+msgid "💼 Administrator"
+msgstr "💼 Администратор"
+
+#: ../../source/how-to/roles.rst:151
+msgid "administrator"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:152
+msgid "Manages users, moderates content, configures most settings."
+msgstr ""
+"Управляет пользователями, модерирует контент, настраивает большинство "
+"параметров."
+
+#: ../../source/how-to/roles.rst:153
+msgid "🛡️ Moderator"
+msgstr "🛡️ Модератор"
+
+#: ../../source/how-to/roles.rst:154
+msgid "moderator"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:155
+msgid "Moderates activity, issues warnings, enforces rules."
+msgstr ""
+"Модерирует активность, выдаёт предупреждения, следит за соблюдением "
+"правил."
+
+#: ../../source/how-to/roles.rst:156
+msgid "📊 Manager"
+msgstr "📊 Менеджер"
+
+#: ../../source/how-to/roles.rst:157
+msgid "manager"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:158
+msgid "Oversees non-technical operations (campaigns, tasks, content)."
+msgstr "Ведёт нетехнические задачи (кампании, задачи, контент)."
+
+#: ../../source/how-to/roles.rst:159
+msgid "❤️ Sponsor"
+msgstr "❤️ Спонсор"
+
+#: ../../source/how-to/roles.rst:160
+msgid "sponsor"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:161
+msgid "Supporter of the project; usually no admin privileges."
+msgstr "Поддерживает проект; обычно без админских прав."
+
+#: ../../source/how-to/roles.rst:162
+msgid "👤 Guest"
+msgstr "👤 Гость"
+
+#: ../../source/how-to/roles.rst:163
+msgid "guest"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:164
+msgid "Temporary access to specific features; typically invited users."
+msgstr ""
+"Временный доступ к отдельным возможностям; обычно приглашённые "
+"пользователи."
+
+#: ../../source/how-to/roles.rst:165
+msgid "💬 Support"
+msgstr "💬 Поддержка"
+
+#: ../../source/how-to/roles.rst:166
+msgid "support"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:167
+msgid "Handles user support and onboarding."
+msgstr "Помогает пользователям и с онбордингом."
+
+#: ../../source/how-to/roles.rst:168
+msgid "🧪 Tester"
+msgstr "🧪 Тестировщик"
+
+#: ../../source/how-to/roles.rst:169
+msgid "tester"
+msgstr ""
+
+#: ../../source/how-to/roles.rst:170
+msgid "Tests new features; may access experimental tools."
+msgstr ""
+"Тестирует новые функции; может иметь доступ к экспериментальным "
+"инструментам."
+
+#: ../../source/how-to/roles.rst:173
+msgid "Custom roles"
+msgstr "Свои роли"
+
+#: ../../source/how-to/roles.rst:175
+msgid ""
+"Define a role by wrapping a "
+":class:`~raito.plugins.roles.filter.RoleFilter` in a "
+":class:`~raito.plugins.roles.constraint.RoleConstraint`:"
+msgstr ""
+"Задайте роль, обернув :class:`~raito.plugins.roles.filter.RoleFilter` в "
+":class:`~raito.plugins.roles.constraint.RoleConstraint`:"
+
+#: ../../source/how-to/roles.rst:187
+msgid ""
+"Use ``DUDE`` as a filter like any built-in role. To make it manageable "
+"and visible in ``.rt staff``, subclass "
+":class:`~raito.plugins.roles.RoleManager` (overriding ``available_roles``"
+" / ``get_role_data`` and, if needed, the permission checks) and pass it "
+"via ``configuration=RaitoConfiguration(role_manager=...)``."
+msgstr ""
+"Используйте ``DUDE`` как фильтр наравне с любой встроенной ролью. Чтобы "
+"роль стала управляемой и появилась в ``.rt staff``, унаследуйтесь от "
+":class:`~raito.plugins.roles.RoleManager` (переопределив "
+"``available_roles`` / ``get_role_data`` и при необходимости проверки "
+"прав) и передайте его через "
+"``configuration=RaitoConfiguration(role_manager=...)``."
+
+#: ../../source/how-to/roles.rst:195
+msgid ""
+"In long-running FSM flows, re-check the role at each step — a user's role"
+" can change between messages."
+msgstr ""
+"В долгих FSM-сценариях перепроверяйте роль на каждом шаге: роль "
+"пользователя может измениться между сообщениями."

@@ -1,0 +1,205 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/reference/commands.rst:2
+msgid "In-chat ``.rt`` commands"
+msgstr "Команды ``.rt`` в чате"
+
+#: ../../source/reference/commands.rst:4
+msgid ""
+"Raito registers a set of built-in developer commands. They use the "
+"``.rt`` prefix (a dot, ``rt`` and a space) instead of ``/`` and are "
+"**hidden** from the Telegram slash menu — you invoke them by typing them "
+"in the chat."
+msgstr ""
+"Raito регистрирует набор встроенных dev-команд. Они используют префикс "
+"``.rt`` (точка, ``rt`` и пробел) вместо ``/`` и **скрыты** из меню "
+"слэш-команд Telegram: вы вызываете их, набирая в чате."
+
+#: ../../source/reference/commands.rst:8
+msgid ""
+"Every command is gated by a role. The user must hold one of the listed "
+"roles (or be a configured ``developer``)."
+msgstr ""
+"Каждая команда закрыта ролью. У пользователя должна быть одна из "
+"перечисленных ролей (или он должен быть в списке ``developer``)."
+
+#: ../../source/reference/commands.rst:12
+msgid "Router management"
+msgstr "Управление роутерами"
+
+#: ../../source/reference/commands.rst:18
+#: ../../source/reference/commands.rst:44
+#: ../../source/reference/commands.rst:67
+msgid "Command"
+msgstr "Команда"
+
+#: ../../source/reference/commands.rst:19
+#: ../../source/reference/commands.rst:38
+#: ../../source/reference/commands.rst:45
+#: ../../source/reference/commands.rst:68
+msgid "Roles"
+msgstr "Роли"
+
+#: ../../source/reference/commands.rst:20
+#: ../../source/reference/commands.rst:46
+#: ../../source/reference/commands.rst:69
+msgid "Description"
+msgstr "Описание"
+
+#: ../../source/reference/commands.rst:21
+msgid "``.rt help``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:22
+#: ../../source/reference/commands.rst:25
+#: ../../source/reference/commands.rst:28
+#: ../../source/reference/commands.rst:31
+#: ../../source/reference/commands.rst:34
+#: ../../source/reference/commands.rst:71
+#: ../../source/reference/commands.rst:74
+#: ../../source/reference/commands.rst:77
+msgid "DEVELOPER"
+msgstr ""
+
+#: ../../source/reference/commands.rst:23
+msgid "Paginated list of all built-in commands."
+msgstr "Список всех встроенных команд с пагинацией."
+
+#: ../../source/reference/commands.rst:24
+msgid "``.rt routers``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:26
+msgid "Render the router tree with load status."
+msgstr "Показывает дерево роутеров со статусом загрузки."
+
+#: ../../source/reference/commands.rst:27
+msgid "``.rt load <name>``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:29
+msgid "Load a router by name (e.g. an ``autoload=False`` one)."
+msgstr "Загружает роутер по имени (например, с ``autoload=False``)."
+
+#: ../../source/reference/commands.rst:30
+msgid "``.rt unload <name>``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:32
+msgid "Unload a router."
+msgstr "Выгружает роутер."
+
+#: ../../source/reference/commands.rst:33
+msgid "``.rt reload <name>``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:35
+msgid "Reload a router."
+msgstr "Перезагружает роутер."
+
+#: ../../source/reference/commands.rst:47
+msgid "``.rt roles``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:48
+#: ../../source/reference/commands.rst:51
+#: ../../source/reference/commands.rst:54
+#: ../../source/reference/commands.rst:57
+msgid "DEVELOPER · OWNER · ADMINISTRATOR"
+msgstr ""
+
+#: ../../source/reference/commands.rst:49
+msgid "Open a role picker, then assign to a user ID."
+msgstr "Открывает выбор роли, затем назначает её по ID пользователя."
+
+#: ../../source/reference/commands.rst:50
+msgid "``.rt assign``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:52
+msgid "Alias of ``.rt roles``."
+msgstr "Псевдоним ``.rt roles``."
+
+#: ../../source/reference/commands.rst:53
+msgid "``.rt revoke``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:55
+msgid "Remove a user's role."
+msgstr "Снимает роль у пользователя."
+
+#: ../../source/reference/commands.rst:56
+msgid "``.rt staff``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:58
+msgid "Tree of all users grouped by role."
+msgstr "Дерево всех пользователей, сгруппированных по ролям."
+
+#: ../../source/reference/commands.rst:61
+msgid "System"
+msgstr "Система"
+
+#: ../../source/reference/commands.rst:70
+msgid "``.rt stats``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:72
+msgid "Process CPU, memory and uptime."
+msgstr "CPU, память и аптайм процесса."
+
+#: ../../source/reference/commands.rst:73
+msgid "``.rt eval`` / ``py`` / ``py3`` / ``python`` / ``exec``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:75
+msgid "Execute arbitrary Python in the bot's context."
+msgstr "Выполняет произвольный Python в контексте бота."
+
+#: ../../source/reference/commands.rst:76
+msgid "``.rt bash`` / ``sh``"
+msgstr ""
+
+#: ../../source/reference/commands.rst:78
+msgid "Execute a shell command on the host."
+msgstr "Выполняет shell-команду на хосте."
+
+#: ../../source/reference/commands.rst:82
+msgid ""
+"``.rt eval`` and ``.rt bash`` are unsandboxed remote code execution. They"
+" do nothing unless the bot was started with ``Raito(..., "
+"enable_dangerous_commands=True)``, and even then only the ``developer`` "
+"role can run them. Leave the flag off in production."
+msgstr ""
+"``.rt eval`` и ``.rt bash`` это выполнение произвольного кода без "
+"песочницы. Они ничего не делают, пока бот не запущен с ``Raito(..., "
+"enable_dangerous_commands=True)``, и даже тогда их может запускать только"
+" роль ``developer``. В продакшене держите флаг выключенным."
+
+#: ../../source/reference/commands.rst:89
+msgid ""
+"The eval context exposes helpers prefixed with ``_``: ``_msg``, "
+"``_user``, ``_raito``, ``_bot``, ``_state`` and ``_command``."
+msgstr ""
+"В контексте eval доступны помощники с префиксом ``_``: ``_msg``, "
+"``_user``, ``_raito``, ``_bot``, ``_state`` и ``_command``."

@@ -1,3 +1,2 @@
 furo
 sphinx
-sphinx-autodoc-typehints

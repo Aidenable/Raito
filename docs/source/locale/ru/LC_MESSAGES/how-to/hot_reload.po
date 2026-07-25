@@ -1,0 +1,157 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/hot_reload.rst:2
+msgid "🔥 Hot Reload"
+msgstr "🔥 Hot Reload"
+
+#: ../../source/how-to/hot_reload.rst:4
+msgid ""
+"Raito automatically reloads routers on file changes in development mode. "
+"This means you can edit handlers and see your updates **instantly — "
+"without restarting.**"
+msgstr ""
+"В режиме разработки Raito сам перезагружает роутеры при изменении файлов."
+" Это значит, что вы правите хендлеры и видите изменения **сразу, без "
+"перезапуска.**"
+
+#: ../../source/how-to/hot_reload.rst:8
+msgid "How it works"
+msgstr "Как это работает"
+
+#: ../../source/how-to/hot_reload.rst:10
+msgid "Hot reload is **enabled by default** when you set `production=False`:"
+msgstr "Hot-reload **включён по умолчанию**, когда вы задаёте `production=False`:"
+
+#: ../../source/how-to/hot_reload.rst:16
+msgid "During ``raito.setup()``, Raito:"
+msgstr "Во время ``raito.setup()`` Raito:"
+
+#: ../../source/how-to/hot_reload.rst:17
+msgid "Scans your ``routers_dir`` for Python files"
+msgstr "сканирует ``routers_dir`` на предмет Python-файлов"
+
+#: ../../source/how-to/hot_reload.rst:18
+msgid "Skips files starting with ``_``"
+msgstr "пропускает файлы, начинающиеся с ``_``"
+
+#: ../../source/how-to/hot_reload.rst:19
+msgid "Dynamically imports all routers (with ``router = Router(...)``)"
+msgstr "динамически импортирует все роутеры (с ``router = Router(...)``)"
+
+#: ../../source/how-to/hot_reload.rst:20
+msgid ""
+"Starts a `watchdog <https://pypi.org/project/watchfiles/>`_ using "
+"``watchfiles.awatch``"
+msgstr ""
+"запускает `watchdog <https://pypi.org/project/watchfiles/>`_ через "
+"``watchfiles.awatch``"
+
+#: ../../source/how-to/hot_reload.rst:21
+msgid "Tracks file changes and reloads the corresponding routers"
+msgstr "следит за изменениями файлов и перезагружает соответствующие роутеры"
+
+#: ../../source/how-to/hot_reload.rst:23
+msgid "No need to manually call ``include_router()`` or manage imports"
+msgstr "Вручную вызывать ``include_router()`` или разбираться с импортами не нужно"
+
+#: ../../source/how-to/hot_reload.rst:28
+msgid "Example"
+msgstr "Пример"
+
+#: ../../source/how-to/hot_reload.rst:42
+msgid "Edit the message and hit save — it will reload automatically."
+msgstr ""
+"Отредактируйте сообщение и сохраните файл: он перезагрузится "
+"автоматически."
+
+#: ../../source/how-to/hot_reload.rst:47
+msgid "What happens on file change?"
+msgstr "Что происходит при изменении файла?"
+
+#: ../../source/how-to/hot_reload.rst:49
+msgid "If a ``.py`` file is **modified or created**:"
+msgstr "Если ``.py``-файл **изменён или создан**:"
+
+#: ../../source/how-to/hot_reload.rst:50
+msgid "The corresponding router is **unloaded and loaded**"
+msgstr "соответствующий роутер **выгружается и загружается заново**"
+
+#: ../../source/how-to/hot_reload.rst:51
+msgid "If a ``.py`` file is **deleted**:"
+msgstr "Если ``.py``-файл **удалён**:"
+
+#: ../../source/how-to/hot_reload.rst:52
+msgid "The router is **unregistered**"
+msgstr "роутер **снимается с регистрации**"
+
+#: ../../source/how-to/hot_reload.rst:54
+msgid "Each router is uniquely tracked by ``Router.name``."
+msgstr "Каждый роутер однозначно отслеживается по ``Router.name``."
+
+#: ../../source/how-to/hot_reload.rst:59
+msgid "Telegram Raito Commands"
+msgstr "Команды Raito в Telegram"
+
+#: ../../source/how-to/hot_reload.rst:60
+msgid "You can also manage routers **manually via Telegram chat**:"
+msgstr "Роутерами можно управлять и **вручную из чата Telegram**:"
+
+#: ../../source/how-to/hot_reload.rst:62
+msgid "``.rt routers`` — List all registered routers"
+msgstr "``.rt routers`` показывает все зарегистрированные роутеры"
+
+#: ../../source/how-to/hot_reload.rst:63
+msgid "``.rt unload <router_name>`` — Unload a router by name"
+msgstr "``.rt unload <router_name>`` выгружает роутер по имени"
+
+#: ../../source/how-to/hot_reload.rst:64
+msgid "``.rt load <router_name>`` — Load a router by name"
+msgstr "``.rt load <router_name>`` загружает роутер по имени"
+
+#: ../../source/how-to/hot_reload.rst:65
+msgid "``.rt reload <router_name>`` — Reload an existing router"
+msgstr "``.rt reload <router_name>`` перезагружает существующий роутер"
+
+#: ../../source/how-to/hot_reload.rst:70
+msgid "Limitations"
+msgstr "Ограничения"
+
+#: ../../source/how-to/hot_reload.rst:71
+msgid ""
+"Changes to **shared modules** (e.g. ``utils/``, ``models/``) do not "
+"trigger reloads"
+msgstr ""
+"изменения в **общих модулях** (например, ``utils/``, ``models/``) "
+"перезагрузку не вызывают"
+
+#: ../../source/how-to/hot_reload.rst:72
+msgid "Reloads affect only files in ``routers_dir``"
+msgstr "перезагрузка затрагивает только файлы в ``routers_dir``"
+
+#: ../../source/how-to/hot_reload.rst:73
+msgid ""
+"If a router has side-effects at the top level (e.g., DB queries) — they "
+"may run twice"
+msgstr ""
+"если у роутера есть побочные эффекты на верхнем уровне (например, запросы"
+" к БД), они могут выполниться дважды"

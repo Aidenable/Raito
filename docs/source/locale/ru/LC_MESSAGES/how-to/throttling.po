@@ -1,0 +1,143 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/throttling.rst:2
+msgid "🐢 Throttling"
+msgstr "🐢 Троттлинг"
+
+#: ../../source/how-to/throttling.rst:4
+msgid ""
+"Rate-limit handlers so users can't flood the bot. Raito offers a global "
+"limit, per-handler limits, and three scoping modes."
+msgstr ""
+"Ограничивайте частоту хендлеров, чтобы пользователи не заваливали бота. В"
+" Raito есть глобальный лимит, лимиты на отдельный хендлер и три режима "
+"области действия."
+
+#: ../../source/how-to/throttling.rst:8
+msgid "Global throttling"
+msgstr "Глобальный троттлинг"
+
+#: ../../source/how-to/throttling.rst:10
+msgid ""
+":meth:`~raito.Raito.add_throttling` installs one limit across every "
+"message and callback query:"
+msgstr ""
+":meth:`~raito.Raito.add_throttling` ставит один лимит на все сообщения и "
+"колбэк-запросы:"
+
+#: ../../source/how-to/throttling.rst:18
+msgid ""
+"Now the same user can trigger *any* handler at most once every 1.2 "
+"seconds. The default mode is ``\"chat\"``."
+msgstr ""
+"Теперь один и тот же пользователь может вызывать *любой* хендлер не чаще "
+"раза в 1,2 секунды. Режим по умолчанию ``\"chat\"``."
+
+#: ../../source/how-to/throttling.rst:22
+msgid "Per-handler limits"
+msgstr "Лимиты на хендлер"
+
+#: ../../source/how-to/throttling.rst:24
+msgid "For a specific handler, apply :func:`@rt.limiter <raito.rt.limiter>`:"
+msgstr "Для конкретного хендлера примените :func:`@rt.limiter <raito.rt.limiter>`:"
+
+#: ../../source/how-to/throttling.rst:37
+msgid ""
+"Its default mode is ``\"user\"``. A handler carrying ``@rt.limiter`` uses"
+" **only** its own limit — it bypasses the global one, so you can make one"
+" expensive command stricter (or looser) than the rest without touching "
+"the global rule."
+msgstr ""
+"Его режим по умолчанию ``\"user\"``. Хендлер с ``@rt.limiter`` использует"
+" **только** собственный лимит и обходит глобальный, поэтому одну тяжёлую "
+"команду можно сделать строже (или мягче) остальных, не трогая общее "
+"правило."
+
+#: ../../source/how-to/throttling.rst:42
+msgid "Modes"
+msgstr "Режимы"
+
+#: ../../source/how-to/throttling.rst:45
+msgid "Mode"
+msgstr "Режим"
+
+#: ../../source/how-to/throttling.rst:45
+msgid "Cooldown is shared by…"
+msgstr "Кулдаун общий для…"
+
+#: ../../source/how-to/throttling.rst:47
+msgid "``\"user\"``"
+msgstr ""
+
+#: ../../source/how-to/throttling.rst:47
+msgid "the same user (across chats)."
+msgstr "одного пользователя (во всех чатах)."
+
+#: ../../source/how-to/throttling.rst:48
+msgid "``\"chat\"``"
+msgstr ""
+
+#: ../../source/how-to/throttling.rst:48
+msgid "the same chat (all members share one cooldown)."
+msgstr "одного чата (кулдаун общий для всех участников)."
+
+#: ../../source/how-to/throttling.rst:49
+msgid "``\"bot\"``"
+msgstr ""
+
+#: ../../source/how-to/throttling.rst:49
+msgid "everyone — a single global cooldown for the whole bot."
+msgstr "всех сразу: единый глобальный кулдаун на всего бота."
+
+#: ../../source/how-to/throttling.rst:53
+msgid "Behaviour and limits"
+msgstr "Поведение и ограничения"
+
+#: ../../source/how-to/throttling.rst:55
+msgid ""
+"A throttled update is **silently dropped** — the handler is not called "
+"and the user gets no error. Keep limits short enough not to feel broken."
+msgstr ""
+"Заглушённый апдейт **молча отбрасывается**: хендлер не вызывается, а "
+"пользователь не получает ошибки. Держите лимиты достаточно короткими, "
+"чтобы это не выглядело поломкой."
+
+#: ../../source/how-to/throttling.rst:57
+msgid ""
+"Limits are enforced with a ``cachetools.TTLCache``; ``add_throttling`` "
+"accepts ``max_size`` (default ``10_000``) to cap how many keys are "
+"tracked."
+msgstr ""
+"Лимиты держатся на ``cachetools.TTLCache``; ``add_throttling`` принимает "
+"``max_size`` (по умолчанию ``10_000``), ограничивая число отслеживаемых "
+"ключей."
+
+#: ../../source/how-to/throttling.rst:59
+msgid ""
+"The per-handler limit is remembered by the handler's identity, so its "
+"rate is fixed at first use — changing ``rate_limit`` for the same handler"
+" at runtime won't take effect until restart."
+msgstr ""
+"Лимит на хендлер запоминается по его идентичности, поэтому частота "
+"фиксируется при первом использовании: смена ``rate_limit`` для того же "
+"хендлера на лету вступит в силу только после перезапуска."

@@ -1,0 +1,172 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/explanation/stateless-pagination.rst:2
+msgid "Stateless pagination"
+msgstr "Stateless-пагинация"
+
+#: ../../source/explanation/stateless-pagination.rst:4
+msgid ""
+"Most pagination systems store the current page somewhere on the server. "
+"Raito's does not — the entire state lives in the buttons. This page "
+"explains how, and what the trade-offs are."
+msgstr ""
+"Большинство систем пагинации хранят текущую страницу где-то на сервере. В"
+" Raito это не так: всё состояние живёт в кнопках. Эта страница объясняет,"
+" как именно и в чём компромиссы."
+
+#: ../../source/explanation/stateless-pagination.rst:9
+msgid "State lives in the callback data"
+msgstr "Состояние живёт в callback_data"
+
+#: ../../source/explanation/stateless-pagination.rst:11
+msgid ""
+"Every navigation button carries a ``callback_data`` that encodes the "
+"whole page state:"
+msgstr ""
+"Каждая кнопка навигации несёт ``callback_data``, кодирующую всё состояние"
+" страницы:"
+
+#: ../../source/explanation/stateless-pagination.rst:18
+msgid ""
+"There is no server-side record of \"which page is user X on\". When the "
+"user taps a button, Telegram sends that string back, and Raito "
+"reconstructs everything it needs from it."
+msgstr ""
+"На сервере не хранится записи о том, «на какой странице пользователь X». "
+"Когда пользователь жмёт кнопку, Telegram присылает эту строку обратно, и "
+"Raito восстанавливает из неё всё нужное."
+
+#: ../../source/explanation/stateless-pagination.rst:23
+msgid "The round trip"
+msgstr "Круговорот"
+
+#: ../../source/explanation/stateless-pagination.rst:25
+msgid ""
+"You call :meth:`~raito.Raito.paginate` with a name, page and limit. Raito"
+" renders the page and draws navigation buttons whose callback data "
+"encodes the *target* page of each."
+msgstr ""
+"Вы вызываете :meth:`~raito.Raito.paginate` с именем, страницей и лимитом."
+" Raito рисует страницу и кнопки навигации, чьи callback_data кодируют "
+"*целевую* страницу каждой."
+
+#: ../../source/explanation/stateless-pagination.rst:28
+msgid ""
+"The user taps \"next\". Telegram delivers a callback query carrying that "
+"encoded state."
+msgstr ""
+"Пользователь жмёт «вперёд». Telegram доставляет колбэк-запрос с этим "
+"закодированным состоянием."
+
+#: ../../source/explanation/stateless-pagination.rst:30
+msgid ""
+"A middleware unpacks it, rebuilds the right paginator for that ``mode``, "
+"and injects ``paginator``, ``page``, ``limit`` and a derived ``offset = "
+"(page - 1) * limit`` into your handler."
+msgstr ""
+"Middleware распаковывает его, пересобирает нужный пагинатор для этого "
+"``mode`` и передаёт в ваш хендлер ``paginator``, ``page``, ``limit`` и "
+"вычисленный ``offset = (page - 1) * limit``."
+
+#: ../../source/explanation/stateless-pagination.rst:33
+msgid ""
+"Your handler slices *its own* data with ``offset``/``limit`` and calls "
+"``paginator.answer(...)``, which edits the message and redraws navigation"
+" — closing the loop."
+msgstr ""
+"Ваш хендлер режет *свои* данные по ``offset``/``limit`` и вызывает "
+"``paginator.answer(...)``, который редактирует сообщение и перерисовывает"
+" навигацию, замыкая круг."
+
+#: ../../source/explanation/stateless-pagination.rst:37
+msgid ""
+"Your data is never stored by Raito; you re-slice it each time from "
+"wherever it lives (a list, a database query, an API)."
+msgstr ""
+"Ваши данные Raito не хранит; вы каждый раз заново режете их оттуда, где "
+"они лежат (список, запрос к БД, API)."
+
+#: ../../source/explanation/stateless-pagination.rst:41
+msgid "Why this is nice"
+msgstr "Чем это хорошо"
+
+#: ../../source/explanation/stateless-pagination.rst:43
+msgid ""
+"**No storage, no expiry, no cleanup.** Buttons that were sent last week "
+"still work; there is no session to lose."
+msgstr ""
+"**Ни хранилища, ни срока жизни, ни очистки.** Кнопки, отправленные на "
+"прошлой неделе, всё ещё работают; нет сессии, которую можно потерять."
+
+#: ../../source/explanation/stateless-pagination.rst:45
+msgid ""
+"**Horizontally trivial.** Any process behind the bot can handle any "
+"callback, because the state travels with the request."
+msgstr ""
+"**Тривиально масштабируется.** Любой процесс за ботом может обработать "
+"любой колбэк, ведь состояние путешествует вместе с запросом."
+
+#: ../../source/explanation/stateless-pagination.rst:47
+msgid ""
+"**Simple mental model.** A page is a pure function of ``(offset, limit)``"
+" over your data."
+msgstr ""
+"**Простая модель в голове.** Страница это чистая функция от ``(offset, "
+"limit)`` над вашими данными."
+
+#: ../../source/explanation/stateless-pagination.rst:51
+msgid "The trade-off: 64 bytes"
+msgstr "Компромисс: 64 байта"
+
+#: ../../source/explanation/stateless-pagination.rst:53
+msgid ""
+"Telegram limits ``callback_data`` to 64 bytes, and everything — mode, "
+"name, page, total, limit — must fit. In practice this only bites with a "
+"long pagination ``name`` combined with large page numbers. Keep names "
+"short. Raito validates the inputs, but the encoding is the hard ceiling, "
+"so a very long name plus big counters can exceed the limit."
+msgstr ""
+"Telegram ограничивает ``callback_data`` 64 байтами, и туда должно "
+"уложиться всё: mode, name, page, total, limit. На практике это бьёт "
+"только при длинном ``name`` пагинации вместе с большими номерами страниц."
+" Держите имена короткими. Raito проверяет входные данные, но кодировка "
+"это жёсткий потолок, поэтому очень длинное имя плюс крупные счётчики "
+"могут превысить лимит."
+
+#: ../../source/explanation/stateless-pagination.rst:60
+msgid "Modes"
+msgstr "Режимы"
+
+#: ../../source/explanation/stateless-pagination.rst:62
+msgid ""
+"The ``mode`` in the callback selects the paginator: inline (content "
+"buttons), text, list, photo or rich. Because the mode is encoded, the "
+"middleware can rebuild the correct paginator type on every tap without "
+"any stored context. See the :doc:`pagination how-to <../how-"
+"to/pagination>` for the APIs."
+msgstr ""
+"Поле ``mode`` в колбэке выбирает пагинатор: inline (кнопки с контентом), "
+"text, list, photo или rich. Так как режим закодирован, middleware может "
+"пересобрать нужный тип пагинатора на каждое нажатие без всякого "
+"сохранённого контекста. API смотрите в :doc:`руководстве по пагинации "
+"<../how-to/pagination>`."

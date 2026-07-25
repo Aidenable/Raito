@@ -45,7 +45,7 @@ class SceneMiddleware(BaseMiddleware):
         :param data: contextual data passed through the chain
         :return: handler result
         """
-        if not isinstance(event, (Message, CallbackQuery)):
+        if not isinstance(event, Message | CallbackQuery):
             return await handler(event, data)
 
         if await self.manager.cleanup(data.get("state"), data.get("raw_state")):

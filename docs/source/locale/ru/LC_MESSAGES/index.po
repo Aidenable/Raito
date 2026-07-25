@@ -1,0 +1,135 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/index.rst:61
+msgid "Tutorial"
+msgstr "Обучение"
+
+#: ../../source/index.rst:67
+msgid "How-to guides"
+msgstr "Практические руководства"
+
+#: ../../source/index.rst:73
+msgid "Reference"
+msgstr "Справочник"
+
+#: ../../source/index.rst:79
+msgid "Explanation"
+msgstr "Объяснения"
+
+#: ../../source/index.rst:2
+msgid "🔦 Raito"
+msgstr "🔦 Raito"
+
+#: ../../source/index.rst:4
+msgid ""
+"*REPL, hot-reload, keyboards, pagination, and internal dev tools — all in"
+" one.*"
+msgstr ""
+"*REPL, hot-reload, клавиатуры, пагинация и внутренние dev-инструменты. "
+"Всё сразу.*"
+
+#: ../../source/index.rst:6
+msgid ""
+"**Raito** is a batteries-included companion for `aiogram "
+"<https://aiogram.dev>`_. It removes the boilerplate from bot development:"
+" routers load themselves, change live while the bot runs, and ship with "
+"roles, pagination, multi-step scenes, keyboards, throttling and a set of "
+"in-chat developer tools."
+msgstr ""
+"**Raito** дополняет `aiogram <https://aiogram.dev>`_ всем необходимым из "
+"коробки и снимает рутину при разработке ботов: роутеры подключаются сами,"
+" обновляются на лету во время работы бота и приносят с собой роли, "
+"пагинацию, многошаговые сцены, клавиатуры, троттлинг и набор "
+"dev-инструментов прямо в чате."
+
+#: ../../source/index.rst:33
+msgid "Where to start"
+msgstr "С чего начать"
+
+#: ../../source/index.rst:35
+msgid ""
+"The documentation is organised in four parts, each answering a different "
+"need."
+msgstr "Документация состоит из четырёх частей, каждая закрывает свою задачу."
+
+#: ../../source/index.rst:37
+msgid ":doc:`🐣 Tutorial <tutorial/index>`"
+msgstr ":doc:`🐣 Обучение <tutorial/index>`"
+
+#: ../../source/index.rst:38
+msgid ""
+"Learning-oriented. Build your first Raito bot from an empty folder and "
+"grow it step by step. **Start here if you are new.**"
+msgstr ""
+"Чтобы научиться. Соберите первого бота на Raito с чистой папки и "
+"постепенно его развивайте. **Начните отсюда, если только знакомитесь с "
+"фреймворком.**"
+
+#: ../../source/index.rst:41
+msgid ":doc:`🛠️ How-to guides <how-to/index>`"
+msgstr ":doc:`🛠️ Практические руководства <how-to/index>`"
+
+#: ../../source/index.rst:42
+msgid ""
+"Task-oriented recipes. \"How do I add roles / paginate a list / build a "
+"keyboard?\" Short, focused answers for things you already understand."
+msgstr ""
+"Рецепты под конкретные задачи: «как добавить роли», «как сделать "
+"пагинацию списка», «как собрать клавиатуру». Короткие ответы для того, "
+"что вы уже в целом понимаете."
+
+#: ../../source/index.rst:45
+msgid ":doc:`📖 Reference <reference/index>`"
+msgstr ":doc:`📖 Справочник <reference/index>`"
+
+#: ../../source/index.rst:46
+msgid ""
+"Information-oriented. The generated API, configuration options and the "
+"in-chat ``.rt`` commands. Look things up here."
+msgstr ""
+"Чтобы посмотреть детали. Сгенерированный API, параметры конфигурации и "
+"команды ``.rt`` прямо в чате. Сюда заходят за справкой."
+
+#: ../../source/index.rst:49
+msgid ":doc:`💡 Explanation <explanation/index>`"
+msgstr ":doc:`💡 Объяснения <explanation/index>`"
+
+#: ../../source/index.rst:50
+msgid ""
+"Understanding-oriented. How hot-reload, request-scoped scenes and the "
+"role system actually work under the hood."
+msgstr ""
+"Чтобы понять. Как на самом деле работают hot-reload, request-scoped сцены"
+" и система ролей внутри."
+
+#: ../../source/index.rst:56
+msgid ""
+"New to the four-part split? It follows the `Diátaxis "
+"<https://diataxis.fr>`_ framework: tutorials teach, how-to guides solve a"
+" task, reference describes the machinery, and explanation gives you the "
+"mental model."
+msgstr ""
+"Впервые видите такое деление на четыре части? Оно построено по фреймворку"
+" `Diátaxis <https://diataxis.fr>`_: обучение учит, практические "
+"руководства решают задачу, справочник описывает устройство, а объяснения "
+"дают цельную картину."
