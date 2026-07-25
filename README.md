@@ -1,6 +1,6 @@
 <div align="center">
     <h1 id="header" align="center">🔦 Raito</h1>
-    <p align="center">REPL, hot-reload, keyboards, pagination, and internal dev tools — all in one. That's Raito.</p>
+    <p align="center">The missing toolkit for aiogram. Hot-reload, roles, pagination, scenes and dev tools, all included.</p>
 </div>
 
 <div align="center">
