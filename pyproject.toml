@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "raito"
-version = "1.5.0"
+version = "1.5.1"
 description = "The missing toolkit for aiogram. Hot-reload, roles, pagination, scenes and dev tools, all included."
 authors = [{ name = "Aiden", email = "aidenthedev@gmail.com" }]
 license = "MIT"
