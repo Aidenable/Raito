@@ -19,3 +19,9 @@ sphinx:
 python:
   install:
     - requirements: docs/requirements.txt
+    - method: pip
+      path: .
+      extra_requirements:
+        - sqlite
+        - postgresql
+        - redis

@@ -1,0 +1,104 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/logging.rst:2
+msgid "📝 Logging"
+msgstr "📝 Логирование"
+
+#: ../../source/how-to/logging.rst:4
+msgid ""
+"Raito ships a colored, adaptive log formatter so your terminal output is "
+"readable out of the box."
+msgstr ""
+"Raito поставляется с цветным адаптивным форматтером логов, поэтому вывод "
+"в терминале читается сразу из коробки."
+
+#: ../../source/how-to/logging.rst:8
+msgid "Enable it"
+msgstr "Включение"
+
+#: ../../source/how-to/logging.rst:10
+msgid ""
+":meth:`~raito.Raito.init_logging` installs the formatter on the root "
+"logger:"
+msgstr ":meth:`~raito.Raito.init_logging` ставит форматтер на корневой логгер:"
+
+#: ../../source/how-to/logging.rst:17
+msgid ""
+"The level follows ``production``: ``DEBUG`` in development, ``INFO`` in "
+"production. Pass logger names to silence noisy third-party loggers:"
+msgstr ""
+"Уровень зависит от ``production``: ``DEBUG`` в разработке, ``INFO`` в "
+"продакшене. Передайте имена логгеров, чтобы приглушить шумные сторонние:"
+
+#: ../../source/how-to/logging.rst:24
+msgid ""
+"Each name is dropped via a "
+":class:`~raito.utils.loggers.MuteLoggersFilter`."
+msgstr ""
+"Каждое имя отсекается через "
+":class:`~raito.utils.loggers.MuteLoggersFilter`."
+
+#: ../../source/how-to/logging.rst:27
+msgid "What you get"
+msgstr "Что вы получаете"
+
+#: ../../source/how-to/logging.rst:29
+msgid "**Level-colored tags** — ``D / I / W / E / C`` on a colored background."
+msgstr "**Цветные метки уровня**: ``D / I / W / E / C`` на цветном фоне."
+
+#: ../../source/how-to/logging.rst:30
+msgid ""
+"**Adaptive timestamps** — :class:`~raito.utils.loggers.ColoredFormatter` "
+"shows more (date, logger name) on wide terminals and less on narrow ones,"
+" so lines don't wrap."
+msgstr ""
+"**Адаптивные таймстемпы**: :class:`~raito.utils.loggers.ColoredFormatter`"
+" показывает больше (дату, имя логгера) на широких терминалах и меньше на "
+"узких, чтобы строки не переносились."
+
+#: ../../source/how-to/logging.rst:33
+msgid ""
+"Warnings are captured into logging (``logging.captureWarnings(True)``), "
+"so ``DeprecationWarning`` and friends appear in your logs too."
+msgstr ""
+"Предупреждения захватываются в логирование "
+"(``logging.captureWarnings(True)``), поэтому ``DeprecationWarning`` и "
+"подобные тоже попадают в ваши логи."
+
+#: ../../source/how-to/logging.rst:37
+msgid "Logging from your code"
+msgstr "Логирование из вашего кода"
+
+#: ../../source/how-to/logging.rst:39
+msgid "The ``rt`` namespace exposes the root logger and a ``debug`` shortcut:"
+msgstr "Пространство имён ``rt`` даёт корневой логгер и сокращение ``debug``:"
+
+#: ../../source/how-to/logging.rst:50
+msgid ""
+"Raito's own subsystems log under named loggers (``raito.core``, "
+"``raito.routers``, ``raito.roles``, ``raito.scenes``, …), so you can tune"
+" or mute any part independently."
+msgstr ""
+"Собственные подсистемы Raito пишут в именованные логгеры (``raito.core``,"
+" ``raito.routers``, ``raito.roles``, ``raito.scenes`` и т.д.), поэтому "
+"любую часть можно настроить или приглушить отдельно."

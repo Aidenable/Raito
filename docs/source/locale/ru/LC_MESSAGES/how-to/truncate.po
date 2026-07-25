@@ -1,0 +1,64 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/truncate.rst:2
+msgid "✂️ truncate"
+msgstr "✂️ truncate"
+
+#: ../../source/how-to/truncate.rst:4
+msgid ""
+"Shorten a string to a maximum length, appending an ellipsis when it is "
+"cut."
+msgstr ""
+"Укорачивает строку до максимальной длины, добавляя многоточие, если "
+"пришлось обрезать."
+
+#: ../../source/how-to/truncate.rst:14
+msgid ""
+"Signature: ``truncate(text, max_length, ellipsis=\"...\")``. When "
+"``text`` is longer than ``max_length``, the result is cut so that "
+"``text`` plus ``ellipsis`` fits within the limit."
+msgstr ""
+"Сигнатура: ``truncate(text, max_length, ellipsis=\"...\")``. Когда "
+"``text`` длиннее ``max_length``, строка обрезается так, чтобы ``text`` "
+"вместе с ``ellipsis`` уложился в лимит."
+
+#: ../../source/how-to/truncate.rst:18
+msgid ""
+"Raito uses it internally to keep command descriptions and help output "
+"within Telegram's length limits — reach for it whenever you echo user- or"
+" config-provided text into a fixed-width UI."
+msgstr ""
+"Raito использует её внутри, чтобы удерживать описания команд и вывод "
+"справки в пределах длины Telegram. Берите её всякий раз, когда выводите "
+"пользовательский или конфигурационный текст в интерфейс фиксированной "
+"ширины."
+
+#: ../../source/how-to/truncate.rst:24
+msgid ""
+"Give ``max_length`` room for the ellipsis. With a limit smaller than the "
+"ellipsis itself the result can exceed ``max_length`` — size the limit for"
+" the UI you're targeting."
+msgstr ""
+"Оставляйте ``max_length`` запас под многоточие. Если лимит меньше самого "
+"многоточия, результат может превысить ``max_length``, поэтому подбирайте "
+"лимит под ваш интерфейс."

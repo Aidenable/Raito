@@ -1,0 +1,114 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:56+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/index.rst:4
+msgid "🛠️ How-to guides"
+msgstr "🛠️ Практические руководства"
+
+#: ../../source/how-to/index.rst:6
+msgid ""
+"Task-oriented recipes for a specific feature you already understand. If "
+"you are still learning the basics, start with the "
+":doc:`../tutorial/index`."
+msgstr ""
+"Рецепты под конкретную возможность, которую вы уже в целом понимаете. "
+"Если ещё осваиваете основы, начните с :doc:`../tutorial/index`."
+
+#: ../../source/how-to/index.rst:10
+msgid "Routing & reloading"
+msgstr "Роутинг и перезагрузка"
+
+#: ../../source/how-to/index.rst:12
+msgid ":doc:`routers`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:13
+msgid ":doc:`hot_reload`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:16
+msgid "Commands & access"
+msgstr "Команды и доступ"
+
+#: ../../source/how-to/index.rst:18
+msgid ":doc:`commands`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:19
+msgid ":doc:`roles`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:22
+msgid "Interaction"
+msgstr "Взаимодействие"
+
+#: ../../source/how-to/index.rst:24
+msgid ":doc:`keyboards`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:25
+msgid ":doc:`pagination`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:26
+msgid ":doc:`scenes`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:27
+msgid ":doc:`conversations`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:28
+msgid ":doc:`album`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:31
+msgid "Operations"
+msgstr "Эксплуатация"
+
+#: ../../source/how-to/index.rst:33
+msgid ":doc:`throttling`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:34
+msgid ":doc:`lifespan`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:37
+msgid "Utilities"
+msgstr "Утилиты"
+
+#: ../../source/how-to/index.rst:39
+msgid ":doc:`logging`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:40
+msgid ":doc:`retry`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:41
+msgid ":doc:`truncate`"
+msgstr ""
+
+#: ../../source/how-to/index.rst:42
+msgid ":doc:`suppress_not_modified`"
+msgstr ""

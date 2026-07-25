@@ -1,0 +1,336 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/explanation/architecture.rst:2
+msgid "Architecture"
+msgstr "Архитектура"
+
+#: ../../source/explanation/architecture.rst:4
+msgid ""
+"Raito is a thin layer on top of aiogram. It does not replace the "
+"dispatcher, the FSM or the filter system — it *drives* them. "
+"Understanding that relationship explains almost every behaviour in the "
+"library."
+msgstr ""
+"Raito это тонкий слой поверх aiogram. Он не заменяет ни диспетчер, ни "
+"FSM, ни систему фильтров, а *управляет* ими. Если понять эту связь, "
+"становится ясно почти всё поведение библиотеки."
+
+#: ../../source/explanation/architecture.rst:9
+msgid "The ``Raito`` object"
+msgstr "Объект ``Raito``"
+
+#: ../../source/explanation/architecture.rst:11
+msgid ""
+":class:`raito.Raito` is the coordinator. When you create it you hand over"
+" the aiogram ``Dispatcher`` and a directory of handler files:"
+msgstr ""
+":class:`raito.Raito` это координатор. При создании вы передаёте ему "
+"``Dispatcher`` из aiogram и папку с файлами хендлеров:"
+
+#: ../../source/explanation/architecture.rst:18
+msgid "The constructor immediately does two things worth knowing about:"
+msgstr "Конструктор сразу делает две вещи, о которых стоит знать:"
+
+#: ../../source/explanation/architecture.rst:20
+msgid ""
+"it registers itself in the dispatcher's context as "
+"``dispatcher[\"raito\"]``, so every handler and filter can receive a "
+"``raito`` argument through aiogram's dependency injection;"
+msgstr ""
+"регистрирует себя в контексте диспетчера как ``dispatcher[\"raito\"]``, "
+"поэтому любой хендлер и фильтр может получить аргумент ``raito`` через "
+"внедрение зависимостей aiogram;"
+
+#: ../../source/explanation/architecture.rst:23
+msgid ""
+"it selects a **role provider** based on the FSM storage you passed (in-"
+"memory, JSON, Redis or SQL), falling back to an in-memory provider."
+msgstr ""
+"выбирает **провайдер ролей** по переданному FSM-хранилищу (в памяти, "
+"JSON, Redis или SQL), с откатом на провайдер в памяти."
+
+#: ../../source/explanation/architecture.rst:26
+msgid "Nothing is loaded yet. The real work happens in :meth:`raito.Raito.setup`."
+msgstr ""
+"Пока ничего не загружено. Основная работа происходит в "
+":meth:`raito.Raito.setup`."
+
+#: ../../source/explanation/architecture.rst:29
+msgid "The setup sequence"
+msgstr "Последовательность setup"
+
+#: ../../source/explanation/architecture.rst:31
+msgid "``await raito.setup()`` performs, in order:"
+msgstr "``await raito.setup()`` выполняет по порядку:"
+
+#: ../../source/explanation/architecture.rst:33
+msgid "**Migrations** — the role provider creates its table/keys if needed."
+msgstr ""
+"**Миграции**: провайдер ролей при необходимости создаёт свою таблицу или "
+"ключи."
+
+#: ../../source/explanation/architecture.rst:34
+msgid ""
+"**Middleware registration** — Raito attaches its middlewares to the "
+"dispatcher: pagination, command parsing, album grouping and "
+"conversations."
+msgstr ""
+"**Регистрация middleware**: Raito подключает к диспетчеру свои "
+"middleware: пагинацию, разбор команд, группировку альбомов и диалоги."
+
+#: ../../source/explanation/architecture.rst:36
+msgid ""
+"**Loading built-in handlers** — the ``.rt`` developer toolbox (help, "
+"router management, roles, stats, and the guarded eval/bash) is loaded "
+"first."
+msgstr ""
+"**Загрузка встроенных хендлеров**: первым грузится набор dev-инструментов"
+" ``.rt`` (help, управление роутерами, роли, статистика и защищённые "
+"eval/bash)."
+
+#: ../../source/explanation/architecture.rst:38
+msgid ""
+"**Loading your routers** — the directory you passed is scanned and every "
+"router registered."
+msgstr ""
+"**Загрузка ваших роутеров**: переданная папка сканируется, и каждый "
+"роутер регистрируется."
+
+#: ../../source/explanation/architecture.rst:40
+msgid ""
+"**Watchdog** — in development mode (``production=False``) a file watcher "
+"is started so edits reload live."
+msgstr ""
+"**Watchdog**: в режиме разработки (``production=False``) запускается "
+"наблюдатель за файлами, чтобы правки применялись на лету."
+
+#: ../../source/explanation/architecture.rst:43
+msgid ""
+"Because everything hangs off the dispatcher, Raito is transport-agnostic:"
+" it works the same whether you poll or run behind a webhook."
+msgstr ""
+"Так как всё держится на диспетчере, Raito не зависит от транспорта: он "
+"одинаково работает и на поллинге, и за вебхуком."
+
+#: ../../source/explanation/architecture.rst:47
+msgid "How routers are discovered"
+msgstr "Как находятся роутеры"
+
+#: ../../source/explanation/architecture.rst:49
+msgid ""
+"Routers are ordinary aiogram routers that live in files. Three small "
+"classes turn a directory into a live router tree:"
+msgstr ""
+"Роутеры это обычные роутеры aiogram, лежащие в файлах. Три небольших "
+"класса превращают папку в живое дерево роутеров:"
+
+#: ../../source/explanation/architecture.rst:52
+msgid "``RouterParser``"
+msgstr "``RouterParser``"
+
+#: ../../source/explanation/architecture.rst:53
+msgid ""
+"Imports a ``.py`` file as an isolated module and finds the router in it —"
+" either a variable named ``router`` or, failing that, the single "
+"``aiogram.Router`` / ``raito.Router`` instance defined in the file."
+msgstr ""
+"Импортирует ``.py``-файл как изолированный модуль и находит в нём роутер:"
+" либо переменную с именем ``router``, либо, если её нет, единственный "
+"экземпляр ``aiogram.Router`` / ``raito.Router``, определённый в файле."
+
+#: ../../source/explanation/architecture.rst:57
+msgid "``RouterLoader``"
+msgstr "``RouterLoader``"
+
+#: ../../source/explanation/architecture.rst:58
+msgid ""
+"Owns the lifecycle of one file: ``load`` registers the router with the "
+"dispatcher, ``unload`` removes it, and ``reload`` re-imports the file so "
+"new code takes effect. It remembers the router's position so ordering "
+"survives a reload."
+msgstr ""
+"Владеет жизненным циклом одного файла: ``load`` регистрирует роутер в "
+"диспетчере, ``unload`` убирает его, а ``reload`` заново импортирует файл,"
+" чтобы новый код вступил в силу. Он запоминает позицию роутера, поэтому "
+"порядок переживает перезагрузку."
+
+#: ../../source/explanation/architecture.rst:63
+msgid "``RouterManager``"
+msgstr "``RouterManager``"
+
+#: ../../source/explanation/architecture.rst:64
+msgid ""
+"Scans the directory (ignoring ``_``-prefixed names), creates one loader "
+"per file, resolves duplicate router names, and loads everything **highest"
+" priority first**."
+msgstr ""
+"Сканирует папку (пропуская имена с префиксом ``_``), создаёт по "
+"загрузчику на файл, разрешает конфликты имён роутеров и грузит всё "
+"**сначала с наибольшим приоритетом**."
+
+#: ../../source/explanation/architecture.rst:69
+msgid "Priority and autoload"
+msgstr "Приоритет и автозагрузка"
+
+#: ../../source/explanation/architecture.rst:71
+msgid ":class:`raito.Router` extends aiogram's router with two attributes:"
+msgstr ":class:`raito.Router` расширяет роутер aiogram двумя атрибутами:"
+
+#: ../../source/explanation/architecture.rst:73
+msgid ""
+"``priority`` — higher loads earlier, so auth/middleware routers can "
+"register before the routers that depend on them;"
+msgstr ""
+"``priority``: чем больше, тем раньше загрузка, поэтому роутеры с "
+"авторизацией или middleware могут зарегистрироваться раньше тех, кто от "
+"них зависит;"
+
+#: ../../source/explanation/architecture.rst:75
+msgid ""
+"``autoload`` — set to ``False`` to keep a router out of automatic "
+"loading; it can still be enabled at runtime with ``.rt load``."
+msgstr ""
+"``autoload``: поставьте ``False``, чтобы роутер не грузился "
+"автоматически; его всё ещё можно включить на лету через ``.rt load``."
+
+#: ../../source/explanation/architecture.rst:86
+msgid "Hot reload"
+msgstr "Hot reload"
+
+#: ../../source/explanation/architecture.rst:88
+msgid ""
+"In development the ``RouterManager`` runs a watcher "
+"(``watchfiles.awatch``) over your directory. On each change it finds the "
+"loader for that file and:"
+msgstr ""
+"В разработке ``RouterManager`` держит наблюдатель (``watchfiles.awatch``)"
+" над вашей папкой. На каждое изменение он находит загрузчик этого файла "
+"и:"
+
+#: ../../source/explanation/architecture.rst:91
+msgid ""
+"**modified** → ``reload`` (unload, re-import, load) so the new code is "
+"live;"
+msgstr ""
+"**изменён** → ``reload`` (выгрузка, повторный импорт, загрузка), чтобы "
+"новый код заработал;"
+
+#: ../../source/explanation/architecture.rst:92
+msgid "**added** → a loader is created for the new file and it is loaded;"
+msgstr "**добавлен** → под новый файл создаётся загрузчик, и роутер грузится;"
+
+#: ../../source/explanation/architecture.rst:93
+msgid "**deleted** → the router is unloaded."
+msgstr "**удалён** → роутер выгружается."
+
+#: ../../source/explanation/architecture.rst:95
+msgid ""
+"The freshness of the code comes from re-importing the module on reload, "
+"not from patching objects in place. This is why hot reload is reliable "
+"but also why module-level side effects run again on every reload — keep "
+"import-time work in your handler files minimal."
+msgstr ""
+"Свежесть кода берётся из повторного импорта модуля при перезагрузке, а не"
+" из правки объектов на месте. Именно поэтому hot-reload надёжен, но по "
+"этой же причине побочные эффекты на уровне модуля выполняются заново при "
+"каждой перезагрузке, поэтому держите работу на этапе импорта в файлах "
+"хендлеров минимальной."
+
+#: ../../source/explanation/architecture.rst:101
+msgid "Features are opt-in layers"
+msgstr "Возможности это опциональные слои"
+
+#: ../../source/explanation/architecture.rst:103
+msgid ""
+"Everything beyond loading is added per-handler, and almost always through"
+" one of two aiogram mechanisms:"
+msgstr ""
+"Всё, кроме загрузки, добавляется на уровне хендлера и почти всегда через "
+"один из двух механизмов aiogram:"
+
+#: ../../source/explanation/architecture.rst:106
+msgid ""
+"**Flags** carry metadata on a handler. ``@rt.description``, "
+"``@rt.hidden``, ``@rt.params`` and ``@rt.limiter`` all set flags; "
+"middlewares and the command registrar read them later. Nothing happens at"
+" decoration time — the flag is just data attached to the handler."
+msgstr ""
+"**Флаги** несут метаданные на хендлере. ``@rt.description``, "
+"``@rt.hidden``, ``@rt.params`` и ``@rt.limiter`` все ставят флаги; "
+"middleware и регистратор команд читают их позже. В момент декорирования "
+"ничего не происходит: флаг это просто данные, привязанные к хендлеру."
+
+#: ../../source/explanation/architecture.rst:111
+msgid ""
+"**Filters** decide whether a handler runs. The role system is the "
+"clearest example: ``OWNER | ADMINISTRATOR`` is a filter that asks the "
+"role manager whether the current user holds one of those roles. Used as a"
+" normal aiogram filter, it gates the handler."
+msgstr ""
+"**Фильтры** решают, выполнится ли хендлер. Нагляднее всего система ролей:"
+" ``OWNER | ADMINISTRATOR`` это фильтр, который спрашивает у менеджера "
+"ролей, есть ли у текущего пользователя одна из этих ролей. Как обычный "
+"фильтр aiogram, он ограничивает хендлер."
+
+#: ../../source/explanation/architecture.rst:116
+msgid ""
+"This design keeps Raito composable: you can adopt one decorator without "
+"buying into the rest, and your handlers stay ordinary aiogram handlers."
+msgstr ""
+"Такой подход держит Raito составным: можно взять один декоратор, не "
+"подписываясь на остальное, а ваши хендлеры остаются обычными хендлерами "
+"aiogram."
+
+#: ../../source/explanation/architecture.rst:120
+msgid "Request-scoped by default"
+msgstr "Request-scoped по умолчанию"
+
+#: ../../source/explanation/architecture.rst:122
+msgid ""
+"Raito leans on aiogram's per-update dependency injection. A middleware "
+"that provides, say, a database session per update will set it up and tear"
+" it down around each message. Raito's **scenes** are designed to preserve"
+" this: every step of a multi-step dialog is a separate, fully-returning "
+"handler, so the session is released between steps instead of being held "
+"while the user thinks."
+msgstr ""
+"Raito опирается на внедрение зависимостей aiogram на каждый апдейт. "
+"Middleware, дающий, скажем, сессию БД на апдейт, поднимет её и закроет "
+"вокруг каждого сообщения. **Сцены** Raito специально это сохраняют: "
+"каждый шаг многошагового диалога это отдельный, полностью завершающийся "
+"хендлер, поэтому сессия освобождается между шагами, а не удерживается, "
+"пока пользователь думает."
+
+#: ../../source/explanation/architecture.rst:128
+msgid ""
+"**Conversations** make the opposite trade-off — ``wait_for`` suspends the"
+" handler coroutine until the next message arrives, which is simpler but "
+"keeps that update's dependencies alive for the duration. The :doc:`scenes"
+" <../how-to/scenes>` and :doc:`conversations <../how-to/conversations>` "
+"guides describe when to reach for each."
+msgstr ""
+"**Диалоги** делают обратный выбор: ``wait_for`` приостанавливает корутину"
+" хендлера до прихода следующего сообщения, что проще, но держит "
+"зависимости этого апдейта живыми всё это время. Когда что выбрать, "
+"описано в руководствах :doc:`scenes <../how-to/scenes>` и "
+":doc:`conversations <../how-to/conversations>`."

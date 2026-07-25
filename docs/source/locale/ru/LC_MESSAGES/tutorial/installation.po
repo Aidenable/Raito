@@ -1,0 +1,103 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/tutorial/installation.rst:2
+msgid "Installation"
+msgstr "Установка"
+
+#: ../../source/tutorial/installation.rst:4
+msgid "Raito requires **Python 3.10+** and **aiogram 3.20+**."
+msgstr "Для Raito нужны **Python 3.10+** и **aiogram 3.20+**."
+
+#: ../../source/tutorial/installation.rst:7
+msgid "Install from PyPI"
+msgstr "Установка с PyPI"
+
+#: ../../source/tutorial/installation.rst:13
+msgid "Or with your tool of choice:"
+msgstr "Или привычным вам инструментом:"
+
+#: ../../source/tutorial/installation.rst:21
+msgid "Optional extras"
+msgstr "Опциональные extras"
+
+#: ../../source/tutorial/installation.rst:23
+msgid ""
+"Raito's persistent storages and role backends are optional. Install only "
+"what you need:"
+msgstr ""
+"Постоянные хранилища и бэкенды ролей в Raito опциональны. Ставьте только "
+"то, что вам нужно:"
+
+#: ../../source/tutorial/installation.rst:27
+msgid "Extra"
+msgstr "Extra"
+
+#: ../../source/tutorial/installation.rst:27
+msgid "Enables"
+msgstr "Что даёт"
+
+#: ../../source/tutorial/installation.rst:29
+msgid "``raito[sqlite]``"
+msgstr "``raito[sqlite]``"
+
+#: ../../source/tutorial/installation.rst:29
+msgid "SQLite FSM storage and role provider (SQLAlchemy + aiosqlite)"
+msgstr "FSM-хранилище и провайдер ролей на SQLite (SQLAlchemy + aiosqlite)"
+
+#: ../../source/tutorial/installation.rst:30
+msgid "``raito[postgresql]``"
+msgstr "``raito[postgresql]``"
+
+#: ../../source/tutorial/installation.rst:30
+msgid "PostgreSQL FSM storage and role provider (SQLAlchemy + asyncpg)"
+msgstr "FSM-хранилище и провайдер ролей на PostgreSQL (SQLAlchemy + asyncpg)"
+
+#: ../../source/tutorial/installation.rst:31
+msgid "``raito[redis]``"
+msgstr "``raito[redis]``"
+
+#: ../../source/tutorial/installation.rst:31
+msgid "Redis role provider"
+msgstr "Провайдер ролей на Redis"
+
+#: ../../source/tutorial/installation.rst:38
+msgid ""
+"Without an extra, Raito falls back to in-memory / JSON storage, which is "
+"perfect for development but **not recommended for production** (Raito "
+"will warn you at startup)."
+msgstr ""
+"Без extra Raito использует хранилище в памяти или в JSON. Для разработки "
+"это удобно, но **в продакшене не рекомендуется** (Raito предупредит об "
+"этом при запуске)."
+
+#: ../../source/tutorial/installation.rst:43
+msgid "Verify the install"
+msgstr "Проверьте установку"
+
+#: ../../source/tutorial/installation.rst:49
+msgid ""
+"You should see ``<class 'raito.core.raito.Raito'>``. Continue to :doc"
+":`your-first-bot`."
+msgstr ""
+"Вы должны увидеть ``<class 'raito.core.raito.Raito'>``. Переходите к :doc"
+":`your-first-bot`."

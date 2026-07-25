@@ -1,0 +1,70 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/retry.rst:2
+msgid "🔁 retry"
+msgstr "🔁 retry"
+
+#: ../../source/how-to/retry.rst:4
+msgid ""
+"Calls an async function and retries it when Telegram raises a transient "
+"error — flood control (``RetryAfter``) or a network/server error "
+"(``TelegramNetworkError``, ``TelegramServerError``)."
+msgstr ""
+"Вызывает асинхронную функцию и повторяет её, когда Telegram отдаёт "
+"временную ошибку: флуд-контроль (``RetryAfter``) или сетевую/серверную "
+"ошибку (``TelegramNetworkError``, ``TelegramServerError``)."
+
+#: ../../source/how-to/retry.rst:8
+msgid ""
+"Pass the coroutine **function** (or bound method) and its arguments — not"
+" an already-created coroutine. ``retry`` re-invokes the function on every"
+" attempt, and your IDE checks the argument names and types just like a "
+"direct call:"
+msgstr ""
+"Передавайте саму **функцию** (или связанный метод) и её аргументы, а не "
+"уже созданную корутину. ``retry`` заново вызывает функцию на каждой "
+"попытке, а ваша IDE проверяет имена и типы аргументов так же, как при "
+"прямом вызове:"
+
+#: ../../source/how-to/retry.rst:21
+msgid ""
+"Do **not** call the function yourself. "
+"``rt.retry(bot.send_message(...))`` still works but emits a "
+"``DeprecationWarning`` (and your type checker flags it): the resulting "
+"coroutine is awaited only once and cannot be retried. Support will be "
+"removed in 1.8.0."
+msgstr ""
+"**Не** вызывайте функцию сами. ``rt.retry(bot.send_message(...))`` пока "
+"работает, но выдаёт ``DeprecationWarning`` (и тайпчекер это отметит): "
+"полученную корутину можно ждать лишь раз, повторить её нельзя. Поддержку "
+"уберут в 1.8.0."
+
+#: ../../source/how-to/retry.rst:26
+msgid ""
+"Retries use a fixed policy — up to 5 attempts, honouring the server-"
+"provided ``retry_after`` for flood control and exponential backoff for "
+"network/server errors."
+msgstr ""
+"Повторы идут по фиксированной политике: до 5 попыток, с учётом серверного"
+" ``retry_after`` для флуд-контроля и с экспоненциальной задержкой для "
+"сетевых/серверных ошибок."

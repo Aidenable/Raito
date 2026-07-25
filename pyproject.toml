@@ -61,14 +61,14 @@ dev = [
     "types-cachetools>=6.0.0.20250525",
     "python-dotenv",
 ]
-docs = ["sphinx", "furo", "sphinx-autodoc-typehints", "watchdog>=6.0.0"]
+docs = ["sphinx", "furo", "sphinx-intl", "watchdog>=6.0.0"]
 redis = ["redis>=6.2.0"]
 postgresql = ["sqlalchemy[asyncio]>=2.0.0", "asyncpg>=0.29.0"]
 sqlite = ["sqlalchemy[asyncio]>=2.0.0", "aiosqlite>=0.20.0"]
 
 [project.urls]
 Repository = "https://github.com/Aidenable/raito"
-Documentation = "https://aidenable.github.io/raito"
+Documentation = "https://raito.readthedocs.io"
 
 [tool.hatch.build]
 packages = ["raito"]

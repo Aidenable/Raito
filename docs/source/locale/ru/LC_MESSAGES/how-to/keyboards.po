@@ -1,0 +1,147 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/keyboards.rst:2
+msgid "⌨️ Keyboards"
+msgstr "⌨️ Клавиатуры"
+
+#: ../../source/how-to/keyboards.rst:4
+msgid ""
+"Raito has two keyboard decorators. Both return a ready aiogram markup, so"
+" you never manage builders or markup objects at the call site."
+msgstr ""
+"В Raito два декоратора клавиатур. Оба возвращают готовую разметку "
+"aiogram, поэтому вам не нужно возиться с билдерами или объектами разметки"
+" на месте вызова."
+
+#: ../../source/how-to/keyboards.rst:7
+msgid ""
+":func:`@rt.keyboard.static <raito.rt.keyboard>` — declare the layout as "
+"the function's return value;"
+msgstr ""
+":func:`@rt.keyboard.static <raito.rt.keyboard>` описывает раскладку через"
+" возвращаемое значение функции;"
+
+#: ../../source/how-to/keyboards.rst:9
+msgid ""
+":func:`@rt.keyboard.dynamic <raito.rt.keyboard>` — build it imperatively "
+"with a builder."
+msgstr ""
+":func:`@rt.keyboard.dynamic <raito.rt.keyboard>` строит её императивно "
+"через билдер."
+
+#: ../../source/how-to/keyboards.rst:13
+msgid "Static — layout by return value"
+msgstr "Static: раскладка через возвращаемое значение"
+
+#: ../../source/how-to/keyboards.rst:15
+msgid ""
+"Return a list of rows. Each item is either a **button** (a ``str`` or a "
+"``tuple``) or a **row** (a list of buttons):"
+msgstr ""
+"Верните список рядов. Каждый элемент это либо **кнопка** (``str`` или "
+"``tuple``), либо **ряд** (список кнопок):"
+
+#: ../../source/how-to/keyboards.rst:30
+msgid ""
+"For **inline** keyboards a button is a ``(text, value)`` tuple. ``value``"
+" becomes ``callback_data``, unless it looks like a URL (``https://``, "
+"``tg://``, ``t.me/...``), in which case it becomes a URL button:"
+msgstr ""
+"Для **inline**-клавиатур кнопка это кортеж ``(text, value)``. ``value`` "
+"становится ``callback_data``, если только он не похож на URL "
+"(``https://``, ``tg://``, ``t.me/...``): тогда получится URL-кнопка:"
+
+#: ../../source/how-to/keyboards.rst:44
+msgid ""
+"The decorator returns a ``ReplyKeyboardMarkup`` or "
+"``InlineKeyboardMarkup`` depending on ``inline=``. Call the function to "
+"get the markup:"
+msgstr ""
+"Декоратор возвращает ``ReplyKeyboardMarkup`` или ``InlineKeyboardMarkup``"
+" в зависимости от ``inline=``. Вызовите функцию, чтобы получить разметку:"
+
+#: ../../source/how-to/keyboards.rst:52
+msgid "Dynamic — build with a builder"
+msgstr "Dynamic: сборка через билдер"
+
+#: ../../source/how-to/keyboards.rst:54
+msgid ""
+"When the layout depends on data, take the builder as the first argument "
+"and add buttons yourself. Any extra parameters are yours to pass at call "
+"time:"
+msgstr ""
+"Когда раскладка зависит от данных, примите билдер первым аргументом и "
+"добавляйте кнопки сами. Любые дополнительные параметры вы передаёте при "
+"вызове:"
+
+#: ../../source/how-to/keyboards.rst:76
+msgid "Parameters"
+msgstr "Параметры"
+
+#: ../../source/how-to/keyboards.rst:79
+msgid "Parameter"
+msgstr "Параметр"
+
+#: ../../source/how-to/keyboards.rst:79
+msgid "Meaning"
+msgstr "Значение"
+
+#: ../../source/how-to/keyboards.rst:81
+msgid "``inline``"
+msgstr ""
+
+#: ../../source/how-to/keyboards.rst:81
+msgid "Build an inline (``True``) or reply (``False``) keyboard."
+msgstr "Строить inline- (``True``) или reply- (``False``) клавиатуру."
+
+#: ../../source/how-to/keyboards.rst:82
+msgid "``*sizes``"
+msgstr ""
+
+#: ../../source/how-to/keyboards.rst:82
+msgid "Row-size pattern for ``adjust`` (e.g. ``1, 2, 1``)."
+msgstr "Схема размеров рядов для ``adjust`` (например, ``1, 2, 1``)."
+
+#: ../../source/how-to/keyboards.rst:83
+msgid "``adjust``"
+msgstr ""
+
+#: ../../source/how-to/keyboards.rst:83
+msgid "Auto-arrange buttons with ``builder.adjust(*sizes)``."
+msgstr "Автоматически раскладывать кнопки через ``builder.adjust(*sizes)``."
+
+#: ../../source/how-to/keyboards.rst:84
+msgid "``repeat``"
+msgstr ""
+
+#: ../../source/how-to/keyboards.rst:84
+msgid "Repeat the ``*sizes`` pattern to cover all buttons."
+msgstr "Повторять схему ``*sizes``, пока не покроет все кнопки."
+
+#: ../../source/how-to/keyboards.rst:87
+msgid ""
+"Set ``adjust=False`` to lay the keyboard out yourself — useful when the "
+"shape is conditional:"
+msgstr ""
+"Поставьте ``adjust=False``, чтобы разложить клавиатуру самому. Это "
+"удобно, когда форма зависит от условий:"

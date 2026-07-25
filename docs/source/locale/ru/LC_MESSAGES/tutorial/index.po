@@ -1,0 +1,76 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:56+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/tutorial/index.rst:4
+msgid "🐣 Tutorial"
+msgstr "🐣 Обучение"
+
+#: ../../source/tutorial/index.rst:6
+msgid ""
+"This tutorial takes you from an empty folder to a running Raito bot with "
+"commands, typed arguments and role-based access. Each page builds on the "
+"previous one, so read them in order."
+msgstr ""
+"Это руководство проведёт вас от пустой папки до готового бота на Raito с "
+"командами, типизированными аргументами и доступом по ролям. Каждая "
+"страница продолжает предыдущую, поэтому читайте их подряд."
+
+#: ../../source/tutorial/index.rst:10
+msgid "By the end you will understand the two ideas Raito is built around:"
+msgstr "К концу вы разберётесь в двух идеях, на которых держится Raito:"
+
+#: ../../source/tutorial/index.rst:12
+msgid ""
+"**handlers live in files, and Raito loads them for you** — no manual "
+"``include_router``, and they reload as you edit;"
+msgstr ""
+"**хендлеры лежат в файлах, а Raito подключает их за вас**: никакого "
+"ручного ``include_router``, и они обновляются прямо во время правок;"
+
+#: ../../source/tutorial/index.rst:14
+msgid ""
+"**features are opt-in decorators and filters** — descriptions, argument "
+"parsing, roles, keyboards and pagination are added a line at a time."
+msgstr ""
+"**возможности подключаются декораторами и фильтрами**: описания, разбор "
+"аргументов, роли, клавиатуры и пагинация добавляются буквально по "
+"строчке."
+
+#: ../../source/tutorial/index.rst:17
+msgid ":doc:`installation`"
+msgstr ""
+
+#: ../../source/tutorial/index.rst:18
+msgid ":doc:`your-first-bot`"
+msgstr ""
+
+#: ../../source/tutorial/index.rst:19
+msgid ":doc:`commands`"
+msgstr ""
+
+#: ../../source/tutorial/index.rst:20
+msgid ":doc:`access-control`"
+msgstr ""
+
+#: ../../source/tutorial/index.rst:21
+msgid ":doc:`going-further`"
+msgstr ""

@@ -1,0 +1,124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/tutorial/access-control.rst:2
+msgid "Access control with roles"
+msgstr "Доступ по ролям"
+
+#: ../../source/tutorial/access-control.rst:4
+msgid ""
+"Raito ships a role system so you can gate commands behind access levels "
+"without writing your own checks."
+msgstr ""
+"В Raito встроена система ролей, чтобы закрывать команды по уровню доступа"
+" и не писать собственные проверки."
+
+#: ../../source/tutorial/access-control.rst:8
+msgid "Built-in roles"
+msgstr "Встроенные роли"
+
+#: ../../source/tutorial/access-control.rst:10
+msgid ""
+"Nine roles come predefined. Import them from ``rt`` and use them as "
+"aiogram filters:"
+msgstr ""
+"Девять ролей уже готовы. Импортируйте их из ``rt`` и применяйте как "
+"фильтры aiogram:"
+
+#: ../../source/tutorial/access-control.rst:29
+msgid ""
+"A role used as a filter passes only if the user currently holds that "
+"role. Combine roles with ``|`` to mean \"any of these\"."
+msgstr ""
+"Роль, использованная как фильтр, пропускает пользователя, только если он "
+"ею сейчас обладает. Объединяйте роли через ``|`` в значении «любая из "
+"перечисленных»."
+
+#: ../../source/tutorial/access-control.rst:32
+msgid ""
+"The full list — ``OWNER``, ``DEVELOPER``, ``ADMINISTRATOR``, "
+"``MODERATOR``, ``MANAGER``, ``SPONSOR``, ``GUEST``, ``SUPPORT``, "
+"``TESTER`` — and how to define your own is in the :doc:`roles guide "
+"<../how-to/roles>`."
+msgstr ""
+"Полный список (``OWNER``, ``DEVELOPER``, ``ADMINISTRATOR``, "
+"``MODERATOR``, ``MANAGER``, ``SPONSOR``, ``GUEST``, ``SUPPORT``, "
+"``TESTER``) и способ завести свою роль смотрите в :doc:`руководстве по "
+"ролям <../how-to/roles>`."
+
+#: ../../source/tutorial/access-control.rst:37
+msgid "Developers"
+msgstr "Разработчики"
+
+#: ../../source/tutorial/access-control.rst:39
+msgid ""
+"Pass trusted user IDs as ``developers`` when constructing Raito. They "
+"implicitly hold the ``developer`` role — handy for yourself during "
+"development:"
+msgstr ""
+"Передайте доверенные ID пользователей в ``developers`` при создании "
+"Raito. Они неявно получают роль ``developer``, что удобно для себя во "
+"время разработки:"
+
+#: ../../source/tutorial/access-control.rst:47
+msgid "Assigning roles at runtime"
+msgstr "Назначение ролей на ходу"
+
+#: ../../source/tutorial/access-control.rst:49
+msgid ""
+"Roles are stored by a provider chosen from your FSM storage (in-memory by"
+" default; SQLite/PostgreSQL/Redis/JSON when configured). A user with a "
+"managing role can grant roles to others straight from the chat:"
+msgstr ""
+"Роли хранит провайдер, выбранный по вашему FSM-хранилищу (по умолчанию в "
+"памяти; SQLite, PostgreSQL, Redis или JSON, если настроите). Пользователь"
+" с управляющей ролью может выдавать роли другим прямо из чата:"
+
+#: ../../source/tutorial/access-control.rst:59
+msgid ""
+"These ``.rt`` commands are part of Raito's built-in developer toolbox — "
+"see the :doc:`commands reference <../reference/commands>`."
+msgstr ""
+"Эти команды ``.rt`` входят в набор dev-инструментов Raito, подробнее в "
+":doc:`справочнике по командам <../reference/commands>`."
+
+#: ../../source/tutorial/access-control.rst:64
+msgid ""
+"A user with ``developer`` role can run ``.rt eval`` and ``.rt bash`` "
+"(arbitrary code / shell) — but only if the bot was started with "
+"``Raito(..., enable_dangerous_commands=True)``. Keep that flag off unless"
+" you understand the risk."
+msgstr ""
+"Пользователь с ролью ``developer`` может запускать ``.rt eval`` и ``.rt "
+"bash`` (произвольный код и shell), но только если бот запущен с "
+"``Raito(..., enable_dangerous_commands=True)``. Держите этот флаг "
+"выключенным, пока не понимаете риск."
+
+#: ../../source/tutorial/access-control.rst:69
+msgid ""
+"That's the core loop: files become routers, decorators add behaviour, "
+"roles gate access. :doc:`going-further` points you at the bigger "
+"features."
+msgstr ""
+"Вот основной цикл: файлы становятся роутерами, декораторы добавляют "
+"поведение, роли ограничивают доступ. :doc:`going-further` подскажет, что "
+"есть покрупнее."

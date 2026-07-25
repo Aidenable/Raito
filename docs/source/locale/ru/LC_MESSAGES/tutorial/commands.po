@@ -1,0 +1,135 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:56+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/tutorial/commands.rst:2
+msgid "Commands with descriptions and arguments"
+msgstr "Команды с описаниями и аргументами"
+
+#: ../../source/tutorial/commands.rst:4
+msgid ""
+"A bot is mostly commands. Raito adds three small decorators from the "
+"``rt`` namespace that make commands self-describing and type-safe."
+msgstr ""
+"Бот в основном состоит из команд. Raito добавляет три небольших "
+"декоратора из пространства имён ``rt``, которые делают команды "
+"самоописательными и типобезопасными."
+
+#: ../../source/tutorial/commands.rst:8
+msgid "Descriptions"
+msgstr "Описания"
+
+#: ../../source/tutorial/commands.rst:10
+msgid ""
+":func:`rt.description <raito.rt.description>` attaches a human "
+"description to a command. Raito collects these and registers them with "
+"Telegram, so they show up in the client's slash menu automatically."
+msgstr ""
+":func:`rt.description <raito.rt.description>` добавляет к команде "
+"понятное описание. Raito собирает их и регистрирует в Telegram, поэтому "
+"они сами появляются в меню команд клиента."
+
+#: ../../source/tutorial/commands.rst:27
+msgid ""
+"To publish the menu, call :meth:`raito.Raito.register_commands` once at "
+"startup (usually from a :doc:`lifespan <../how-to/lifespan>` handler):"
+msgstr ""
+"Чтобы опубликовать меню, вызовите :meth:`raito.Raito.register_commands` "
+"один раз при запуске, обычно из хендлера :doc:`lifespan <../how-"
+"to/lifespan>`:"
+
+#: ../../source/tutorial/commands.rst:35
+msgid "Hiding a command"
+msgstr "Скрытие команды"
+
+#: ../../source/tutorial/commands.rst:37
+msgid ""
+"Some commands are internal. Decorate them with :func:`rt.hidden "
+"<raito.rt.hidden>` (note: no parentheses) and they are registered as "
+"handlers but kept out of the `slash command menu "
+"<https://core.telegram.org/bots/features#commands>`_:"
+msgstr ""
+"Некоторые команды служебные. Пометьте их :func:`rt.hidden "
+"<raito.rt.hidden>` (без скобок), и они останутся рабочими хендлерами, но "
+"не попадут в `меню слэш-команд "
+"<https://core.telegram.org/bots/features#commands>`_:"
+
+#: ../../source/tutorial/commands.rst:50
+msgid "Typed arguments"
+msgstr "Типизированные аргументы"
+
+#: ../../source/tutorial/commands.rst:52
+msgid ""
+"For a command like ``/add 2 3``, :func:`rt.params <raito.rt.params>` "
+"extracts positional arguments, converts them to the declared types and "
+"injects them into your handler by name:"
+msgstr ""
+"Для команды вроде ``/add 2 3`` :func:`rt.params <raito.rt.params>` берёт "
+"позиционные аргументы, приводит их к указанным типам и передаёт в хендлер"
+" по именам:"
+
+#: ../../source/tutorial/commands.rst:64
+msgid ""
+"Supported types are ``int``, ``float``, ``str`` and ``bool`` (``bool`` "
+"accepts ``true/yes/on/1/ok/+``). If an argument is missing or fails to "
+"convert, Raito replies with an auto-generated usage message instead of "
+"calling your handler — so ``/add two 3`` shows help, not a traceback."
+msgstr ""
+"Поддерживаются типы ``int``, ``float``, ``str`` и ``bool`` (``bool`` "
+"принимает ``true/yes/on/1/ok/+``). Если аргумента нет или он не "
+"приводится, Raito вместо вызова хендлера отвечает автоматически собранной"
+" подсказкой, поэтому ``/add two 3`` покажет справку, а не трейсбек."
+
+#: ../../source/tutorial/commands.rst:71
+msgid ""
+"Arguments are **positional** and split on whitespace, in declaration "
+"order. ``@rt.params(name=str)`` with ``/hello John Doe`` gives "
+"``name=\"John\"``, so use a single trailing argument for multi-word "
+"input, or parse ``message.text`` yourself."
+msgstr ""
+"Аргументы **позиционные** и делятся по пробелам в порядке объявления. "
+"``@rt.params(name=str)`` для ``/hello John Doe`` даст ``name=\"John\"``, "
+"так что для многословного ввода используйте один аргумент в конце или "
+"разбирайте ``message.text`` сами."
+
+#: ../../source/tutorial/commands.rst:78
+msgid ""
+"Positional command arguments fit developer and testing tools, not user-"
+"facing flows. ``/add 2 3`` is fine for you; asking ordinary users to pass"
+" arguments in the right order is not friendly. To collect input from real"
+" users, ask one thing at a time with a :doc:`scene <../how-to/scenes>` "
+"(backed by FSM) or a :doc:`conversation <../how-to/conversations>` "
+"(``wait_for``)."
+msgstr ""
+"Позиционные аргументы команд подходят для инструментов разработчика и "
+"тестов, но не для обычных пользователей. Вам удобно набрать ``/add 2 3``,"
+" а вот просить рядового пользователя передавать аргументы в правильном "
+"порядке уже неудобно. Чтобы собирать данные у настоящих пользователей, "
+"спрашивайте по одному через :doc:`сцену <../how-to/scenes>` (на базе FSM)"
+" или через :doc:`диалог <../how-to/conversations>` (``wait_for``)."
+
+#: ../../source/tutorial/commands.rst:85
+msgid ""
+"You now have described, typed commands. Next, restrict who can call them "
+"in :doc:`access-control`."
+msgstr ""
+"Теперь у вас есть команды с описаниями и типами. Дальше ограничим, кто "
+"может их вызывать: :doc:`access-control`."

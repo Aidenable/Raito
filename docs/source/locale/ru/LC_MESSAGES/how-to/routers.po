@@ -1,0 +1,163 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/routers.rst:2
+msgid "🗂 Routers"
+msgstr "🗂 Роутеры"
+
+#: ../../source/how-to/routers.rst:4
+msgid ""
+"Raito uses an extended ``Router`` class on top of aiogram's built-in "
+"router. It adds **priority-based loading**, **autoload control**, and "
+"seamless integration with the hot reload system."
+msgstr ""
+"Raito использует расширенный класс ``Router`` поверх встроенного роутера "
+"aiogram. Он добавляет **загрузку по приоритету**, **управление "
+"автозагрузкой** и бесшовную работу с системой hot-reload."
+
+#: ../../source/how-to/routers.rst:10
+msgid "Basic usage"
+msgstr "Как использовать"
+
+#: ../../source/how-to/routers.rst:22
+msgid ""
+"Raito will automatically discover and register this router if the file is"
+" inside ``routers_dir``."
+msgstr ""
+"Если файл лежит внутри ``routers_dir``, Raito сам найдёт и зарегистрирует"
+" этот роутер."
+
+#: ../../source/how-to/routers.rst:27
+msgid "Parameters"
+msgstr "Параметры"
+
+#: ../../source/how-to/routers.rst:37
+msgid ""
+"``name`` — unique router name; if omitted, Raito derives it from the "
+"filename"
+msgstr ""
+"``name`` это уникальное имя роутера; если не задать, Raito возьмёт его из"
+" имени файла"
+
+#: ../../source/how-to/routers.rst:38
+msgid "``priority`` — load order: **higher values load first** (default: ``0``)"
+msgstr ""
+"``priority`` это порядок загрузки: **чем больше значение, тем раньше "
+"загрузка** (по умолчанию ``0``)"
+
+#: ../../source/how-to/routers.rst:39
+msgid ""
+"``autoload`` — if ``False``, the router is discovered but not loaded on "
+"startup (default: ``True``)"
+msgstr ""
+"``autoload``: при ``False`` роутер находится, но не загружается на старте"
+" (по умолчанию ``True``)"
+
+#: ../../source/how-to/routers.rst:44
+msgid "Priority"
+msgstr "Приоритет"
+
+#: ../../source/how-to/routers.rst:46
+msgid ""
+"When multiple routers are present, they load in descending priority "
+"order. Routers with the same priority load in alphabetical file order."
+msgstr ""
+"Когда роутеров несколько, они загружаются по убыванию приоритета. Роутеры"
+" с одинаковым приоритетом загружаются в алфавитном порядке имён файлов."
+
+#: ../../source/how-to/routers.rst:59
+msgid ""
+"This matters when one router has filters or middleware that others depend"
+" on."
+msgstr ""
+"Это важно, когда у одного роутера есть фильтры или middleware, от которых"
+" зависят другие."
+
+#: ../../source/how-to/routers.rst:64
+msgid "Autoload"
+msgstr "Автозагрузка"
+
+#: ../../source/how-to/routers.rst:66
+msgid ""
+"Set ``autoload=False`` to register a router without activating it at "
+"startup. You can then load it manually via Telegram commands or "
+"``RouterLoader``."
+msgstr ""
+"Поставьте ``autoload=False``, чтобы зарегистрировать роутер, но не "
+"активировать его на старте. Потом его можно загрузить вручную командами в"
+" Telegram или через ``RouterLoader``."
+
+#: ../../source/how-to/routers.rst:80
+msgid "Naming & conflicts"
+msgstr "Имена и конфликты"
+
+#: ../../source/how-to/routers.rst:82
+msgid ""
+"Each router must have a unique name across ``routers_dir``. If two files "
+"expose a router with the same name, Raito renames the second one "
+"automatically:"
+msgstr ""
+"Имя каждого роутера должно быть уникальным в пределах ``routers_dir``. "
+"Если два файла содержат роутер с одинаковым именем, Raito автоматически "
+"переименует второй:"
+
+#: ../../source/how-to/routers.rst:89
+msgid "To avoid this, always set an explicit ``name``:"
+msgstr "Чтобы этого избежать, всегда задавайте явное ``name``:"
+
+#: ../../source/how-to/routers.rst:98
+msgid "Additional methods"
+msgstr "Дополнительные методы"
+
+#: ../../source/how-to/routers.rst:100
+msgid "``Router`` inherits everything from aiogram's ``Router`` and adds:"
+msgstr "``Router`` наследует всё от роутера aiogram и добавляет:"
+
+#: ../../source/how-to/routers.rst:102
+msgid ""
+"``router.on_pagination(name, *filters)`` — register a pagination callback"
+" handler"
+msgstr ""
+"``router.on_pagination(name, *filters)`` регистрирует хендлер колбэков "
+"пагинации"
+
+#: ../../source/how-to/routers.rst:103
+msgid "``router.on_command_signature_error()`` — handle incorrect command usage"
+msgstr ""
+"``router.on_command_signature_error()`` обрабатывает неверный вызов "
+"команды"
+
+#: ../../source/how-to/routers.rst:104
+msgid ""
+"``router.lifespan()`` — define startup/shutdown logic (see "
+":doc:`lifespan`)"
+msgstr ""
+"``router.lifespan()`` задаёт логику запуска и остановки (см. "
+":doc:`lifespan`)"
+
+#: ../../source/how-to/routers.rst:105
+msgid ""
+"``router.scene(states, ...)`` — define a per-update dialog flow (see "
+":doc:`scenes`)"
+msgstr ""
+"``router.scene(states, ...)`` задаёт пошаговый диалог на один апдейт (см."
+" :doc:`scenes`)"

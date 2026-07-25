@@ -1,0 +1,124 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/tutorial/going-further.rst:2
+msgid "Going further"
+msgstr "Что дальше"
+
+#: ../../source/tutorial/going-further.rst:4
+msgid ""
+"You can now build described, typed, role-gated commands that hot-reload "
+"as you edit. Here is the rest of Raito, and where to read about it."
+msgstr ""
+"Теперь вы умеете собирать команды с описаниями, типами и доступом по "
+"ролям, которые обновляются на лету. Вот остальной Raito и где о нём "
+"почитать."
+
+#: ../../source/tutorial/going-further.rst:8
+msgid "Interactive features"
+msgstr "Интерактивные возможности"
+
+#: ../../source/tutorial/going-further.rst:10
+msgid ""
+"**Keyboards** — build inline and reply keyboards declaratively or with a "
+"builder. See the :doc:`keyboards guide <../how-to/keyboards>`."
+msgstr ""
+"**Клавиатуры**: собирайте inline- и reply-клавиатуры декларативно или "
+"через билдер. Смотрите :doc:`руководство по клавиатурам <../how-"
+"to/keyboards>`."
+
+#: ../../source/tutorial/going-further.rst:12
+msgid ""
+"**Pagination** — page through text and media with inline buttons, with "
+"**no server-side state**. See the :doc:`pagination guide <../how-"
+"to/pagination>`."
+msgstr ""
+"**Пагинация**: листайте текст и медиа inline-кнопками, причём **без "
+"серверного состояния**. Смотрите :doc:`руководство по пагинации <../how-"
+"to/pagination>`."
+
+#: ../../source/tutorial/going-further.rst:14
+msgid ""
+"**Scenes** — multi-step dialogs where every step is an ordinary handler, "
+"so request-scoped dependencies (like a database session) are released "
+"between messages. See the :doc:`scenes guide <../how-to/scenes>`."
+msgstr ""
+"**Сцены**: многошаговые диалоги, где каждый шаг является обычным "
+"хендлером, поэтому request-scoped зависимости (например, сессия БД) "
+"освобождаются между сообщениями. Смотрите :doc:`руководство по сценам "
+"<../how-to/scenes>`."
+
+#: ../../source/tutorial/going-further.rst:17
+msgid ""
+"**Conversations** — pause a handler and wait for the user's next message."
+" See the :doc:`conversations guide <../how-to/conversations>`."
+msgstr ""
+"**Диалоги (conversations)**: приостановите хендлер и дождитесь следующего"
+" сообщения пользователя. Смотрите :doc:`руководство по conversations "
+"<../how-to/conversations>`."
+
+#: ../../source/tutorial/going-further.rst:21
+msgid "Operational features"
+msgstr "Эксплуатационные возможности"
+
+#: ../../source/tutorial/going-further.rst:23
+msgid "**Throttling** — rate-limit globally or per-command."
+msgstr "**Троттлинг**: ограничение частоты глобально или на отдельную команду."
+
+#: ../../source/tutorial/going-further.rst:24
+msgid "**Albums** — receive grouped media as a single list."
+msgstr "**Альбомы**: получайте сгруппированное медиа одним списком."
+
+#: ../../source/tutorial/going-further.rst:25
+msgid "**Lifespan** — startup/shutdown logic in one async generator."
+msgstr "**Lifespan**: логика запуска и остановки в одном async-генераторе."
+
+#: ../../source/tutorial/going-further.rst:26
+msgid "**Storages** — optional JSON and SQL persistence."
+msgstr "**Хранилища**: опциональное сохранение в JSON и SQL."
+
+#: ../../source/tutorial/going-further.rst:29
+msgid "Understand the internals"
+msgstr "Как всё устроено внутри"
+
+#: ../../source/tutorial/going-further.rst:31
+msgid ""
+"If you prefer to know *why* things work the way they do, the "
+":doc:`../explanation/index` section covers the architecture, the hot-"
+"reload mechanism, request-scoped scenes, stateless pagination and the "
+"role model."
+msgstr ""
+"Если хочется понять, *почему* всё работает именно так, раздел "
+":doc:`../explanation/index` разбирает архитектуру, механизм hot-reload, "
+"request-scoped сцены, stateless-пагинацию и модель ролей."
+
+#: ../../source/tutorial/going-further.rst:36
+msgid "Look things up"
+msgstr "Найти нужное"
+
+#: ../../source/tutorial/going-further.rst:38
+msgid ""
+"The :doc:`../reference/index` has the generated API, every configuration "
+"option and the full list of in-chat ``.rt`` commands."
+msgstr ""
+"В :doc:`../reference/index` есть сгенерированный API, все параметры "
+"конфигурации и полный список команд ``.rt`` прямо в чате."

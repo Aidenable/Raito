@@ -1,0 +1,55 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Aiden
+# This file is distributed under the same license as the Raito package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Raito 1.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 02:20+0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/how-to/lifespan.rst:2
+msgid "🍃 Lifespan"
+msgstr "🍃 Lifespan"
+
+#: ../../source/how-to/lifespan.rst:4
+msgid ""
+"Raito lets you define async startup/shutdown logic using a "
+"``@rt.lifespan(router)`` decorator — just like in FastAPI."
+msgstr ""
+"Raito позволяет описать асинхронную логику запуска и остановки "
+"декоратором ``@rt.lifespan(router)``, прямо как в FastAPI."
+
+#: ../../source/how-to/lifespan.rst:9
+msgid "Example"
+msgstr "Пример"
+
+#: ../../source/how-to/lifespan.rst:36
+msgid "How it works"
+msgstr "Как это работает"
+
+#: ../../source/how-to/lifespan.rst:38
+msgid "Code before ``yield`` runs on **startup**"
+msgstr "код до ``yield`` выполняется при **запуске**"
+
+#: ../../source/how-to/lifespan.rst:39
+msgid "Code after ``yield`` runs on **shutdown**"
+msgstr "код после ``yield`` выполняется при **остановке**"
+
+#: ../../source/how-to/lifespan.rst:40
+msgid "Lifespans are tracked per ``bot.id`` and executed in reverse order on exit"
+msgstr ""
+"lifespan'ы отслеживаются по ``bot.id`` и на выходе выполняются в обратном"
+" порядке"
